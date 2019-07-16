@@ -1,0 +1,33 @@
+
+<?xml version="1.0"?>
+<config
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd"
+>
+    <default>
+        <payment>
+            <webbhuset_collectorbankcheckout>
+                <debug>0</debug>
+                <active>0</active>
+                <model>CollectorBankCheckoutFacade</model>
+                <order_status>pending</order_status>
+                <title>Collector Bank Checkout</title>
+                <allowspecific>0</allowspecific>
+                <can_edit>false</can_edit>
+                <can_authorize>true</can_authorize>
+                <can_void>true</can_void>
+                <can_cancel>true</can_cancel>
+                <can_capture>true</can_capture>
+                <can_capture_partial>false</can_capture_partial>
+                <can_refund>true</can_refund>
+                <can_refund_partial>false</can_refund_partial>
+                <can_refund_partial_per_invoice>false</can_refund_partial_per_invoice>
+                <can_use_checkout>true</can_use_checkout>
+                <can_use_internal>false</can_use_internal>
+                <can_use_for_multishipping>false</can_use_for_multishipping>
+                <debug_mode>false</debug_mode>
+                <is_gateway>1</is_gateway>
+            </webbhuset_collectorbankcheckout>
+        </payment>
+    </default>
+</config>
