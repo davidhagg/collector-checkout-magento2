@@ -7,7 +7,6 @@
 * Order review
 * Shipping methods
 * Switch button/link between B2C and B2B
-* Data layer pusher for GTM
 
 ```
 public function execute()
