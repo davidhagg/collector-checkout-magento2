@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Webbhuset\CollectorBankCheckout\Logger\Logger">
+        <arguments>
+            <argument name="handlers"  xsi:type="array">
+                <argument name="name" xsi:type="string">collector-logger</argument>
+                <item name="system" xsi:type="object">Webbhuset\CollectorBankCheckout\Logger\Handler\System</item>
+            </argument>
+        </arguments>
+    </type>
 
     <virtualType name="CollectorBankCheckoutFacade" type="Webbhuset\CollectorBankCheckout\Model\Adapter">
         <arguments>
@@ -75,13 +83,4 @@
             </argument>
         </arguments>
     </virtualType>
-
-    <type name="Webbhuset\CollectorBankCheckout\Model\Logger\Logger">
-        <arguments>
-            <argument name="name" xsi:type="string">collectorbank-checkout</argument>
-            <argument name="handlers"  xsi:type="array">
-                <item name="system" xsi:type="object">Webbhuset\CollectorBankCheckout\Model\Logger\Handler</item>
-            </argument>
-        </arguments>
-    </type>
 </config>
