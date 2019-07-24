@@ -12,8 +12,8 @@
 
     <virtualType name="CollectorBankCheckoutFacade" type="Webbhuset\CollectorBankCheckout\Model\Adapter">
         <arguments>
-            <argument name="code" xsi:type="const">Webbhuset\CollectorBankCheckout\Model\Ui\ConfigProvider::CHECKOUT_CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Webbhuset\CollectorBankCheckout\Block\Form\Checkout</argument>
+            <argument name="code" xsi:type="const">Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Webbhuset\CollectorBankCheckout\Block\Admin\Form</argument>
             <argument name="infoBlockType" xsi:type="string">Webbhuset\CollectorBankCheckout\Block\Admin\OrderInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">CollectorBankInvoiceValueHandlerPool</argument>
             <argument name="commandPool" xsi:type="object">CollectorBankCheckoutCommandPool</argument>
@@ -36,7 +36,7 @@
 
     <virtualType name="CollectorBankInvoicePaymentConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Webbhuset\CollectorBankCheckout\Config::CHECKOUT_CODE</argument>
+            <argument name="methodCode" xsi:type="const">Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE</argument>
         </arguments>
     </virtualType>
 
