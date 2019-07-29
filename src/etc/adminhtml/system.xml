@@ -15,7 +15,7 @@
             >
                 <label>Collector Bank Checkout</label>
                 <field
-                        id="active"
+                        id="enable"
                         translate="label"
                         type="select"
                         sortOrder="1"
@@ -37,7 +37,11 @@
                 >
                     <label>Test Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
                 </field>
+
                 <field
                         id='username'
                         translate='label'
@@ -49,7 +53,6 @@
                 >
                     <label>Username</label>
                     <comment><![CDATA[]]></comment>
-                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <depends>
                         <field id='enable'>1</field>
                     </depends>
@@ -66,6 +69,165 @@
                     <label>Password</label>
                     <comment><![CDATA[]]></comment>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+                <field
+                        id='b2c'
+                        translate='label'
+                        type='text'
+                        sortOrder='4'
+                        showInDefault='1'
+                        showInWebsite='1'
+                        showInStore='1'
+                >
+                    <label>B2C store id</label>
+                    <comment><![CDATA[]]></comment>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+                <field
+                        id='b2b'
+                        translate='label'
+                        type='text'
+                        sortOrder='4'
+                        showInDefault='1'
+                        showInWebsite='1'
+                        showInStore='1'
+                >
+                    <label>B2B store id</label>
+                    <comment><![CDATA[]]></comment>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="customer_type"
+                        translate="label"
+                        type="select"
+                        sortOrder="35"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Allowed customers</label>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type</source_model>
+                </field>
+
+                <field
+                        id="default_customer_type"
+                        translate="label"
+                        type="select"
+                        sortOrder="36"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Default customer type</label>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType</source_model>
+                </field>
+
+                <field
+                        id="order_new_status"
+                        translate="label"
+                        type="select"
+                        sortOrder="37"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Order status - New order</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="order_accepted_status"
+                        translate="label"
+                        type="select"
+                        sortOrder="38"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Order status - Acknowledged order</label>
+                    <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="order_holded_status"
+                        translate="label"
+                        type="select"
+                        sortOrder="38"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Order status - On hold</label>
+                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Order\Holded</source_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+
+
+                <field
+                        id="order_denied_status"
+                        translate="label"
+                        type="select"
+                        sortOrder="38"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Order status - Denied order</label>
+                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Order\Cancelled</source_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="show_discount_box"
+                        translate="label"
+                        type="select"
+                        sortOrder="45"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Show discount box on checkout page</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id='enable'>1</field>
+                    </depends>
+                </field>
+
+
+                <field
+                        id="terms_url"
+                        translate="label"
+                        type="text"
+                        sortOrder="100"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Terms and conditions url</label>
                     <depends>
                         <field id='enable'>1</field>
                     </depends>

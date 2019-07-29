@@ -10,7 +10,7 @@
         </arguments>
     </type>
 
-    <virtualType name="CollectorBankCheckoutFacade" type="Webbhuset\CollectorBankCheckout\Model\Adapter">
+    <virtualType name="CollectorBankCheckoutFacade" type="Webbhuset\CollectorBankCheckout\Checkout\Adapter">
         <arguments>
             <argument name="code" xsi:type="const">Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE</argument>
             <argument name="formBlockType" xsi:type="string">Webbhuset\CollectorBankCheckout\Block\Admin\Form</argument>
