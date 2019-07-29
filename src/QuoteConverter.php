@@ -74,7 +74,6 @@ class QuoteConverter
     {
         $shippingAddress = $quote->getShippingAddress();
         $method = $shippingAddress->getShippingMethod();
-
         if (!$method) {
             return null;
         }
