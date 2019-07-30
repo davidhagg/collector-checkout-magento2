@@ -60,7 +60,7 @@
                 <field
                         id='password'
                         translate='label'
-                        type='text'
+                        type="obscure"
                         sortOrder='4'
                         showInDefault='1'
                         showInWebsite='1'
