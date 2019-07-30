@@ -45,18 +45,19 @@ class Adapter
         return $collectorSession;
     }
 
-    protected function getConfig($storeId = null) : \CollectorBank\CheckoutSDK\Config\ConfigInterface
+    public function getConfig($storeId = null) : \CollectorBank\CheckoutSDK\Config\ConfigInterface
     {
         return $this->config;
     }
 
-    protected function getAdapter($config)
+    public function getAdapter($config)
     {
         // Todo take this module config object
+        $config =  $this->getConfig();
 
 
         // if ($config->isMockMode()) {
-            // return new \CollectorBank\CheckoutSDK\Adapter\MockAdapter($config);
+            return new \CollectorBank\CheckoutSDK\Adapter\MockAdapter($config);
         // }
 
 
