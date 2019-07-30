@@ -7,5 +7,8 @@
         <route id="collectorcheckout" frontName="collectorcheckout">
             <module name="Webbhuset_CollectorBankCheckout" />
         </route>
+        <route id="collectorbank" frontName="collectorbank">
+            <module name="Webbhuset_CollectorBankCheckout"/>
+        </route>
     </router>
 </config>
