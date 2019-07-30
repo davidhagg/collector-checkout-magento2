@@ -4,11 +4,6 @@ namespace Webbhuset\CollectorBankCheckout\Block\Checkout;
 
 class Index extends \Magento\Framework\View\Element\Template
 {
-    public function toHtml()
-    {
-        return $this->getIframe();
-    }
-
     public function getIframe()
     {
         $session = $this->getCollectorSession();
