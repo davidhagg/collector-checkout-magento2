@@ -15,7 +15,7 @@
             >
                 <label>Collector Bank Checkout</label>
                 <field
-                        id="enable"
+                        id="active"
                         translate="label"
                         type="select"
                         sortOrder="1"
@@ -26,6 +26,7 @@
                     <label>Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+
                 <field
                         id="test_mode"
                         translate="label"
@@ -38,7 +39,7 @@
                     <label>Test Mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
 
@@ -54,9 +55,10 @@
                     <label>Username</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
+
                 <field
                         id='password'
                         translate='label'
@@ -70,7 +72,7 @@
                     <comment><![CDATA[]]></comment>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
                 <field
@@ -85,9 +87,10 @@
                     <label>B2C store id</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
+
                 <field
                         id='b2b'
                         translate='label'
@@ -100,7 +103,7 @@
                     <label>B2B store id</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
 
@@ -115,7 +118,7 @@
                 >
                     <label>Allowed customers</label>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                     <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type</source_model>
                 </field>
@@ -131,7 +134,7 @@
                 >
                     <label>Default customer type</label>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                     <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType</source_model>
                 </field>
@@ -148,7 +151,7 @@
                     <label>Order status - New order</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status\NewStatus</source_model>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
 
@@ -164,7 +167,7 @@
                     <label>Order status - Acknowledged order</label>
                     <source_model>Magento\Sales\Model\Config\Source\Order\Status\Processing</source_model>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
 
@@ -180,10 +183,9 @@
                     <label>Order status - On hold</label>
                     <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Order\Holded</source_model>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
-
 
                 <field
                         id="order_denied_status"
@@ -197,26 +199,9 @@
                     <label>Order status - Denied order</label>
                     <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Order\Cancelled</source_model>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
-
-                <field
-                        id="show_discount_box"
-                        translate="label"
-                        type="select"
-                        sortOrder="45"
-                        showInDefault="1"
-                        showInWebsite="1"
-                        showInStore="1"
-                >
-                    <label>Show discount box on checkout page</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <depends>
-                        <field id='enable'>1</field>
-                    </depends>
-                </field>
-
 
                 <field
                         id="terms_url"
@@ -229,7 +214,7 @@
                 >
                     <label>Terms and conditions url</label>
                     <depends>
-                        <field id='enable'>1</field>
+                        <field id='active'>1</field>
                     </depends>
                 </field>
             </group>

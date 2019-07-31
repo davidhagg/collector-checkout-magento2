@@ -39,7 +39,6 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
             'redirectPageUri'         => $this->getRedirectPageUri(),
             'notificationUri'         => $this->getNotificationUri(),
             'validationUri'           => $this->getValidationUri(),
-            'showDiscountBox'         => $this->getShowDiscountBox(),
             'orderStatusNew'          => $this->getOrderStatusNew(),
             'orderStatusAcknowledged' => $this->getOrderStatusAcknowledged(),
             'orderStatusHolded'       => $this->getOrderStatusHolded(),
@@ -131,11 +130,6 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
         $urlKey = "collectorbank/validation/index/quoteid/$quoteId";
         return $this->storeManager->getStore()->getUrl($urlKey);
-    }
-
-    public function getShowDiscountBox(): bool
-    {
-        return $this->getConfigValue('show_discount_box');
     }
 
     public function getOrderStatusNew(): string
