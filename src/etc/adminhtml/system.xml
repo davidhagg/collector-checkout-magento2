@@ -137,7 +137,7 @@
                 </field>
 
                 <field
-                        id="order_new_status"
+                        id="order_status"
                         translate="label"
                         type="select"
                         sortOrder="37"

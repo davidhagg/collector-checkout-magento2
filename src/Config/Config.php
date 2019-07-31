@@ -7,15 +7,18 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
     protected $scopeConfig;
     protected $storeManager;
     protected $encryptor;
+    protected $checkoutSession;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
+        \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->encryptor = $encryptor;
-        $this->storeManager = $storeManager;
+        $this->scopeConfig     = $scopeConfig;
+        $this->encryptor       = $encryptor;
+        $this->checkoutSession = $checkoutSession;
+        $this->storeManager    = $storeManager;
     }
 
     public function getConfig(): array
@@ -124,7 +127,9 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
     public function getValidationUri(): string
     {
-        $urlKey = "collectorbank/validation/index";
+        $quoteId = $this->checkoutSession->getQuoteId();
+
+        $urlKey = "collectorbank/validation/index/quoteid/$quoteId";
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
 
