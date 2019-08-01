@@ -45,6 +45,16 @@ class Adapter
         return $collectorSession;
     }
 
+    public function acquireCheckoutInformation($collectorOrderReference): \CollectorBank\CheckoutSDK\CheckoutData
+    {
+        $config = $this->getConfig();
+        $adapter = $this->getAdapter($config);
+        $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
+        $collectorSession->load($collectorOrderReference);
+
+        return $collectorSession->getCheckoutData();
+    }
+
     public function getConfig($storeId = null) : \CollectorBank\CheckoutSDK\Config\ConfigInterface
     {
         return $this->config;
