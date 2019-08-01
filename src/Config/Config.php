@@ -126,7 +126,8 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
     public function getNotificationUri() : string
     {
-        $urlKey = "collectorbank/notification/index";
+        $orderId = $this->checkoutSession->getQuote()->reserveOrderId()->getReservedOrderId();
+        $urlKey = "collectorbank/notification/index/orderid/$orderId";
 
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
@@ -215,5 +216,11 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
         $value = $this->scopeConfig->getValue('payment/webbhuset_collectorbankcheckout/' . $name);
 
         return $value;
+    }
+    public function getMode()
+    {
+        $mode = $this->getIsTestMode() ? "test mode" : "production mode";
+
+        return $this->getIsMockMode() ? "mock mode" : $mode;
     }
 }
