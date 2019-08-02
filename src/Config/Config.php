@@ -175,7 +175,7 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
         $value = $this->getConfigValue('password');
         $value = $this->encryptor->decrypt($value);
 
-        return $this->getConfigValue($value);
+        return $value;
     }
 
     public function getProductionModeB2C() : string
@@ -198,7 +198,7 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
         $value = $this->getConfigValue('test_mode_password');
         $value = $this->encryptor->decrypt($value);
 
-        return $this->getConfigValue($value);
+        return $value;
     }
 
     public function getTestModeB2C(): string
