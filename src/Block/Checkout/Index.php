@@ -20,4 +20,9 @@ class Index extends \Magento\Framework\View\Element\Template
 
         return $session->getIframe($iframeConfig);
     }
+
+    public function getUpdateUrl()
+    {
+        return $this->getUrl('collectorcheckout/update');
+    }
 }

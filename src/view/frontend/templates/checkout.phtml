@@ -1,8 +1,9 @@
 <?php
-    $iframe = $this->getIframe();
+    $iframe = $block->getIframe();
 ?>
+<div data-mage-init='{ "collectorCheckout": {
+    "updateUrl": "<?= $block->getUpdateUrl() ?>"
+} }' id="collectorcheckout">
+</div>
 
 <?= $iframe ?>
-
-<div data-mage-init='{ "Webbhuset_CollectorBankCheckout/js/checkout": {} }' id="collectorcheckout">
-</div>
