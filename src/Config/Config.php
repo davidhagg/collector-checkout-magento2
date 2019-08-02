@@ -43,7 +43,15 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
             'orderStatusAcknowledged' => $this->getOrderStatusAcknowledged(),
             'orderStatusHolded'       => $this->getOrderStatusHolded(),
             'orderStatusDenied'       => $this->getOrderStatusDenied(),
-            'profileName'             => $this->getProfileName()
+            'profileName'             => $this->getProfileName(),
+            'testModeUsername'        => $this->getTestModeUsername(),
+            'testModePassword'        => $this->getTestModePassword(),
+            'testModeB2C'             => $this->getTestModeB2C(),
+            'testModeB2B'             => $this->getTestModeB2B(),
+            'productionModeUsername'  => $this->getProductionModeUsername(),
+            'productionModePassword'  => $this->getProductionModePassword(),
+            'productionModeB2C'       => $this->getProductionModeB2C(),
+            'productionModeB2B'       => $this->getProductionModeB2B()
         ];
 
         return $data;
@@ -51,20 +59,17 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
     public function getUsername() : string
     {
-        return $this->getConfigValue('username');
+        return $this->getIsTestMode() ? $this->getTestModeUsername() : $this->getProductionModeUsername();
     }
 
     public function getSharedAccessKey() : string
     {
-        $value = $this->getConfigValue('password');
-        $value = $this->encryptor->decrypt($value);
-
-        return $value;
+        return $this->getPassword();
     }
 
     public function getPassword() : string
     {
-        return $this->getSharedAccessKey();
+        return $this->getIsTestMode() ? $this->getTestModePassword() : $this->getProductionModePassword();
     }
 
     public function getCountryCode() : string
@@ -79,12 +84,12 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
     public function getB2C() : string
     {
-        return $this->getConfigValue('b2c');
+        return $this->getIsTestMode() ? $this->getTestModeB2C() : $this->getProductionModeB2C();
     }
 
     public function getB2B() : string
     {
-        return $this->getConfigValue('b2b');
+        return $this->getIsTestMode() ? $this->getTestModeB2B() : $this->getProductionModeB2B();
     }
 
     public function getCustomerTypeAllowed(): int
@@ -115,20 +120,22 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
     public function getRedirectPageUri(): string
     {
         $urlKey = "collectorbank/success";
+
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
 
     public function getNotificationUri() : string
     {
         $urlKey = "collectorbank/notification/index";
+
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
 
     public function getValidationUri(): string
     {
         $quoteId = $this->checkoutSession->getQuoteId();
-
         $urlKey = "collectorbank/validation/index/quoteid/$quoteId";
+
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
 
@@ -155,6 +162,52 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
     public function getProfileName(): string
     {
         return "profilename";
+    }
+
+    public function getProductionModeUsername(): string
+    {
+        return $this->getConfigValue('username');
+    }
+
+    public function getProductionModePassword(): string
+    {
+        $value = $this->getConfigValue('password');
+        $value = $this->encryptor->decrypt($value);
+
+        return $this->getConfigValue($value);
+    }
+
+    public function getProductionModeB2C() : string
+    {
+        return $this->getConfigValue('b2c');
+    }
+
+    public function getProductionModeB2B() : string
+    {
+        return $this->getConfigValue('b2b');
+    }
+
+    public function getTestModeUsername(): string
+    {
+        return $this->getConfigValue('test_mode_username');
+    }
+
+    public function getTestModePassword(): string
+    {
+        $value = $this->getConfigValue('test_mode_password');
+        $value = $this->encryptor->decrypt($value);
+
+        return $this->getConfigValue($value);
+    }
+
+    public function getTestModeB2C(): string
+    {
+        return $this->getConfigValue('test_mode_b2c');
+    }
+
+    public function getTestModeB2B(): string
+    {
+        return $this->getConfigValue('test_mode_b2b');
     }
 
     private function getConfigValue($name)
