@@ -46,7 +46,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
                 'comment' => 'Collector Bank store id',
             ]
         ];
-        $this->addColumnIfNotExists($columns, $table, $setup);
+        $this->addColumns($columns, $table, $setup);
     }
 
     private function addCollectorBankSalesOrderColumns(\Magento\Framework\Setup\SchemaSetupInterface $setup)
@@ -73,17 +73,15 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
                 'comment' => 'Collector Bank store id',
             ]
         ];
-        $this->addColumnIfNotExists($columns, $table, $setup);
+        $this->addColumns($columns, $table, $setup);
     }
 
-    private function addColumnIfNotExists($columns, $table, \Magento\Framework\Setup\SchemaSetupInterface $setup)
+    private function addColumns($columns, $table, \Magento\Framework\Setup\SchemaSetupInterface $setup)
     {
         $connection = $setup->getConnection();
 
         foreach ($columns as $name => $definition) {
-            if (!$connection->tableColumnExists($table, $name)) {
-                $connection->addColumn($table, $name, $definition);
-            }
+            $connection->addColumn($table, $name, $definition);
         }
     }
 }
