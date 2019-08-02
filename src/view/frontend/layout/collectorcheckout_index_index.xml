@@ -3,7 +3,7 @@
     <update handle="checkout_cart_index" />
     <body>
         <referenceContainer name="content">
-            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout\Index" name="collectorbank_index_index" template="Webbhuset_CollectorBankCheckout::checkout.phtml"/>
+            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Webbhuset_CollectorBankCheckout::checkout.phtml"/>
         </referenceContainer>
         <referenceContainer name="page.messages">
             <block

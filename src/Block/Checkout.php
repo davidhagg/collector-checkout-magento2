@@ -1,8 +1,8 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Block\Checkout;
+namespace Webbhuset\CollectorBankCheckout\Block;
 
-class Index extends \Magento\Framework\View\Element\Template
+class Checkout extends \Magento\Framework\View\Element\Template
 {
     public function getIframe()
     {
