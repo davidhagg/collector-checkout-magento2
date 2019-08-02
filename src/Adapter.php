@@ -6,13 +6,19 @@ class Adapter
 {
     protected $quoteConverter;
     protected $config;
+    protected $quoteDataHandler;
+    protected $orderDataHandler;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
         \Webbhuset\CollectorBankCheckout\Config\Config $config
     ) {
         $this->quoteConverter = $quoteConverter;
         $this->config = $config;
+        $this->quoteDataHandler = $quoteDataHandler;
+        $this->orderDataHandler = $orderDataHandler;
     }
 
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
@@ -25,7 +31,6 @@ class Adapter
         $config = $this->getConfig($quote->getStoreId());
         $countryCode = $config->getCountryCode();
         $adapter = $this->getAdapter($config);
-        $reference = '';
 
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
@@ -37,6 +42,13 @@ class Adapter
                 $countryCode,
                 $initCustomer
             );
+
+            $this->quoteDataHandler->setPrivateId($quote, $collectorSession->getPrivateId())
+                ->setPublicToken($quote, $collectorSession->getPublicToken())
+                ->setStoreId($quote, $config->getStoreId());
+
+            $quote->save();
+
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
             die;
         }
@@ -44,9 +56,22 @@ class Adapter
         return $collectorSession;
     }
 
-    public function acquireCheckoutInformation(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
     {
-        $privateId = 'b4bcb34e-91ad-4942-931d-d8d8a52453e5';
+        $privateId = $this->quoteDataHandler->getPrivateId($quote);
+
+        return $this->acquireCheckoutInformation($privateId);
+    }
+
+    public function acquireCheckoutInformationFromOrder(\Magento\Sales\Model\Order $order): \CollectorBank\CheckoutSDK\CheckoutData
+    {
+        $privateId = $this->orderDataHandler->getPrivateId($order);
+
+        return $this->acquireCheckoutInformation($privateId);
+    }
+
+    public function acquireCheckoutInformation($privateId): \CollectorBank\CheckoutSDK\CheckoutData
+    {
         $config = $this->getConfig();
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
@@ -62,7 +87,7 @@ class Adapter
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
         $fee = $this->quoteConverter->getFees($quote);
-        $privateId = '123';
+        $privateId = $this->orderDataHandler->getPrivateId($order);;
 
         try {
             $collectorSession->setPrivateId($privateId)
@@ -82,7 +107,7 @@ class Adapter
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
         $cart = $this->quoteConverter->getCart($quote);
-        $privateId = '123';
+        $privateId = $this->orderDataHandler->getPrivateId($order);
 
         try {
             $collectorSession->setPrivateId($privateId)

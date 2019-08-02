@@ -48,7 +48,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $oldFees = $this->quoteConverter->getFees($quote);
         $oldCart = $this->quoteConverter->getCart($quote);
-        $checkoutData = $this->collectorAdapter->acquireCheckoutInformation($quote);
+        $checkoutData = $this->collectorAdapter->acquireCheckoutInformationFromQuote($quote);
 
         $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
         $quote->collectTotals()
