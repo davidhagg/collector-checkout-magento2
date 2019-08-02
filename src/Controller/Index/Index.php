@@ -7,16 +7,19 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $pageFactory;
     protected $checkoutSession;
     protected $collectorAdapter;
+    protected $quoteDataHandler;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Webbhuset\CollectorBankCheckout\Adapter $collectorAdapter,
+        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
         \Magento\Framework\View\Result\PageFactory $pageFactory
     ) {
         $this->pageFactory = $pageFactory;
         $this->checkoutSession = $checkoutSession;
         $this->collectorAdapter = $collectorAdapter;
+        $this->quoteDataHandler = $quoteDataHandler;
 
         return parent::__construct($context);
     }
@@ -30,12 +33,21 @@ class Index extends \Magento\Framework\App\Action\Action
             return $page;
         }
 
-        $collectorSession = $this->collectorAdapter->initialize($quote);
+        $publicToken = $this->quoteDataHandler->getPublicToken($quote);
+        if (!$publicToken) {
+            $collectorSession = $this->collectorAdapter->initialize($quote);
+            $publicToken = $collectorSession->getPublicToken();
+        }
+
+        $iframeConfig = new \CollectorBank\CheckoutSDK\Config\IframeConfig(
+            $publicToken
+        );
+        $iframe = \CollectorBank\CheckoutSDK\Iframe::getScript($iframeConfig);
 
         $block = $page
             ->getLayout()
             ->getBlock('collectorbank_index_index')
-            ->setCollectorSession($collectorSession);
+            ->setIframe($iframe);
 
         return $page;
     }

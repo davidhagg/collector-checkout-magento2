@@ -4,21 +4,18 @@ namespace Webbhuset\CollectorBankCheckout\Block;
 
 class Checkout extends \Magento\Framework\View\Element\Template
 {
+    protected $iframe;
+
     public function getIframe()
     {
-        $session = $this->getCollectorSession();
+        return $this->iframe;
+    }
 
-        if (!$session) {
-            return '';
-        }
+    public function setIframe($iframe)
+    {
+        $this->iframe = $iframe;
 
-        $publicToken = $session->getPublicToken();
-
-        $iframeConfig = new \CollectorBank\CheckoutSDK\Config\IframeConfig(
-            $publicToken
-        );
-
-        return $session->getIframe($iframeConfig);
+        return $this;
     }
 
     public function getUpdateUrl()
