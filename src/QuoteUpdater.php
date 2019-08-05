@@ -23,6 +23,7 @@ class QuoteUpdater
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ) : Quote
     {
+
         $customer                   = $checkoutData->getCustomer();
         $collectorInvoiceAddress    = $customer->getInvoiceAddress();
         $billingAddress             = $quote->getBillingAddress();
@@ -31,17 +32,50 @@ class QuoteUpdater
 
         if ($customer instanceof SDK\PrivateCustomer) {
             $billingAddress = $this->setPrivateAddressData($billingAddress, $customer, $collectorInvoiceAddress)
-                ->setCountryCode($checkoutData->getCountryCode());
+                ->setCountryId($checkoutData->getCountryCode());
             $shippingAddress = $this->setPrivateAddressData($shippingAddress, $customer, $collectorDeliveryAddress)
-                ->setCountryCode($checkoutData->getCountryCode());
+                ->setCountryId($checkoutData->getCountryCode());
         }
 
         if ($customer instanceof SDK\BusinessCustomer) {
             $billingAddress = $this->setBusinessAddressData($billingAddress, $customer, $collectorInvoiceAddress)
-                ->setCountryCode($checkoutData->getCountryCode());
+                ->setCountryId($checkoutData->getCountryCode());
             $shippingAddress = $this->setBusinessAddressData($shippingAddress, $customer, $collectorDeliveryAddress)
-                ->setCountryCode($checkoutData->getCountryCode());
+                ->setCountryId($checkoutData->getCountryCode());
         }
+
+        $this->setCustomerData($quote, $checkoutData);
+        $this->setPaymentMethod($quote);
+        $quote->setCustomerIsGuest(true);
+
+        return $quote;
+    }
+
+    public function setCustomerData(
+        Quote $quote,
+        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+    ) : Quote
+    {
+        $customer = $checkoutData->getCustomer();
+        $customerAddress = $customer->getInvoiceAddress();
+
+        $firstname = $customerAddress->getFirstName();
+        $lastname  = $customerAddress->getLastName();
+        $email = $customer->getEmail();
+
+        $quote->setCustomerFirstname($firstname)
+            ->setCustomerLastname($lastname)
+            ->setCustomerEmail($email);
+
+        return $quote;
+    }
+
+    public function setPaymentMethod(
+        Quote $quote
+    ) : Quote
+    {
+        $payment = $quote->getPayment();
+        $payment->setMethod(\Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE);
 
         return $quote;
     }
