@@ -5,7 +5,7 @@
     "require": {
 		"collector/php-sdk-checkout": "dev-master",
 		"collector/php-sdk-payment": "dev-master"
-	},
+    },
     "repositories": [
         {
             "type": "vcs",
