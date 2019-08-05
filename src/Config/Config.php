@@ -51,7 +51,8 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
             'productionModeUsername'  => $this->getProductionModeUsername(),
             'productionModePassword'  => $this->getProductionModePassword(),
             'productionModeB2C'       => $this->getProductionModeB2C(),
-            'productionModeB2B'       => $this->getProductionModeB2B()
+            'productionModeB2B'       => $this->getProductionModeB2B(),
+            'customBaseUrl'           => $this->getCustomBaseUrl(),
         ];
 
         return $data;
@@ -127,7 +128,12 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
     public function getNotificationUri() : string
     {
         $orderId = $this->checkoutSession->getQuote()->reserveOrderId()->getReservedOrderId();
+
         $urlKey = "collectorbank/notification/index/orderid/$orderId";
+
+        if ($this->getCustomBaseUrl()) {
+            return $this->getCustomBaseUrl() . $urlKey;
+        }
 
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
@@ -136,6 +142,10 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
     {
         $quoteId = $this->checkoutSession->getQuoteId();
         $urlKey = "collectorbank/validation/index/quoteid/$quoteId";
+
+        if ($this->getCustomBaseUrl()) {
+            return $this->getCustomBaseUrl() . $urlKey;
+        }
 
         return $this->storeManager->getStore()->getUrl($urlKey);
     }
@@ -217,10 +227,16 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
         return $value;
     }
+
     public function getMode()
     {
         $mode = $this->getIsTestMode() ? "test mode" : "production mode";
 
         return $this->getIsMockMode() ? "mock mode" : $mode;
+    }
+
+    public function getCustomBaseUrl()
+    {
+        return $this->getConfigValue('custom_base_url');
     }
 }
