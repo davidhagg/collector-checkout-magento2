@@ -56,12 +56,13 @@ class Manager
     {
         $order = $this->getOrderByIncrementId($incrementOrderId);
         $orderId = $order->getEntityId();
-        // get collector bank reference id
+
         $collectorBankPrivateId = $order->getCollectorbankPrivateId();
 
         $adapter = $this->collectorAdapter->create();
+
         $checkoutData = $adapter->acquireCheckoutInformation($collectorBankPrivateId);
-        $purchaseResult = $checkoutData->getPurchase()->getResult();
+        $purchaseResult = $checkoutData->getPurchase()->getResult()->getResult();
 
         switch ($purchaseResult) {
             case PurchaseResult::PRELIMINARY:
@@ -89,7 +90,7 @@ class Manager
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusAcknowledged(),
-            Magento\Sales\Model\Order::STATE_PROCESSING
+            \Magento\Sales\Model\Order::STATE_PROCESSING
         );
     }
 
@@ -100,7 +101,7 @@ class Manager
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusHolded(),
-            Magento\Sales\Model\Order::STATE_HOLDED
+            \Magento\Sales\Model\Order::STATE_HOLDED
         );
     }
 
@@ -111,7 +112,7 @@ class Manager
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusDenied(),
-            Magento\Sales\Model\Order::STATE_CANCELED
+            \Magento\Sales\Model\Order::STATE_CANCELED
         );
     }
 
@@ -126,11 +127,10 @@ class Manager
             ->addFilter('increment_id', $incrementOrderId, 'eq')->create();
         $orderList = $this->orderRepository->getList($searchCriteria)->getItems();
 
-        if (!isset($orderList[0])) {
+        if (sizeof($orderList) == 0) {
             throw new \Magento\Framework\Exception\NoSuchEntityException();
         }
-
-        return $orderList[0];
+        return reset($orderList);
     }
 
     private function getIncrementIdByOrderId($orderId)
