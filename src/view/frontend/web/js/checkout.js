@@ -4,8 +4,10 @@ define([
     'mage/storage',
 ], function (Element, urlBuilder, storage) {
     'use strict';
-
     return Element.extend({
+        defaults: {
+            template: 'Webbhuset_CollectorBankCheckout/checkout',
+        },
         updateUrl: '',
         getUpdateUrl: function(eventName, publicId) {
             return this.updateUrl + '?event=' + eventName + '&quoteid=' + publicId

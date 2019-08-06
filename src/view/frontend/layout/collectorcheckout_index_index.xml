@@ -2,24 +2,71 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="checkout_cart_index" />
     <body>
-        <referenceContainer name="content">
-            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Webbhuset_CollectorBankCheckout::checkout.phtml"/>
-        </referenceContainer>
-        <referenceContainer name="page.messages">
-            <block
-                class="Magento\Checkout\Block\Cart\ValidationMessages"
-                name="checkout.cart.validationmessages"
-            />
-        </referenceContainer>
-        <move element="checkout.cart.form" destination="cart.summary" before="-"/>
-        <move element="checkout.cart.coupon" destination="cart.summary" before="checkout.cart.totals.container"/>
 
-        <referenceContainer name="checkout.cart.methods" remove="true" />
+        <referenceContainer name="checkout.cart.items">
+            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Magento_Checkout::onepage.phtml" cacheable="false" before="-">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="checkout" xsi:type="array">
+                                <item name="component" xsi:type="string">uiComponent</item>
+                                <item name="children" xsi:type="array">
+                                    <item name="hej" xsi:type="array">
+                                        <item name="component" xsi:type="string">collectorCheckout</item>
+                                        <item name="config" xsi:type="array">
+                                            <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/checkout</item>
+                                        </item>
+                                    </item>
 
-        <block
-            class="Magento\Checkout\Block\Cart\Additional\Info"
-            name="additional.product.info"
-            template="cart/additional/info.phtml"
-        />
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+
+            </block>
+            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorBankCheckout::iframe.phtml" cacheable="false" />
+        </referenceContainer>
+
+        <referenceBlock class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon" remove="true"/>
+        <move element="checkout.cart.shipping" destination="checkout.cart.items" before="collectorbank_checkout_iframe"/>
+        <move element="checkout.cart.totals.container" destination="checkout.cart.container" after="-"/>
+        <move element="checkout.cart.coupon" destination="checkout.cart.container" after="-"/>
+        <referenceContainer name="cart.summary" remove="true" />
+        <referenceBlock name="checkout.cart.shipping" template="Webbhuset_CollectorBankCheckout::cart/shipping.phtml">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="block-summary" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="discount" xsi:type="array">
+                                    <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/discount</item>
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/payment/discount</item>
+                                    <item name="sortOrder" xsi:type="string">1</item>
+                                    <item name="children" xsi:type="array">
+                                        <item name="errors" xsi:type="array">
+                                            <item name="sortOrder" xsi:type="string">0</item>
+                                            <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/discount-messages</item>
+                                            <item name="displayArea" xsi:type="string">messages</item>
+                                        </item>
+                                        <item name="captcha" xsi:type="array">
+                                            <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/captcha</item>
+                                            <item name="displayArea" xsi:type="string">captcha</item>
+                                            <item name="formId" xsi:type="string">sales_rule_coupon_request</item>
+                                            <item name="configSource" xsi:type="string">checkoutConfig</item>
+                                        </item>
+                                    </item>
+                                </item>
+                                <item name="block-shipping" xsi:type="array">
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/shipping-estimation</item>
+                                    <item name="sortOrder" xsi:type="string">2</item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+        <referenceBlock name="checkout.cart.methods.bottom" remove="true" />
     </body>
 </page>

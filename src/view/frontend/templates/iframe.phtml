@@ -1,0 +1,10 @@
+<?php
+    $iframe = $block->getIframe();
+?>
+<script>
+    if (window.checkoutConfig) {
+        window.checkoutConfig.updateUrl = "<?= $block->getUpdateUrl() ?>";
+    }
+</script>
+
+<?= $iframe ?>

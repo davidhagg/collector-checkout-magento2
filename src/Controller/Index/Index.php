@@ -46,7 +46,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $block = $page
             ->getLayout()
-            ->getBlock('collectorbank_index_index')
+            ->getBlock('collectorbank_checkout_iframe')
             ->setIframe($iframe);
 
         return $page;
