@@ -27,8 +27,6 @@ class SaveOrderBeforeSalesModelQuoteObserver implements \Magento\Framework\Event
         $order = $observer->getEvent()->getData('order');
         /* @var \Magento\Quote\Model\Quote $quote */
         $quote = $observer->getEvent()->getData('quote');
-        \dahbug::dump($quote);
-        \dahbug::dump($order);
         $this->objectCopyService->copyFieldsetToTarget('sales_convert_quote', 'to_order', $quote, $order);
 
         return $this;
