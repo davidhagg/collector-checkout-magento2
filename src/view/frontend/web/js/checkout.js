@@ -8,14 +8,11 @@ define([
         defaults: {
             template: 'Webbhuset_CollectorBankCheckout/checkout',
         },
-        updateUrl: '',
+        updateUrl: window.checkoutConfig.updateUrl,
         getUpdateUrl: function(eventName, publicId) {
             return this.updateUrl + '?event=' + eventName + '&quoteid=' + publicId
         },
         initialize: function (config) {
-            var self = this;
-            self.updateUrl = config.updateUrl;
-
             document.addEventListener( 'collectorCheckoutCustomerUpdated', self.listener.bind(self));
             document.addEventListener( 'collectorCheckoutOrderValidationFailed', self.listener.bind(self) );
             document.addEventListener( 'collectorCheckoutLocked', self.listener.bind(self));
