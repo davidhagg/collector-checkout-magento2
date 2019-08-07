@@ -86,8 +86,8 @@ class Adapter
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
-        $fee = $this->quoteConverter->getFees($quote);
-        $privateId = $this->orderDataHandler->getPrivateId($order);;
+        $fees = $this->quoteConverter->getFees($quote);
+        $privateId = $this->quoteDataHandler->getPrivateId($quote);;
 
         try {
             $collectorSession->setPrivateId($privateId)
@@ -107,7 +107,7 @@ class Adapter
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
         $cart = $this->quoteConverter->getCart($quote);
-        $privateId = $this->orderDataHandler->getPrivateId($order);
+        $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         try {
             $collectorSession->setPrivateId($privateId)
