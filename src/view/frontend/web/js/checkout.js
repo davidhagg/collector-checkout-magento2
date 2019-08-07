@@ -13,6 +13,9 @@ define([
             return this.updateUrl + '?event=' + eventName + '&quoteid=' + publicId
         },
         initialize: function (config) {
+            var self = this;
+            self.updateUrl = window.checkoutConfig.updateUrl;
+
             document.addEventListener( 'collectorCheckoutCustomerUpdated', self.listener.bind(self));
             document.addEventListener( 'collectorCheckoutOrderValidationFailed', self.listener.bind(self) );
             document.addEventListener( 'collectorCheckoutLocked', self.listener.bind(self));
