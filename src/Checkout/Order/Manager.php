@@ -121,7 +121,7 @@ class Manager
         // Should this invoice the order and capture offline?
     }
 
-    private function getOrderByIncrementId($incrementOrderId)
+    public function getOrderByIncrementId($incrementOrderId)
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('increment_id', $incrementOrderId, 'eq')->create();

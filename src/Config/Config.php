@@ -8,17 +8,20 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
     protected $storeManager;
     protected $encryptor;
     protected $checkoutSession;
+    protected $quoteDataHandler;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
     ) {
-        $this->scopeConfig     = $scopeConfig;
-        $this->encryptor       = $encryptor;
-        $this->checkoutSession = $checkoutSession;
-        $this->storeManager    = $storeManager;
+        $this->scopeConfig      = $scopeConfig;
+        $this->encryptor        = $encryptor;
+        $this->checkoutSession  = $checkoutSession;
+        $this->storeManager     = $storeManager;
+        $this->quoteDataHandler = $quoteDataHandler;
     }
 
     public function getConfig(): array
@@ -120,9 +123,12 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
 
     public function getRedirectPageUri(): string
     {
-        $urlKey = "collectorbank/success";
+        $orderId = $this->checkoutSession->getQuote()->reserveOrderId()->getReservedOrderId();
 
-        return $this->storeManager->getStore()->getUrl($urlKey);
+        $urlKey = "collectorcheckout/success/index/incrementorderid/$orderId";
+
+        $url = $this->storeManager->getStore()->getUrl($urlKey);
+        return $url;
     }
 
     public function getNotificationUri() : string
