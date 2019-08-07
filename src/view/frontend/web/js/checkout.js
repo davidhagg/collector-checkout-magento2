@@ -8,7 +8,7 @@ define([
         defaults: {
             template: 'Webbhuset_CollectorBankCheckout/checkout',
         },
-        updateUrl: window.checkoutConfig.updateUrl,
+        updateUrl: '',
         getUpdateUrl: function(eventName, publicId) {
             return this.updateUrl + '?event=' + eventName + '&quoteid=' + publicId
         },
