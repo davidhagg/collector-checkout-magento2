@@ -27,6 +27,30 @@ class Adapter
         $this->quoteRepository  = $quoteRepository;
     }
 
+    public function initOrSync(\Magento\Quote\Model\Quote $quote) : string
+    {
+        $publicToken = $this->quoteDataHandler->getPublicToken($quote);
+        if ($publicToken) {
+            $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
+            $oldFees = $checkoutData->getFees();
+            $oldCart = $checkoutData->getCart();
+            $newFees = $this->quoteConverter->getFees($quote);
+            if ($oldFees != $newFees) {
+                $this->updateFees($quote);
+            }
+
+            $newCart = $this->quoteConverter->getCart($quote);
+            if ($oldCart != $newCart) {
+                $this->updateCart($quote);
+            }
+        } else {
+            $collectorSession = $this->initialize($quote);
+            $publicToken = $collectorSession->getPublicToken();
+        }
+
+        return $publicToken;
+    }
+
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $this->quoteUpdater->setDefaultShippingIfEmpty($quote);

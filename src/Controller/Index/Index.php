@@ -36,25 +36,7 @@ class Index extends \Magento\Framework\App\Action\Action
             return $page;
         }
 
-        $publicToken = $this->quoteDataHandler->getPublicToken($quote);
-        if ($publicToken) {
-            $checkoutData = $this->collectorAdapter->acquireCheckoutInformationFromQuote($quote);
-            $oldFees = $checkoutData->getFees();
-            $oldCart = $checkoutData->getCart();
-            $newFees = $this->quoteConverter->getFees($quote);
-            if ($oldFees != $newFees) {
-                $this->collectorAdapter->updateFees($quote);
-            }
-
-            $newCart = $this->quoteConverter->getCart($quote);
-            if ($oldCart != $newCart) {
-                $this->collectorAdapter->updateCart($quote);
-            }
-        } else {
-            $collectorSession = $this->collectorAdapter->initialize($quote);
-            $publicToken = $collectorSession->getPublicToken();
-        }
-
+        $publicToken = $this->collectorAdapter->initOrSync($quote);
         $iframeConfig = new \CollectorBank\CheckoutSDK\Config\IframeConfig(
             $publicToken
         );
