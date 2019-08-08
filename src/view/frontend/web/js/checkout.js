@@ -2,7 +2,8 @@ define([
     'uiElement',
     'Magento_Checkout/js/model/url-builder',
     'mage/storage',
-], function (Element, urlBuilder, storage) {
+    'Webbhuset_CollectorBankCheckout/js/iframe',
+], function (Element, urlBuilder, storage, collectorIframe) {
     'use strict';
     return Element.extend({
         defaults: {
@@ -25,12 +26,6 @@ define([
             document.addEventListener('collectorCheckoutResumed', self.listener.bind(self));
 
             this._super();
-        },
-        suspend: function() {
-            window.collector.checkout.api.suspend();
-        },
-        resume: function() {
-            window.collector.checkout.api.resume();
         },
         listener: function(event) {
             switch(event.type) {
@@ -91,7 +86,7 @@ define([
         },
         updateCart: function(event) {
             var self = this;
-            self.suspend();
+            collectorIframe.suspend();
             var payload = {}
 
             return storage.post(
@@ -102,7 +97,7 @@ define([
                 }
             ).success(
                 function () {
-                    self.resume();
+                    collectorIframe.resume();
                 }
             );
         }
