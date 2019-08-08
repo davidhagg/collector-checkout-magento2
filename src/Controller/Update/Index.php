@@ -46,23 +46,7 @@ class Index extends \Magento\Framework\App\Action\Action
             return $result->setData(['message' => __('Quote not found')]);
         }
 
-        $oldFees = $this->quoteConverter->getFees($quote);
-        $oldCart = $this->quoteConverter->getCart($quote);
-        $checkoutData = $this->collectorAdapter->acquireCheckoutInformationFromQuote($quote);
-
-        $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
-        $quote->collectTotals()
-            ->save();
-
-        $newFees = $this->quoteConverter->getFees($quote);
-        if ($oldFees != $newFees) {
-            $this->collectorAdapter->updateFees($quote);
-        }
-
-        $newCart = $this->quoteConverter->getCart($quote);
-        if ($oldCart != $newCart) {
-            $this->collectorAdapter->updateCart($quote);
-        }
+        $quote = $this->collectorAdapter->synchronize($quote);
 
         $result->setData(
             [

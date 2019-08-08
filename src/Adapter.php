@@ -31,24 +31,45 @@ class Adapter
     {
         $publicToken = $this->quoteDataHandler->getPublicToken($quote);
         if ($publicToken) {
-            $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
-            $oldFees = $checkoutData->getFees();
-            $oldCart = $checkoutData->getCart();
-            $newFees = $this->quoteConverter->getFees($quote);
-            if ($oldFees != $newFees) {
-                $this->updateFees($quote);
-            }
-
-            $newCart = $this->quoteConverter->getCart($quote);
-            if ($oldCart != $newCart) {
-                $this->updateCart($quote);
-            }
+            $this->synchronize($quote);
         } else {
             $collectorSession = $this->initialize($quote);
             $publicToken = $collectorSession->getPublicToken();
         }
 
         return $publicToken;
+    }
+
+
+    /**
+     * Fetch addresses from collector order,
+     * set address on magento quote,
+     * update fees and cart if needed
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \Magento\Quote\Model\Quote
+     */
+    public function synchronize(\Magento\Quote\Model\Quote $quote)
+    {
+        $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
+        $oldFees = $checkoutData->getFees();
+        $oldCart = $checkoutData->getCart();
+
+        $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
+        $quote->collectTotals()
+            ->save();
+
+        $newFees = $this->quoteConverter->getFees($quote);
+        if ($oldFees != $newFees) {
+            $this->updateFees($quote);
+        }
+
+        $newCart = $this->quoteConverter->getCart($quote);
+        if ($oldCart != $newCart) {
+            $this->updateCart($quote);
+        }
+
+        return $quote;
     }
 
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
