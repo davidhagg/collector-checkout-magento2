@@ -27,6 +27,10 @@ class QuoteConverter
         $items = [];
         foreach ($quoteItems as $quoteItem) {
             $items[] = $this->getCartItem($quoteItem);
+
+            if ($quoteItem->getDiscountAmount()) {
+                $items[] = $this->getDiscountItem($quoteItem);
+            }
         }
 
         $cart = new Cart($items);
@@ -52,6 +56,33 @@ class QuoteConverter
             $vat,
             $requiresElectronicId,
             $sku
+        );
+
+        return $item;
+    }
+
+    public function getDiscountItem(\Magento\Quote\Model\Quote\Item\AbstractItem $quoteItem)
+    {
+
+        $discountAmount = $quoteItem->getDiscountAmount();
+        $taxPercent = $quoteItem->getTaxPercent();
+        $discountTax = 0;
+        if ($taxPercent) {
+            $discountTax = ($discountAmount * $taxPercent / 100);
+        }
+
+        $id                     = (string) $quoteItem->getSku();
+        $description            = (string) __('collector_discount');
+        $unitPrice              = (float) ($discountAmount + $discountTax) * -1;
+        $quantity               = (int) 1;
+        $vat                    = (float) 0;
+
+        $item = new Item(
+            $id,
+            $description,
+            $unitPrice,
+            $quantity,
+            $vat
         );
 
         return $item;
