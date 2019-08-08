@@ -9,13 +9,19 @@ class QuoteUpdater
 {
     protected $taxConfig;
     protected $taxCalculator;
+    protected $shippingMethodManagement;
+    protected $config;
 
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
-        \Magento\Tax\Model\Calculation $taxCalculator
+        \Magento\Tax\Model\Calculation $taxCalculator,
+        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
+        \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManagement
     ) {
-        $this->taxConfig = $taxConfig;
-        $this->taxCalculator = $taxCalculator;
+        $this->taxConfig                = $taxConfig;
+        $this->config                   = $config;
+        $this->taxCalculator            = $taxCalculator;
+        $this->shippingMethodManagement = $shippingMethodManagement;
     }
 
     public function setQuoteData(
@@ -49,6 +55,52 @@ class QuoteUpdater
         $quote->setCustomerIsGuest(true);
 
         return $quote;
+    }
+
+    public function setDefaultShippingIfEmpty(
+        Quote $quote
+    ) : Quote
+    {
+        if ($quote->getShippingAddress()->getShippingMethod()) {
+
+            return $quote;
+        }
+        $shippingAdress = $quote->getShippingAddress();
+        $countryCode = $this->config->create()->getCountryCode();
+
+        $shippingAdress->setCountryId($countryCode)
+            ->setCollectShippingRates(true)
+            ->collectShippingRates();
+        $defaultShippingMethod = $this->getDefaultShippingMethod($quote);
+
+        if($defaultShippingMethod){
+            $shippingAdress
+                ->setShippingMethod($defaultShippingMethod);
+        }
+
+        return $quote;
+    }
+
+    private function getDefaultShippingMethod(Quote $quote)
+    {
+        $shippingAddress = $quote->getShippingAddress();
+        $rates = $this->shippingMethodManagement->getList($quote->getId());
+
+        if (empty($rates)) {
+
+            return false;
+        }
+
+        $shippingMethod = reset($rates);
+        foreach ($rates as $rate) {
+            $method = $rate->getCarrierCode() . '_' . $rate->getMethodCode();
+            if ($method === $shippingAddress->getShippingMethod()) {
+                $shippingMethod = $rate;
+                break;
+            }
+        }
+
+        return $shippingMethod->getCarrierCode() . '_' . $shippingMethod->getMethodCode();
     }
 
     public function setCustomerData(

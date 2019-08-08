@@ -8,22 +8,30 @@ class Adapter
     protected $config;
     protected $quoteDataHandler;
     protected $orderDataHandler;
+    protected $quoteUpdater;
+    protected $quoteRepository;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorBankCheckout\QuoteUpdater $quoteUpdater,
         \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
         \Webbhuset\CollectorBankCheckout\Config\Config $config
     ) {
-        $this->quoteConverter = $quoteConverter;
-        $this->config = $config;
+        $this->quoteConverter   = $quoteConverter;
+        $this->config           = $config;
         $this->quoteDataHandler = $quoteDataHandler;
         $this->orderDataHandler = $orderDataHandler;
+        $this->quoteUpdater     = $quoteUpdater;
+        $this->quoteRepository  = $quoteRepository;
     }
 
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
-        $shippingAddress =$quote->getShippingAddress()->collectShippingRates();
+        $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
+        $this->quoteRepository->save($quote);
+
         $cart = $this->quoteConverter->getCart($quote);
         $fees = $this->quoteConverter->getFees($quote);
         $initCustomer = $this->quoteConverter->getInitializeCustomer($quote);
@@ -47,9 +55,10 @@ class Adapter
                 ->setPublicToken($quote, $collectorSession->getPublicToken())
                 ->setStoreId($quote, $config->getStoreId());
 
-            $quote->save();
+            $this->quoteRepository->save($quote);
 
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+
             die;
         }
 
