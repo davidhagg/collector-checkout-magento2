@@ -51,6 +51,10 @@
                                         </item>
                                     </item>
                                 </item>
+                                <item name="block-rates" xsi:type="array">
+                                    <item name="component" xsi:type="string">Webbhuset_CollectorBankCheckout/js/view/cart/shipping-rates</item>
+                                    <item name="sortOrder" xsi:type="string">2</item>
+                                </item>
                                 <item name="block-shipping" xsi:type="array">
                                     <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/shipping-estimation</item>
                                     <item name="sortOrder" xsi:type="string">2</item>
