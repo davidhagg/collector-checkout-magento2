@@ -20,7 +20,6 @@ class Manager
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
-
     ) {
         $this->cartManagement        = $cartManagement;
         $this->quoteRepository       = $quoteRepository;
@@ -55,37 +54,42 @@ class Manager
     public function notificationCallbackHandler($incrementOrderId)
     {
         $order = $this->getOrderByIncrementId($incrementOrderId);
-        $orderId = $order->getEntityId();
 
         $collectorBankPrivateId = $order->getCollectorbankPrivateId();
+        
+        $checkoutAdapter = $this->collectorAdapter->create(); 
+        $checkoutData = $checkoutAdapter->acquireCheckoutInformation($collectorBankPrivateId);
 
-        $adapter = $this->collectorAdapter->create();
-
-        $checkoutData = $adapter->acquireCheckoutInformation($collectorBankPrivateId);
-        $purchaseResult = $checkoutData->getPurchase()->getResult()->getResult();
-
-        switch ($purchaseResult) {
+        $paymentResult = $checkoutData->getPurchase()->getResult()->getResult();
+        
+        switch ($paymentResult) {
             case PurchaseResult::PRELIMINARY:
-                $this->acknowledgeOrder($orderId);
+                $this->acknowledgeOrder($order, $checkoutData);
                 break;
 
             case PurchaseResult::ON_HOLD:
-                $this->holdOrder($orderId);
+                $this->holdOrder($order, $checkoutData);
                 break;
 
             case PurchaseResult::REJECTED:
-                $this->cancelOrder($orderId);
+                $this->cancelOrder($order, $checkoutData);
                 break;
 
             case PurchaseResult::ACTIVATED:
-                $this->activateOrder($orderId);
+                $this->activateOrder($order, $checkoutData);
                 break;
         }
+        $this->orderRepository->save($order);
     }
 
-    public function acknowledgeOrder($orderId)
-    {
-        $order = $this->orderRepository->get($orderId);
+    public function acknowledgeOrder(
+        \Magento\Sales\Api\Data\OrderInterface $order,
+        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+    ) {
+        $this->addPaymentInformation(
+            $order->getPayment(),
+            $checkoutData->getPurchase()
+        );
 
         $this->updateOrderStatus(
             $order,
@@ -94,10 +98,29 @@ class Manager
         );
     }
 
-    public function holdOrder($orderId)
-    {
-        $order = $this->orderRepository->get($orderId);
 
+    private function addPaymentInformation(
+        \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
+        \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData)
+    {
+        $info = [
+            'method_title'            => "Collector Bank Checkout",
+            'payment_name'            => $purchaseData->getPaymentName(),
+            'amount_to_pay'           => $purchaseData->getAmountToPay(),
+            'invoice_delivery_method' => $purchaseData->getInvoiceDeliveryMethod(),
+            'purchase_identifier'     => $purchaseData->getPurchaseIdentifier(),
+            'result'                  => $purchaseData->getResult()->getResult(),
+        ];
+        $payment->setAdditionalInformation($info);
+
+        $payment->authorize(true, $purchaseData->getAmountToPay());
+    }
+
+
+    public function holdOrder(
+        \Magento\Sales\Api\Data\OrderInterface $order,
+        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+    ) {
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusHolded(),
@@ -105,10 +128,10 @@ class Manager
         );
     }
 
-    public function cancelOrder($orderId)
-    {
-        $order = $this->orderRepository->get($orderId);
-
+    public function cancelOrder(
+        \Magento\Sales\Api\Data\OrderInterface $order,
+        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+    ) {
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusDenied(),
@@ -116,8 +139,10 @@ class Manager
         );
     }
 
-    public function activateOrder($orderId)
-    {
+    public function activateOrder(
+        \Magento\Sales\Api\Data\OrderInterface $order,
+        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+    ) {
         // Should this invoice the order and capture offline?
     }
 
@@ -145,6 +170,6 @@ class Manager
         $order->setState($state)
             ->setStatus($status);
 
-        $this->orderRepository->save($order);
+        return $this;
     }
 }

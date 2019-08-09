@@ -1,3 +1,24 @@
-<div class="collectorbank-payment-info">
-    Information about the payment
-</div>
+<?php
+    $paymentInfo =$block->getPaymentInfo()
+?>
+<img src="https://merchant.collectorbank.se/globalassets/merchant-services/b8140a48faff4f9baa9ffe8f4731538b.jpg">
+<br><br>
+<table class="data-grid">
+    <thead>
+            <tr>
+                <th><?=__('Name')?></th>
+                <th><?=__('Value')?></th>
+            </tr>
+        </thead>
+    <tbody>
+<?php foreach ($paymentInfo as $name => $value) : ?>
+    <tr>
+        <td>
+            <?=$name?>
+        </td>
+        <td>
+            <?=$value?>
+        </td>
+    </tr>
+<?php endforeach; ?>
+</table>
