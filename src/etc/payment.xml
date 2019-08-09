@@ -7,7 +7,7 @@
         </group>
     </groups>
     <methods>
-        <method name="webbhuset_collectorbankcheckout">
+        <method name="collectorbank_checkout">
             <allow_multiple_address>0</allow_multiple_address>
         </method>
     </methods>
