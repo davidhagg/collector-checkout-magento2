@@ -6,7 +6,6 @@ use Magento\Payment\Gateway\CommandInterface as CommandInterface;
 
 class CollectorBankCommand implements CommandInterface
 {
-
     protected $method;
 
     public function __construct($client)
