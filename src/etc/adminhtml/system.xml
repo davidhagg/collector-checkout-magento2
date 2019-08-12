@@ -5,7 +5,7 @@
         <section id="payment" translate="label" type="text" sortOrder="400" showInDefault="1" showInWebsite="1"
                  showInStore="1">
             <group
-                    id="webbhuset_collectorbankcheckout"
+                    id="collectorbank_checkout"
                     translate="label"
                     type="text"
                     sortOrder="30"
@@ -288,20 +288,20 @@
                     </depends>
                 </field>
 
-                <field
-                        id="custom_base_url"
-                        translate="label"
-                        type="text"
-                        sortOrder="100"
-                        showInDefault="1"
-                        showInWebsite="1"
-                        showInStore="1"
-                >
-                    <label>Custom base url - used during development</label>
-                    <depends>
-                        <field id='active'>1</field>
-                    </depends>
-                </field>
+                                <field
+                                        id="custom_base_url"
+                                        translate="label"
+                                        type="text"
+                                        sortOrder="100"
+                                        showInDefault="1"
+                                        showInWebsite="1"
+                                        showInStore="1"
+                                >
+                                    <label>Custom base url - used during development</label>
+                                    <depends>
+                                        <field id='active'>1</field>
+                                    </depends>
+                                </field>
             </group>
         </section>
     </system>
