@@ -8,6 +8,10 @@ class OrderInfo extends \Magento\Payment\Block\Info
 
     public function getPaymentInfo()
     {
+        if (!$this->getInfo()) {
+            return [];
+        }
+
         return $this->getInfo()->getAdditionalInformation();
     }
 }

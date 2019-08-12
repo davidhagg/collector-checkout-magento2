@@ -56,12 +56,12 @@ class Manager
         $order = $this->getOrderByIncrementId($incrementOrderId);
 
         $collectorBankPrivateId = $order->getCollectorbankPrivateId();
-        
-        $checkoutAdapter = $this->collectorAdapter->create(); 
+
+        $checkoutAdapter = $this->collectorAdapter->create();
         $checkoutData = $checkoutAdapter->acquireCheckoutInformation($collectorBankPrivateId);
 
         $paymentResult = $checkoutData->getPurchase()->getResult()->getResult();
-        
+
         switch ($paymentResult) {
             case PurchaseResult::PRELIMINARY:
                 $this->acknowledgeOrder($order, $checkoutData);
@@ -98,11 +98,10 @@ class Manager
         );
     }
 
-
     private function addPaymentInformation(
         \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
-        \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData)
-    {
+        \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
+    ) {
         $info = [
             'method_title'            => "Collector Bank Checkout",
             'payment_name'            => $purchaseData->getPaymentName(),
@@ -115,7 +114,6 @@ class Manager
 
         $payment->authorize(true, $purchaseData->getAmountToPay());
     }
-
 
     public function holdOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
