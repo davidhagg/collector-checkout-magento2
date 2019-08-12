@@ -2,7 +2,9 @@
 
 namespace Webbhuset\CollectorBankCheckout\Config;
 
-class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
+class Config implements
+    \CollectorBank\CheckoutSDK\Config\ConfigInterface,
+    \CollectorBank\PaymentSDK\Config\ConfigInterface
 {
     protected $scopeConfig;
     protected $storeManager;
@@ -239,6 +241,16 @@ class Config implements \CollectorBank\CheckoutSDK\Config\ConfigInterface
         $mode = $this->getIsTestMode() ? "test mode" : "production mode";
 
         return $this->getIsMockMode() ? "mock mode" : $mode;
+    }
+
+    public function isTestMode(): bool
+    {
+        return $this->getIsTestMode();
+    }
+
+    public function isProductionMode(): bool
+    {
+        return !$this->getIsTestMode();
     }
 
     public function getCustomBaseUrl()

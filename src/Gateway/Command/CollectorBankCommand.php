@@ -2,15 +2,24 @@
 
 namespace Webbhuset\CollectorBankCheckout\Gateway\Command;
 
+use CollectorBank\PaymentSDK\Errors\ResponseError as ResponseError;
 use Magento\Payment\Gateway\CommandInterface as CommandInterface;
+use Magento\Payment\Gateway\Helper\SubjectReader;
 
 class CollectorBankCommand implements CommandInterface
 {
     protected $method;
+    protected $paymentHandler;
+    protected $invoice;
 
-    public function __construct($client)
-    {
-        $this->method = $client['method'];
+    public function __construct(
+        $client,
+        \Webbhuset\CollectorBankCheckout\Data\PaymentHandlerFactory $paymentHandler,
+        \Webbhuset\CollectorBankCheckout\Invoice\Administration $invoice
+    ) {
+        $this->method         = $client['method'];
+        $this->paymentHandler = $paymentHandler;
+        $this->invoice        = $invoice;
     }
 
     public function execute(array $commandSubject)
@@ -21,8 +30,23 @@ class CollectorBankCommand implements CommandInterface
         }
     }
 
-    public function capture($data)
+    public function capture($payment)
     {
+        $payment = SubjectReader::readPayment($payment);
+        $payment = $payment->getPayment();
+        $paymentHandler = $this->paymentHandler->create();
+
+        $purchaseIdentifier = $paymentHandler->getPurchaseIdentifier($payment);
+
+        try {
+            $this->invoice->activateInvoice(
+                $purchaseIdentifier,
+                $payment->getOrder()->getId()
+            );
+        } catch (ResponseError $e) {
+            // do something ... log logging and output something in admin?
+        }
+
         return true;
     }
 
