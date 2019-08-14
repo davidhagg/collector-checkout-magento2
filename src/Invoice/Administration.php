@@ -3,7 +3,6 @@
 namespace Webbhuset\CollectorBankCheckout\Invoice;
 
 use CollectorBank\PaymentSDK\Adapter\SoapAdapter;
-use CollectorBank\PaymentSDK\Errors\ResponseError;
 use CollectorBank\PaymentSDK\Invoice\Administration as InvoiceAdministration;
 
 class Administration
@@ -16,18 +15,35 @@ class Administration
         $this->config = $config;
     }
 
-    public function activateInvoice(int $invoiceNo, int $orderId):array
+    public function activateInvoice(string $invoiceNo, string $orderId):array
     {
         $adapter = new SoapAdapter($this->config->create());
         $invoiceAdmin = new InvoiceAdministration($adapter);
 
-        $response = [];
-        try {
-            $response = $invoiceAdmin->activateInvoice($invoiceNo, $orderId);
-        } catch (ResponseError $e) {
-            // do something with the response error. E.g. logging
-        }
+        return $invoiceAdmin->activateInvoice($invoiceNo, $orderId);
+    }
 
-        return $response;
+    public function cancelInvoice(string $invoiceNo, string $orderId):array
+    {
+        $adapter = new SoapAdapter($this->config->create());
+        $invoiceAdmin = new InvoiceAdministration($adapter);
+
+        return $invoiceAdmin->cancelInvoice($invoiceNo, $orderId);
+    }
+
+    public function creditInvoice(string $invoiceNo, string $orderId):array
+    {
+        $adapter = new SoapAdapter($this->config->create());
+        $invoiceAdmin = new InvoiceAdministration($adapter);
+
+        return $invoiceAdmin->creditInvoice($invoiceNo, $orderId);
+    }
+
+    public function getInvoiceInformation(int $invoiceNo, int $orderId, string $clientIp):array
+    {
+        $adapter = new SoapAdapter($this->config->create());
+        $invoiceAdmin = new InvoiceAdministration($adapter);
+
+        return $invoiceAdmin->getInvoiceInformation($invoiceNo, $clientIp, $orderId);
     }
 }

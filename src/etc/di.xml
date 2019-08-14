@@ -71,7 +71,7 @@
     <virtualType name="CollectorBankCheckoutCancelCommand" type="Webbhuset\CollectorBankCheckout\Gateway\Command\CollectorBankCommand">
         <arguments>
             <argument name="client" xsi:type="array">
-                <item name="method" xsi:type="string">void</item>
+                <item name="method" xsi:type="string">cancel</item>
             </argument>
         </arguments>
     </virtualType>
