@@ -100,12 +100,12 @@ class Config implements
 
     public function getCustomerTypeAllowed(): int
     {
-        return $this->getConfigValue('customer_type');
+        return $this->getConfigValue('customer_type') ? $this->getConfigValue('customer_type') : 0;
     }
 
     public function getDefaultCustomerType(): int
     {
-        return $this->getConfigValue('default_customer_type');
+        return $this->getConfigValue('default_customer_type') ? $this->getConfigValue('default_customer_type') : 0;
     }
 
     public function getIsMockMode(): bool
@@ -115,12 +115,12 @@ class Config implements
 
     public function getIsTestMode(): bool
     {
-        return $this->getConfigValue('test_mode');
+        return $this->getConfigValue('test_mode') ? $this->getConfigValue('test_mode') : false;
     }
 
     public function getMerchantTermsUri(): string
     {
-        return $this->getConfigValue('terms_url');
+        return $this->getConfigValue('terms_url') ? $this->getConfigValue('terms_url') : "";
     }
 
     public function getRedirectPageUri(): string
@@ -160,7 +160,7 @@ class Config implements
 
     public function getOrderStatusNew(): string
     {
-        return $this->getConfigValue('order_new_status');
+        return $this->getConfigValue('order_status');
     }
 
     public function getOrderStatusAcknowledged(): string
@@ -185,12 +185,16 @@ class Config implements
 
     public function getProductionModeUsername(): string
     {
-        return $this->getConfigValue('username');
+        return $this->getConfigValue('username') ? $this->getConfigValue('username') : "";
     }
 
     public function getProductionModePassword(): string
     {
         $value = $this->getConfigValue('password');
+        if (!$value) {
+            return "";
+        }
+
         $value = $this->encryptor->decrypt($value);
 
         return $value;
@@ -198,22 +202,26 @@ class Config implements
 
     public function getProductionModeB2C() : string
     {
-        return $this->getConfigValue('b2c');
+        return $this->getConfigValue('b2c') ? $this->getConfigValue('b2c') : "";
     }
 
     public function getProductionModeB2B() : string
     {
-        return $this->getConfigValue('b2b');
+        return $this->getConfigValue('b2b') ? $this->getConfigValue('b2b') : "";
     }
 
     public function getTestModeUsername(): string
     {
-        return $this->getConfigValue('test_mode_username');
+        return $this->getConfigValue('test_mode_username') ? $this->getConfigValue('test_mode_username') : "";
     }
 
     public function getTestModePassword(): string
     {
         $value = $this->getConfigValue('test_mode_password');
+        if (!$value) {
+            return "";
+        }
+
         $value = $this->encryptor->decrypt($value);
 
         return $value;
@@ -221,17 +229,17 @@ class Config implements
 
     public function getTestModeB2C(): string
     {
-        return $this->getConfigValue('test_mode_b2c');
+        return $this->getConfigValue('test_mode_b2c') ? $this->getConfigValue('test_mode_b2c') : "";
     }
 
     public function getTestModeB2B(): string
     {
-        return $this->getConfigValue('test_mode_b2b');
+        return $this->getConfigValue('test_mode_b2b') ? $this->getConfigValue('test_mode_b2b') : "";
     }
 
     private function getConfigValue($name)
     {
-        $value = $this->scopeConfig->getValue('payment/webbhuset_collectorbankcheckout/' . $name);
+        $value = $this->scopeConfig->getValue('payment/collectorbank_checkout/' . $name);
 
         return $value;
     }
