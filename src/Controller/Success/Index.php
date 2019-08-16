@@ -27,10 +27,19 @@ class Index extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
-        $incrementOrderId = $this->getRequest()->getParam('incrementorderid');
-
+        $reference = $this->getRequest()->getParam('reference');
         $orderManager = $this->orderManager->create();
-        $order = $orderManager->getOrderByIncrementId($incrementOrderId);
+
+        $page = $this->pageFactory->create();
+        try {
+            $order = $orderManager->getOrderByPublicToken($reference);
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            // error handling and logging
+            $page->getLayout()
+                ->getBlock('collectorbank_success_iframe');
+
+            return $page;
+        }
 
         $orderDataHandler = $this->orderDataHandler->create();
         $publicToken = $orderDataHandler->getPublicToken($order);
@@ -40,7 +49,7 @@ class Index extends \Magento\Framework\App\Action\Action
         );
         $iframe = \CollectorBank\CheckoutSDK\Iframe::getScript($iframeConfig);
 
-        $page = $this->pageFactory->create();
+
 
         $page->getLayout()
             ->getBlock('collectorbank_success_iframe')

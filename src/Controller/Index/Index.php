@@ -33,6 +33,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $quote = $this->checkoutSession->getQuote();
 
         if (!$quote->hasItems()) {
+
             return $page;
         }
 

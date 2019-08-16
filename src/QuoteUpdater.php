@@ -2,8 +2,8 @@
 
 namespace Webbhuset\CollectorBankCheckout;
 
-use Magento\Quote\Model\Quote;
 use CollectorBank\CheckoutSDK\Checkout\Customer as SDK;
+use Magento\Quote\Api\Data\CartInterface as Quote;
 
 class QuoteUpdater
 {
@@ -27,9 +27,7 @@ class QuoteUpdater
     public function setQuoteData(
         Quote $quote,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
-    ) : Quote
-    {
-
+    ) : Quote {
         $customer                   = $checkoutData->getCustomer();
         $collectorInvoiceAddress    = $customer->getInvoiceAddress();
         $billingAddress             = $quote->getBillingAddress();
@@ -59,10 +57,8 @@ class QuoteUpdater
 
     public function setDefaultShippingIfEmpty(
         Quote $quote
-    ) : Quote
-    {
+    ) : Quote {
         if ($quote->getShippingAddress()->getShippingMethod()) {
-
             return $quote;
         }
         $shippingAdress = $quote->getShippingAddress();
@@ -73,7 +69,7 @@ class QuoteUpdater
             ->collectShippingRates();
         $defaultShippingMethod = $this->getDefaultShippingMethod($quote);
 
-        if($defaultShippingMethod){
+        if ($defaultShippingMethod) {
             $shippingAdress
                 ->setShippingMethod($defaultShippingMethod);
         }
@@ -87,7 +83,6 @@ class QuoteUpdater
         $rates = $this->shippingMethodManagement->getList($quote->getId());
 
         if (empty($rates)) {
-
             return false;
         }
 
@@ -106,8 +101,7 @@ class QuoteUpdater
     public function setCustomerData(
         Quote $quote,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
-    ) : Quote
-    {
+    ) : Quote {
         $customer = $checkoutData->getCustomer();
         $customerAddress = $customer->getInvoiceAddress();
 
@@ -124,8 +118,7 @@ class QuoteUpdater
 
     public function setPaymentMethod(
         Quote $quote
-    ) : Quote
-    {
+    ) : Quote {
         $payment = $quote->getPayment();
         $payment->setMethod(\Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE);
 
@@ -133,7 +126,7 @@ class QuoteUpdater
     }
 
     public function setPrivateAddressData(
-        Quote\Address $address,
+        \Magento\Quote\Api\Data\AddressInterface $address,
         SDK\PrivateCustomer $customer,
         SDK\PrivateAddress $collectorAddress
     ) {
@@ -152,7 +145,7 @@ class QuoteUpdater
     }
 
     public function setBusinessAddressData(
-        Quote\Address $address,
+        \Magento\Quote\Api\Data\AddressInterface $address,
         SDK\BusinessCustomer $customer,
         SDK\BusinessAddress $collectorAddress
     ) {

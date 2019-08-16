@@ -103,7 +103,7 @@ class Manager
         \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
     ) {
         $info = [
-            'method_title'            => "Collector Bank Checkout",
+            'method_title'            => \Webbhuset\CollectorBankCheckout\Gateway\Config::PAYMENT_METHOD_NAME,
             'payment_name'            => $purchaseData->getPaymentName(),
             'amount_to_pay'           => $purchaseData->getAmountToPay(),
             'invoice_delivery_method' => $purchaseData->getInvoiceDeliveryMethod(),
@@ -144,15 +144,31 @@ class Manager
         // Should this invoice the order and capture offline?
     }
 
-    public function getOrderByIncrementId($incrementOrderId)
+    public function getOrderByPublicToken($publicToken): \Magento\Sales\Api\Data\OrderInterface
+    {
+        return $this->getColumnFromSalesOrder("collectorbank_public_id", $publicToken);
+    }
+
+    public function getOrderByIncrementId($incrementOrderId): \Magento\Sales\Api\Data\OrderInterface
+    {
+        return $this->getColumnFromSalesOrder("increment_id", $incrementOrderId);
+    }
+
+    public function getOrderByQuoteId($quoteId): \Magento\Sales\Api\Data\OrderInterface
+    {
+        return $this->getColumnFromSalesOrder("quote_id", $quoteId);
+    }
+
+    private function getColumnFromSalesOrder($column, $value): \Magento\Sales\Api\Data\OrderInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('increment_id', $incrementOrderId, 'eq')->create();
+            ->addFilter($column, $value, 'eq')->create();
         $orderList = $this->orderRepository->getList($searchCriteria)->getItems();
 
         if (sizeof($orderList) == 0) {
             throw new \Magento\Framework\Exception\NoSuchEntityException();
         }
+
         return reset($orderList);
     }
 

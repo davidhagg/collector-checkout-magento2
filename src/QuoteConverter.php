@@ -124,7 +124,7 @@ class QuoteConverter
         return $fee;
     }
 
-    public function getShippingTaxPercent(\Magento\Quote\Model\Quote $quote) : float
+    public function getShippingTaxPercent(\Magento\Quote\Api\Data\CartInterface $quote) : float
     {
         $request = $this->taxCalculator->getRateRequest(
             $quote->getShippingAddress(),
@@ -139,12 +139,12 @@ class QuoteConverter
         return $vatPercent;
     }
 
-    public function getDirectInvoiceFee(\Magento\Quote\Model\Quote $quote)
+    public function getDirectInvoiceFee(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         return null;
     }
 
-    public function getInitializeCustomer(\Magento\Quote\Model\Quote $quote)
+    public function getInitializeCustomer(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $email                          = (string) $this->getEmail($quote);
         $mobilePhoneNumber              = (string) $this->getMobilePhoneNumber($quote);
@@ -166,7 +166,7 @@ class QuoteConverter
         return null;
     }
 
-    public function getEmail(\Magento\Quote\Model\Quote $quote)
+    public function getEmail(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
         $email = $quote->getCustomerEmail() ?? $shippingAddress->getEmail();
@@ -174,26 +174,26 @@ class QuoteConverter
         return $email;
     }
 
-    public function getMobilePhoneNumber(\Magento\Quote\Model\Quote $quote)
+    public function getMobilePhoneNumber(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
 
         return $shippingAddress->getTelephone();
     }
 
-    public function getNationalIdentificationNumber(\Magento\Quote\Model\Quote $quote)
+    public function getNationalIdentificationNumber(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         return null;
     }
 
-    public function getPostalCode(\Magento\Quote\Model\Quote $quote)
+    public function getPostalCode(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
 
         return $shippingAddress->getPostcode();
     }
 
-    public function getReference(\Magento\Quote\Model\Quote $quote)
+    public function getReference(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         return $quote->getReservedOrderId();
     }

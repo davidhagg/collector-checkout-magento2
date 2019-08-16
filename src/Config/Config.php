@@ -125,11 +125,10 @@ class Config implements
 
     public function getRedirectPageUri(): string
     {
-        $orderId = $this->checkoutSession->getQuote()->reserveOrderId()->getReservedOrderId();
-
-        $urlKey = "collectorcheckout/success/index/incrementorderid/$orderId";
+        $urlKey = "collectorcheckout/success/index/reference/{checkout.publictoken}";
 
         $url = $this->storeManager->getStore()->getUrl($urlKey);
+
         return $url;
     }
 
@@ -140,6 +139,7 @@ class Config implements
         $urlKey = "collectorbank/notification/index/orderid/$orderId";
 
         if ($this->getCustomBaseUrl()) {
+
             return $this->getCustomBaseUrl() . $urlKey;
         }
 
@@ -152,6 +152,7 @@ class Config implements
         $urlKey = "collectorbank/validation/index/quoteid/$quoteId";
 
         if ($this->getCustomBaseUrl()) {
+
             return $this->getCustomBaseUrl() . $urlKey;
         }
 
@@ -192,6 +193,7 @@ class Config implements
     {
         $value = $this->getConfigValue('password');
         if (!$value) {
+
             return "";
         }
 
@@ -219,6 +221,7 @@ class Config implements
     {
         $value = $this->getConfigValue('test_mode_password');
         if (!$value) {
+
             return "";
         }
 

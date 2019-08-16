@@ -27,7 +27,7 @@ class Adapter
         $this->quoteRepository  = $quoteRepository;
     }
 
-    public function initOrSync(\Magento\Quote\Model\Quote $quote) : string
+    public function initOrSync(\Magento\Quote\Api\Data\CartInterface $quote) : string
     {
         $publicToken = $this->quoteDataHandler->getPublicToken($quote);
         if ($publicToken) {
@@ -40,16 +40,15 @@ class Adapter
         return $publicToken;
     }
 
-
     /**
      * Fetch addresses from collector order,
      * set address on magento quote,
      * update fees and cart if needed
      *
-     * @param \Magento\Quote\Model\Quote $quote
-     * @return \Magento\Quote\Model\Quote
+     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @return \Magento\Quote\Api\Data\CartInterface
      */
-    public function synchronize(\Magento\Quote\Model\Quote $quote)
+    public function synchronize(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
         $oldFees = $checkoutData->getFees();
@@ -72,7 +71,7 @@ class Adapter
         return $quote;
     }
 
-    public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
+    public function initialize(\Magento\Quote\Api\Data\CartInterface $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
         $this->quoteRepository->save($quote);
@@ -101,23 +100,21 @@ class Adapter
                 ->setStoreId($quote, $config->getStoreId());
 
             $this->quoteRepository->save($quote);
-
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
-
             die;
         }
 
         return $collectorSession;
     }
 
-    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Api\Data\CartInterface $quote): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         return $this->acquireCheckoutInformation($privateId);
     }
 
-    public function acquireCheckoutInformationFromOrder(\Magento\Sales\Model\Order $order): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformationFromOrder(\Magento\Quote\Api\Data\CartInterface $order): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->orderDataHandler->getPrivateId($order);
 
@@ -134,19 +131,18 @@ class Adapter
         return $collectorSession->getCheckoutData();
     }
 
-    public function updateFees(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
+    public function updateFees(\Magento\Quote\Api\Data\CartInterface $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $config = $this->getConfig($quote->getStoreId());
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
         $fees = $this->quoteConverter->getFees($quote);
-        $privateId = $this->quoteDataHandler->getPrivateId($quote);;
+        $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         try {
             $collectorSession->setPrivateId($privateId)
                 ->updateFees($fees);
-
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
             die;
         }
@@ -154,7 +150,7 @@ class Adapter
         return $collectorSession;
     }
 
-    public function updateCart(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
+    public function updateCart(\Magento\Quote\Api\Data\CartInterface $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $config = $this->getConfig($quote->getStoreId());
         $adapter = $this->getAdapter($config);
@@ -166,8 +162,8 @@ class Adapter
         try {
             $collectorSession->setPrivateId($privateId)
                 ->updateCart($cart);
-
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+            // error handling here and logging
             die;
         }
 

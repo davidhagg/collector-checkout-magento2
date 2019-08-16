@@ -2,7 +2,7 @@
 
 namespace Webbhuset\CollectorBankCheckout\Data;
 
-use Magento\Quote\Model\Quote;
+use Magento\Quote\Api\Data\CartInterface as Quote;
 
 class QuoteHandler
 {

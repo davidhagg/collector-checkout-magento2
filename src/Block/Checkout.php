@@ -5,6 +5,8 @@ namespace Webbhuset\CollectorBankCheckout\Block;
 class Checkout extends \Magento\Framework\View\Element\Template
 {
     protected $iframe;
+    protected $serializer;
+    protected $configProvider;
 
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
