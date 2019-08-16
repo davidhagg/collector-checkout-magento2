@@ -27,9 +27,10 @@ class Adapter
         $this->quoteRepository  = $quoteRepository;
     }
 
-    public function initOrSync(\Magento\Quote\Api\Data\CartInterface $quote) : string
+    public function initOrSync(\Magento\Quote\Model\Quote $quote) : string
     {
         $publicToken = $this->quoteDataHandler->getPublicToken($quote);
+
         if ($publicToken) {
             $this->synchronize($quote);
         } else {
@@ -47,14 +48,16 @@ class Adapter
      *
      * @param \Magento\Quote\Api\Data\CartInterface $quote
      * @return \Magento\Quote\Api\Data\CartInterface
+     * @throws \Exception
      */
-    public function synchronize(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function synchronize(\Magento\Quote\Model\Quote $quote)
     {
         $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
         $oldFees = $checkoutData->getFees();
         $oldCart = $checkoutData->getCart();
 
         $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
+
         $quote->collectTotals()
             ->save();
 
@@ -71,7 +74,7 @@ class Adapter
         return $quote;
     }
 
-    public function initialize(\Magento\Quote\Api\Data\CartInterface $quote) : \CollectorBank\CheckoutSDK\Session
+    public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
         $this->quoteRepository->save($quote);
@@ -107,14 +110,14 @@ class Adapter
         return $collectorSession;
     }
 
-    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Api\Data\CartInterface $quote): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         return $this->acquireCheckoutInformation($privateId);
     }
 
-    public function acquireCheckoutInformationFromOrder(\Magento\Quote\Api\Data\CartInterface $order): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformationFromOrder(\Magento\Quote\Model\Quote $order): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->orderDataHandler->getPrivateId($order);
 
@@ -131,7 +134,7 @@ class Adapter
         return $collectorSession->getCheckoutData();
     }
 
-    public function updateFees(\Magento\Quote\Api\Data\CartInterface $quote) : \CollectorBank\CheckoutSDK\Session
+    public function updateFees(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $config = $this->getConfig($quote->getStoreId());
         $adapter = $this->getAdapter($config);
@@ -141,8 +144,10 @@ class Adapter
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         try {
-            $collectorSession->setPrivateId($privateId)
-                ->updateFees($fees);
+            if (!empty($fees->toArray())) {
+                $collectorSession->setPrivateId($privateId)
+                    ->updateFees($fees);
+            }
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
             die;
         }
@@ -150,7 +155,7 @@ class Adapter
         return $collectorSession;
     }
 
-    public function updateCart(\Magento\Quote\Api\Data\CartInterface $quote) : \CollectorBank\CheckoutSDK\Session
+    public function updateCart(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $config = $this->getConfig($quote->getStoreId());
         $adapter = $this->getAdapter($config);

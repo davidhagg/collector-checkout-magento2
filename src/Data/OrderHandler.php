@@ -2,7 +2,7 @@
 
 namespace Webbhuset\CollectorBankCheckout\Data;
 
-use Magento\Sales\Api\Data\OrderInterface as Order;
+use Magento\Sales\Model\Order;
 
 class OrderHandler
 {

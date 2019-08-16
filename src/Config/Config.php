@@ -26,9 +26,15 @@ class Config implements
         $this->quoteDataHandler = $quoteDataHandler;
     }
 
+    public function getIsActive(): bool
+    {
+        return 1 == $this->getConfigValue('active');
+    }
+
     public function getConfig(): array
     {
         $data = [
+            'is_active'               => $this->getIsActive(),
             'username'                => $this->getUsername(),
             'sharedAccessKey'         => $this->getSharedAccessKey(),
             'password'                => $this->getPassword(),

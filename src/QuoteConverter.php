@@ -2,11 +2,11 @@
 
 namespace Webbhuset\CollectorBankCheckout;
 
-use CollectorBank\CheckoutSDK\Checkout\Fees;
-use CollectorBank\CheckoutSDK\Checkout\Fees\Fee;
 use CollectorBank\CheckoutSDK\Checkout\Cart;
 use CollectorBank\CheckoutSDK\Checkout\Cart\Item;
 use CollectorBank\CheckoutSDK\Checkout\Customer\InitializeCustomer;
+use CollectorBank\CheckoutSDK\Checkout\Fees;
+use CollectorBank\CheckoutSDK\Checkout\Fees\Fee;
 
 class QuoteConverter
 {
@@ -63,7 +63,6 @@ class QuoteConverter
 
     public function getDiscountItem(\Magento\Quote\Model\Quote\Item\AbstractItem $quoteItem)
     {
-
         $discountAmount = $quoteItem->getDiscountAmount();
         $taxPercent = $quoteItem->getTaxPercent();
         $discountTax = 0;
@@ -124,7 +123,7 @@ class QuoteConverter
         return $fee;
     }
 
-    public function getShippingTaxPercent(\Magento\Quote\Api\Data\CartInterface $quote) : float
+    public function getShippingTaxPercent(\Magento\Quote\Model\Quote $quote) : float
     {
         $request = $this->taxCalculator->getRateRequest(
             $quote->getShippingAddress(),
@@ -139,12 +138,12 @@ class QuoteConverter
         return $vatPercent;
     }
 
-    public function getDirectInvoiceFee(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getDirectInvoiceFee(\Magento\Quote\Model\Quote $quote)
     {
         return null;
     }
 
-    public function getInitializeCustomer(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getInitializeCustomer(\Magento\Quote\Model\Quote $quote)
     {
         $email                          = (string) $this->getEmail($quote);
         $mobilePhoneNumber              = (string) $this->getMobilePhoneNumber($quote);
@@ -166,7 +165,7 @@ class QuoteConverter
         return null;
     }
 
-    public function getEmail(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getEmail(\Magento\Quote\Model\Quote $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
         $email = $quote->getCustomerEmail() ?? $shippingAddress->getEmail();
@@ -174,26 +173,26 @@ class QuoteConverter
         return $email;
     }
 
-    public function getMobilePhoneNumber(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getMobilePhoneNumber(\Magento\Quote\Model\Quote $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
 
         return $shippingAddress->getTelephone();
     }
 
-    public function getNationalIdentificationNumber(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getNationalIdentificationNumber(\Magento\Quote\Model\Quote $quote)
     {
         return null;
     }
 
-    public function getPostalCode(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getPostalCode(\Magento\Quote\Model\Quote $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
 
         return $shippingAddress->getPostcode();
     }
 
-    public function getReference(\Magento\Quote\Api\Data\CartInterface $quote)
+    public function getReference(\Magento\Quote\Model\Quote $quote)
     {
         return $quote->getReservedOrderId();
     }

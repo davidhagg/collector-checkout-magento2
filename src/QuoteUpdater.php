@@ -3,7 +3,7 @@
 namespace Webbhuset\CollectorBankCheckout;
 
 use CollectorBank\CheckoutSDK\Checkout\Customer as SDK;
-use Magento\Quote\Api\Data\CartInterface as Quote;
+use Magento\Quote\Model\Quote as Quote;
 
 class QuoteUpdater
 {
@@ -126,7 +126,7 @@ class QuoteUpdater
     }
 
     public function setPrivateAddressData(
-        \Magento\Quote\Api\Data\AddressInterface $address,
+        Quote\Address $address,
         SDK\PrivateCustomer $customer,
         SDK\PrivateAddress $collectorAddress
     ) {
@@ -145,7 +145,7 @@ class QuoteUpdater
     }
 
     public function setBusinessAddressData(
-        \Magento\Quote\Api\Data\AddressInterface $address,
+        Quote\Address $address,
         SDK\BusinessCustomer $customer,
         SDK\BusinessAddress $collectorAddress
     ) {

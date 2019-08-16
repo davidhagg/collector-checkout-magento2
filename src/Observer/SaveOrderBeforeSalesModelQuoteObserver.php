@@ -20,6 +20,7 @@ class SaveOrderBeforeSalesModelQuoteObserver implements \Magento\Framework\Event
 
     /**
      * @param \Magento\Framework\Event\Observer $observer
+     * @return SaveOrderBeforeSalesModelQuoteObserver
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
