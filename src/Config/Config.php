@@ -31,6 +31,11 @@ class Config implements
         return 1 == $this->getConfigValue('active');
     }
 
+    public function getCreateCustomerAccount(): bool
+    {
+        return 1 == $this->getConfigValue('create_customer_account');
+    }
+
     public function getConfig(): array
     {
         $data = [
@@ -64,6 +69,7 @@ class Config implements
             'productionModeB2C'       => $this->getProductionModeB2C(),
             'productionModeB2B'       => $this->getProductionModeB2B(),
             'customBaseUrl'           => $this->getCustomBaseUrl(),
+            'createCustomerAccount'   => $this->getCreateCustomerAccount(),
         ];
 
         return $data;

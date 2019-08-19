@@ -277,7 +277,7 @@
                         id="terms_url"
                         translate="label"
                         type="text"
-                        sortOrder="100"
+                        sortOrder="95"
                         showInDefault="1"
                         showInWebsite="1"
                         showInStore="1"
@@ -288,20 +288,39 @@
                     </depends>
                 </field>
 
-                                <field
-                                        id="custom_base_url"
-                                        translate="label"
-                                        type="text"
-                                        sortOrder="100"
-                                        showInDefault="1"
-                                        showInWebsite="1"
-                                        showInStore="1"
-                                >
-                                    <label>Custom base url - used during development</label>
-                                    <depends>
-                                        <field id='active'>1</field>
-                                    </depends>
-                                </field>
+                <field
+                        id="custom_base_url"
+                        translate="label"
+                        type="text"
+                        sortOrder="100"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Custom base url - used during development</label>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
+
+
+                <field
+                        id="create_customer_account"
+                        translate="label"
+                        type="select"
+                        sortOrder="96"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Create customer accounts</label>
+                    <comment>
+                        Yes = Customer accounts are created automatically for new customers. Orders are placed on the customer account. New customers get new customer email sent.
+
+                        No = Customers are checked out as guests no customer accounts are created.
+                    </comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
             </group>
         </section>
     </system>
