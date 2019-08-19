@@ -11,17 +11,23 @@ class QuoteUpdater
     protected $taxCalculator;
     protected $shippingMethodManagement;
     protected $config;
+    protected $session;
+    protected $customerRepositoryInterface;
 
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Tax\Model\Calculation $taxCalculator,
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
+        \Magento\Customer\Model\Session $session,
         \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManagement
     ) {
-        $this->taxConfig                = $taxConfig;
-        $this->config                   = $config;
-        $this->taxCalculator            = $taxCalculator;
-        $this->shippingMethodManagement = $shippingMethodManagement;
+        $this->taxConfig                   = $taxConfig;
+        $this->config                      = $config;
+        $this->taxCalculator               = $taxCalculator;
+        $this->shippingMethodManagement    = $shippingMethodManagement;
+        $this->session                     = $session;
+        $this->customerRepositoryInterface = $customerRepositoryInterface;
     }
 
     public function setQuoteData(
@@ -50,7 +56,19 @@ class QuoteUpdater
 
         $this->setCustomerData($quote, $checkoutData);
         $this->setPaymentMethod($quote);
-        $quote->setCustomerIsGuest(true);
+
+        $customerLoggedIn = $this->session->isLoggedIn();
+        if (!$customerLoggedIn) {
+            $quote->setCustomerIsGuest(true);
+        } else {
+            $customerId = $this->session->getCustomer()->getId();
+            $customer = $this->customerRepositoryInterface->getById($customerId);
+
+            $customer->setDefaultBilling($shippingAddress);
+            $customer->setDefaultShipping($shippingAddress);
+
+            $quote->setCustomer($customer);
+        }
 
         return $quote;
     }
