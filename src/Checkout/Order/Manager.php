@@ -15,14 +15,12 @@ class Manager
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Sales\Model\OrderRepository $orderRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
     ) {
         $this->cartManagement        = $cartManagement;
-        $this->quoteRepository       = $quoteRepository;
         $this->collectorAdapter      = $collectorAdapter;
         $this->orderRepository       = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
@@ -39,7 +37,6 @@ class Manager
      */
     public function createOrder($quoteId): int
     {
-        $this->quoteRepository->get($quoteId);
         $orderId = $this->cartManagement->placeOrder($quoteId);
 
         return $this->getIncrementIdByOrderId($orderId);

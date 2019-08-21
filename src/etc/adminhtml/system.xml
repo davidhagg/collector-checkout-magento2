@@ -315,7 +315,7 @@
                 >
                     <label>Create customer accounts</label>
                     <comment>
-                        Yes = Customer accounts are created automatically for new customers. Orders are placed on the customer account. New customers get new customer email sent.
+                        Yes = Customer accounts are created automatically for new email addresses. Orders are placed on the customer account. New customers get new customer email sent.
 
                         No = Customers are checked out as guests no customer accounts are created.
                     </comment>
