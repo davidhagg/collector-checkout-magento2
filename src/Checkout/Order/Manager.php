@@ -35,7 +35,7 @@ class Manager
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function createOrder($quoteId): int
+    public function createOrder($quoteId): string
     {
         $orderId = $this->cartManagement->placeOrder($quoteId);
 
