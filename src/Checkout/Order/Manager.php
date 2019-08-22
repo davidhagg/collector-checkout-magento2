@@ -12,12 +12,14 @@ class Manager
     protected $collectorAdapter;
     protected $searchCriteriaBuilder;
     protected $config;
+    protected $orderManagement;
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
         \Magento\Sales\Model\OrderRepository $orderRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
+        \Magento\Sales\Api\OrderManagementInterface $orderManagement,
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
     ) {
         $this->cartManagement        = $cartManagement;
@@ -25,6 +27,7 @@ class Manager
         $this->orderRepository       = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->config                = $config;
+        $this->orderManagement       = $orderManagement;
     }
 
     /**
@@ -46,9 +49,10 @@ class Manager
      * Create order from quote id and return order id
      *
      * @param $incrementOrderId
+     * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function notificationCallbackHandler($incrementOrderId)
+    public function notificationCallbackHandler($incrementOrderId): array
     {
         $order = $this->getOrderByIncrementId($incrementOrderId);
 
@@ -59,30 +63,51 @@ class Manager
 
         $paymentResult = $checkoutData->getPurchase()->getResult()->getResult();
 
+        $result = "";
+
+        if (\Magento\Sales\Model\Order::STATE_CANCELED == $order->getState()) {
+            return [
+                'message' => 'Order is cancelled, order status can not be changed'
+            ];
+        }
+
         switch ($paymentResult) {
             case PurchaseResult::PRELIMINARY:
-                $this->acknowledgeOrder($order, $checkoutData);
+                $result = $this->acknowledgeOrder($order, $checkoutData);
                 break;
 
             case PurchaseResult::ON_HOLD:
-                $this->holdOrder($order, $checkoutData);
+                $result = $this->holdOrder($order, $checkoutData);
                 break;
 
             case PurchaseResult::REJECTED:
-                $this->cancelOrder($order, $checkoutData);
+                $result = $this->cancelOrder($order, $checkoutData);
                 break;
 
             case PurchaseResult::ACTIVATED:
-                $this->activateOrder($order, $checkoutData);
+                $result = $this->activateOrder($order, $checkoutData);
                 break;
         }
         $this->orderRepository->save($order);
+
+        return $result;
     }
 
     public function acknowledgeOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
-    ) {
+    ):array {
+        $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
+        $orderStatusAfter  = $this->config->create()->getOrderStatusAcknowledged();
+
+        if ($orderStatusAfter == $orderStatusBefore) {
+            return [
+                'message' => 'Order status already set to: ' . $orderStatusAfter
+            ];
+        }
+
+        $this->unHoldOrderIfHolded($order);
+
         $this->addPaymentInformation(
             $order->getPayment(),
             $checkoutData->getPurchase()
@@ -90,9 +115,14 @@ class Manager
 
         $this->updateOrderStatus(
             $order,
-            $this->config->create()->getOrderStatusAcknowledged(),
+            $orderStatusAfter,
             \Magento\Sales\Model\Order::STATE_PROCESSING
         );
+
+        return [
+            'order_status_before' => $orderStatusBefore,
+            'order_status_after' => $orderStatusAfter
+        ];
     }
 
     private function addPaymentInformation(
@@ -115,30 +145,79 @@ class Manager
     public function holdOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
-    ) {
+    ):array {
+        $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
+        $orderStatusAfter  = $this->config->create()->getOrderStatusHolded();
+
+        if ($orderStatusBefore == $orderStatusAfter) {
+            return [
+                'message' => 'Order status already set to: ' . $orderStatusAfter
+            ];
+        }
+
+        $this->orderManagement->hold($order->getId());
+
         $this->updateOrderStatus(
             $order,
-            $this->config->create()->getOrderStatusHolded(),
+            $orderStatusAfter,
             \Magento\Sales\Model\Order::STATE_HOLDED
         );
+
+        return [
+            'order_status_before' => $orderStatusBefore,
+            'order_status_after' => $this->orderManagement->getStatus($order->getId())
+        ];
+    }
+
+    public function unHoldOrderIfHolded(
+        \Magento\Sales\Api\Data\OrderInterface $order
+    ) {
+        if (\Magento\Sales\Model\Order::STATE_HOLDED == $order->getState()) {
+            $this->orderManagement->unHold($order->getId());
+        }
     }
 
     public function cancelOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
-    ) {
+    ):array {
+        $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
+        $orderStatusAfter  = $this->config->create()->getOrderStatusHolded();
+
+        if ($orderStatusBefore == $orderStatusAfter) {
+            return [
+                'message' => 'Order status already set to: ' . $orderStatusAfter
+            ];
+        }
+        $this->unHoldOrderIfHolded($order);
+
+        $this->orderManagement->cancel($order->getId());
+
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusDenied(),
             \Magento\Sales\Model\Order::STATE_CANCELED
         );
+
+        return [
+            'order_status_before' => $orderStatusBefore,
+            'order_status_after' => $this->orderManagement->getStatus($order->getId())
+        ];
     }
 
     public function activateOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
-    ) {
+    ):array {
+        $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
+
+        // Do something here?
         // Should this invoice the order and capture offline?
+
+        return [
+            'order_status_before' => $orderStatusBefore,
+            'order_status_after' => $this->orderManagement->getStatus($order->getId())
+        ];
     }
 
     public function getOrderByPublicToken($publicToken): \Magento\Sales\Api\Data\OrderInterface
