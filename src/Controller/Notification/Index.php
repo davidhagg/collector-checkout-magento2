@@ -21,12 +21,13 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $jsonResult = $this->jsonResult->create();
-
         $orderManager = $this->orderManager->create();
 
-        $incrementOrderId = $this->getRequest()->getParam('orderid');
+        $reference = $this->getRequest()->getParam('reference');
+        $order = $this->orderManager->create()->getOrderByPublicToken($reference);
+
         try {
-            $result = $orderManager->notificationCallbackHandler($incrementOrderId);
+            $result = $orderManager->notificationCallbackHandler($order);
 
             $jsonResult->setHttpResponseCode(200);
             $jsonResult->setData($result);
@@ -36,7 +37,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         } catch (\Exception $e) {
             $jsonResult->setHttpResponseCode(404);
-            $jsonResult->setData(['message' => __($e->message())]);
+            $jsonResult->setData(['message' => __($e->getMessage())]);
 
         }
         return $jsonResult;

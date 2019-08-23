@@ -9,11 +9,13 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $customerManager;
     protected $checkoutSession;
     protected $quoteRepository;
+    protected $quoteManager;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResult,
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
+        \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory $quoteManager,
         \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory $customerManager,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
     ) {
@@ -21,6 +23,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->jsonResult      = $jsonResult;
         $this->customerManager = $customerManager;
         $this->quoteRepository = $quoteRepository;
+        $this->quoteManager    = $quoteManager;
 
         parent::__construct($context);
     }
@@ -28,15 +31,15 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         try {
-            $orderManager = $this->orderManager->create();
+            $reference = $this->getRequest()->getParam('reference');
+
+            $quote = $this->quoteManager->create()->getQuoteByPublicToken($reference);
+
             $customerManager = $this->customerManager->create();
-
-            $qouteId = $this->getRequest()->getParam('quoteid');
-            $quote = $this->quoteRepository->get($qouteId);
-
             $customerManager->handleCustomerOnQuote($quote);
 
-            $orderId = $orderManager->createOrder($qouteId);
+            $orderManager = $this->orderManager->create();
+            $orderId = $orderManager->createOrder($quote->getId());
 
             $response = [
                 'orderReference' => $orderId

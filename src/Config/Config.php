@@ -146,9 +146,7 @@ class Config implements
 
     public function getNotificationUri() : string
     {
-        $orderId = $this->checkoutSession->getQuote()->reserveOrderId()->getReservedOrderId();
-
-        $urlKey = "collectorbank/notification/index/orderid/$orderId";
+        $urlKey = "collectorbank/notification/index/reference/{checkout.publictoken}";
 
         if ($this->getCustomBaseUrl()) {
 
@@ -160,8 +158,7 @@ class Config implements
 
     public function getValidationUri(): string
     {
-        $quoteId = $this->checkoutSession->getQuoteId();
-        $urlKey = "collectorbank/validation/index/quoteid/$quoteId";
+        $urlKey = "collectorbank/validation/index/reference/{checkout.publictoken}";
 
         if ($this->getCustomBaseUrl()) {
 

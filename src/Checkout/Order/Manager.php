@@ -3,6 +3,7 @@
 namespace Webbhuset\CollectorBankCheckout\Checkout\Order;
 
 use CollectorBank\CheckoutSDK\Checkout\Purchase\Result as PurchaseResult;
+use Webbhuset\CollectorBankCheckout\Data\QuoteHandler;
 
 class Manager
 {
@@ -10,6 +11,7 @@ class Manager
     protected $orderRepository;
     protected $quoteRepository;
     protected $collectorAdapter;
+    protected $orderHandler;
     protected $searchCriteriaBuilder;
     protected $config;
     protected $orderManagement;
@@ -17,6 +19,7 @@ class Manager
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
         \Magento\Sales\Model\OrderRepository $orderRepository,
+        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
         \Magento\Sales\Api\OrderManagementInterface $orderManagement,
@@ -28,6 +31,7 @@ class Manager
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->config                = $config;
         $this->orderManagement       = $orderManagement;
+        $this->orderHandler          = $orderHandler;
     }
 
     /**
@@ -48,15 +52,13 @@ class Manager
     /**
      * Create order from quote id and return order id
      *
-     * @param $incrementOrderId
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function notificationCallbackHandler($incrementOrderId): array
+    public function notificationCallbackHandler(\Magento\Sales\Api\Data\OrderInterface $order): array
     {
-        $order = $this->getOrderByIncrementId($incrementOrderId);
-
-        $collectorBankPrivateId = $order->getCollectorbankPrivateId();
+        $collectorBankPrivateId = $this->orderHandler->getPrivateId($order);
 
         $checkoutAdapter = $this->collectorAdapter->create();
         $checkoutData = $checkoutAdapter->acquireCheckoutInformation($collectorBankPrivateId);

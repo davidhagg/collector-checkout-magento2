@@ -27,7 +27,7 @@ class Manager
         $this->config             = $config;
     }
 
-    public function handleCustomerOnQuote(\Magento\Quote\Model\Quote $quote)
+    public function handleCustomerOnQuote(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $customer = $this->getOrCreateCustomerIfConfigured($quote);
         if ($customer) {
@@ -78,7 +78,7 @@ class Manager
     }
 
     public function saveCustomerOnQuote(
-        \Magento\Quote\Model\Quote $quote,
+        \Magento\Quote\Api\Data\CartInterface $quote,
         \Magento\Customer\Api\Data\CustomerInterface $customer
     ) {
         $quote = $quote->setCustomer($customer);
