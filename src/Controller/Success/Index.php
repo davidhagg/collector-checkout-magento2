@@ -49,11 +49,10 @@ class Index extends \Magento\Framework\App\Action\Action
         );
         $iframe = \CollectorBank\CheckoutSDK\Iframe::getScript($iframeConfig);
 
-
-
         $page->getLayout()
             ->getBlock('collectorbank_success_iframe')
-            ->setIframe($iframe);
+            ->setIframe($iframe)
+            ->setSuccessOrder($order);
 
         return $page;
     }
