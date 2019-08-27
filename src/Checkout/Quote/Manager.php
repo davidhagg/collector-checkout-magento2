@@ -33,4 +33,12 @@ class Manager
 
         return reset($quoteList);
     }
+
+    public function activateQuote(\Magento\Quote\Api\Data\CartInterface $quote): \Magento\Quote\Api\Data\CartInterface
+    {
+        $quote->setIsActive(1)
+            ->setReservedOrderId(null);
+        $this->quoteRepository->save($quote);
+        return $quote;
+    }
 }

@@ -3,7 +3,6 @@
 namespace Webbhuset\CollectorBankCheckout\Checkout\Order;
 
 use CollectorBank\CheckoutSDK\Checkout\Purchase\Result as PurchaseResult;
-use Webbhuset\CollectorBankCheckout\Data\QuoteHandler;
 
 class Manager
 {
@@ -15,6 +14,9 @@ class Manager
     protected $searchCriteriaBuilder;
     protected $config;
     protected $orderManagement;
+    protected $quoteManagement;
+    protected $orderManager;
+    protected $registry;
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
@@ -23,7 +25,10 @@ class Manager
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
         \Magento\Sales\Api\OrderManagementInterface $orderManagement,
-        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
+        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
+        \Magento\Quote\Model\QuoteManagement $quoteManagement,
+        \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
+        \Magento\Framework\Registry $registry
     ) {
         $this->cartManagement        = $cartManagement;
         $this->collectorAdapter      = $collectorAdapter;
@@ -32,6 +37,9 @@ class Manager
         $this->config                = $config;
         $this->orderManagement       = $orderManagement;
         $this->orderHandler          = $orderHandler;
+        $this->quoteManagement       = $quoteManagement;
+        $this->orderManager          = $orderManager;
+        $this->registry              = $registry;
     }
 
     /**
@@ -41,14 +49,37 @@ class Manager
      * @return int orderId
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function createOrder($quoteId): string
+    public function createOrder(\Magento\Quote\Model\Quote $quote): string
     {
-        $orderId = $this->cartManagement->placeOrder($quoteId);
-
-        return $this->getIncrementIdByOrderId($orderId);
+        $order = $this->quoteManagement->submit($quote);
+        return $order->getIncrementId();
     }
 
+    public function deleteOrder($order)
+    {
+        $this->registry->register('isSecureArea', 'true');
+        $this->orderRepository->delete($order);
+        $this->registry->unregister('isSecureArea', 'true');
+    }
+
+    public function removeOrderIfExists($reference)
+    {
+        try {
+            $order = $this->orderManager->create()->getOrderByPublicToken($reference);
+
+            $order = $this->orderHandler->setPrivateId($order, "");
+            $order = $this->orderHandler->setPublicToken($order, "");
+            $order = $this->orderHandler->setStoreId($order, "");
+
+            $this->orderRepository->save($order);
+            $this->orderManagement->cancel($order->getId());
+
+            $this->deleteOrder($order);
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+        }
+    }
     /**
      * Create order from quote id and return order id
      *
@@ -120,6 +151,8 @@ class Manager
             $orderStatusAfter,
             \Magento\Sales\Model\Order::STATE_PROCESSING
         );
+
+        $this->orderManagement->notify($order->getEntityId());
 
         return [
             'order_status_before' => $orderStatusBefore,

@@ -30,16 +30,21 @@ class Index extends \Magento\Framework\App\Action\Action
 
     public function execute()
     {
+        $reference = $this->getRequest()->getParam('reference');
         try {
-            $reference = $this->getRequest()->getParam('reference');
-
-            $quote = $this->quoteManager->create()->getQuoteByPublicToken($reference);
-
+            $orderManager = $this->orderManager->create();
             $customerManager = $this->customerManager->create();
+            $quoteManager = $this->quoteManager->create();
+
+            $orderManager->removeOrderIfExists($reference);
+
+            $quote = $quoteManager->getQuoteByPublicToken($reference);
+            $quoteManager->activateQuote($quote);
+
             $customerManager->handleCustomerOnQuote($quote);
 
-            $orderManager = $this->orderManager->create();
-            $orderId = $orderManager->createOrder($quote->getId());
+            $orderId = $orderManager->createOrder($quote);
+            $quoteManager->activateQuote($quote);
 
             $response = [
                 'orderReference' => $orderId

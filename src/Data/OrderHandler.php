@@ -15,7 +15,7 @@ class OrderHandler
     {
         $order->setCollectorbankPrivateId($id);
 
-        return $this;
+        return $order;
     }
 
     public function getPublicToken(Order $order)
@@ -27,7 +27,7 @@ class OrderHandler
     {
         $order->setCollectorbankPublicId($id);
 
-        return $this;
+        return $order;
     }
 
     public function getStoreId(Order $order)
@@ -39,6 +39,6 @@ class OrderHandler
     {
         $order->setCollectorbankStoreId($id);
 
-        return $this;
+        return $order;
     }
 }
