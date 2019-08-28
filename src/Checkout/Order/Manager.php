@@ -17,6 +17,7 @@ class Manager
     protected $quoteManagement;
     protected $orderManager;
     protected $registry;
+    protected $dateTime;
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
@@ -28,7 +29,8 @@ class Manager
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
-        \Magento\Framework\Registry $registry
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime
     ) {
         $this->cartManagement        = $cartManagement;
         $this->collectorAdapter      = $collectorAdapter;
@@ -40,6 +42,7 @@ class Manager
         $this->quoteManagement       = $quoteManagement;
         $this->orderManager          = $orderManager;
         $this->registry              = $registry;
+        $this->dateTime              = $dateTime;
     }
 
     /**
@@ -64,11 +67,18 @@ class Manager
         $this->registry->unregister('isSecureArea', 'true');
     }
 
-    public function removeOrderIfExists($reference)
+    public function removeOrderByPublicToken($reference)
     {
         try {
             $order = $this->orderManager->create()->getOrderByPublicToken($reference);
+            $this->removeOrderIfExists($order);
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+        }
+    }
 
+    public function removeOrderIfExists(\Magento\Sales\Api\Data\OrderInterface $order)
+    {
+        try {
             $order = $this->orderHandler->setPrivateId($order, "");
             $order = $this->orderHandler->setPublicToken($order, "");
             $order = $this->orderHandler->setStoreId($order, "");
@@ -78,6 +88,7 @@ class Manager
 
             $this->deleteOrder($order);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+
         }
     }
     /**
@@ -268,6 +279,32 @@ class Manager
     public function getOrderByQuoteId($quoteId): \Magento\Sales\Api\Data\OrderInterface
     {
         return $this->getColumnFromSalesOrder("quote_id", $quoteId);
+    }
+
+    public function getPendingCollectorBankOrders(): array
+    {
+        $ageInHours = \Webbhuset\CollectorBankCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
+
+        $pendingOrderStatus = $this->config->create()->getOrderStatusNew();
+        $to = $this->dateTime->create()->gmtDate(null, "-$ageInHours hours");
+        $from = $this->dateTime->create()->gmtDate(null, "-48 hours");
+
+        $searchCriteria = $this->searchCriteriaBuilder
+            ->addFilter('status', $pendingOrderStatus, 'eq')
+            ->addFilter('created_at', $to, 'lt')
+            ->addFilter('created_at', $from, 'gt')
+            ->create();
+
+        $pendingOrders = $this->orderRepository->getList($searchCriteria)->getItems();
+        $pendingCollectorOrders = [];
+
+        foreach ($pendingOrders as $order) {
+            if ($order->getPayment()->getMethod() == \Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE) {
+                $pendingCollectorOrders[] = $order;
+            }
+        }
+
+        return $pendingCollectorOrders;
     }
 
     private function getColumnFromSalesOrder($column, $value): \Magento\Sales\Api\Data\OrderInterface

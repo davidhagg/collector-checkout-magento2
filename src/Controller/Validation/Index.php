@@ -36,10 +36,9 @@ class Index extends \Magento\Framework\App\Action\Action
             $customerManager = $this->customerManager->create();
             $quoteManager = $this->quoteManager->create();
 
-            $orderManager->removeOrderIfExists($reference);
+            $orderManager->removeOrderByPublicToken($reference);
 
             $quote = $quoteManager->getQuoteByPublicToken($reference);
-            $quoteManager->activateQuote($quote);
 
             $customerManager->handleCustomerOnQuote($quote);
 
