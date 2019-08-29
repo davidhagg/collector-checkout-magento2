@@ -31,35 +31,36 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $reference = $this->getRequest()->getParam('reference');
+        $jsonResult = $this->jsonResult->create();
         try {
             $orderManager = $this->orderManager->create();
             $customerManager = $this->customerManager->create();
             $quoteManager = $this->quoteManager->create();
 
-            $orderManager->removeOrderByPublicToken($reference);
-
+            $orderManager->removeNewOrdersByPublicToken($reference);
             $quote = $quoteManager->getQuoteByPublicToken($reference);
-
             $customerManager->handleCustomerOnQuote($quote);
 
             $orderId = $orderManager->createOrder($quote);
-            $quoteManager->activateQuote($quote);
 
             $response = [
                 'orderReference' => $orderId
             ];
+            $jsonResult->setHttpResponseCode(200);
         } catch (\Magento\Framework\Exception\CouldNotSaveException $e) {
             $response = [
                 'title' => __('Could not save order'),
                 'message' => __($e->getMessage())
             ];
+            $jsonResult->setHttpResponseCode(404);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $response = [
                 'title' => __('Cart not found'),
                 'message' => __($e->getMessage())
             ];
+            $jsonResult->setHttpResponseCode(404);
         }
-        $jsonResult = $this->jsonResult->create();
+
         $jsonResult->setHeader("Content-Type", "application/json", true);
         $jsonResult->setData($response);
 

@@ -18,6 +18,7 @@ class Manager
     protected $orderManager;
     protected $registry;
     protected $dateTime;
+    protected $invoice;
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
@@ -30,7 +31,8 @@ class Manager
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Magento\Framework\Registry $registry,
-        \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime
+        \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime,
+        \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice
     ) {
         $this->cartManagement        = $cartManagement;
         $this->collectorAdapter      = $collectorAdapter;
@@ -43,6 +45,7 @@ class Manager
         $this->orderManager          = $orderManager;
         $this->registry              = $registry;
         $this->dateTime              = $dateTime;
+        $this->invoice               = $invoice;
     }
 
     /**
@@ -67,11 +70,13 @@ class Manager
         $this->registry->unregister('isSecureArea', 'true');
     }
 
-    public function removeOrderByPublicToken($reference)
+    public function removeNewOrdersByPublicToken($reference)
     {
         try {
             $order = $this->orderManager->create()->getOrderByPublicToken($reference);
-            $this->removeOrderIfExists($order);
+            if (\Magento\Sales\Model\Order::STATE_NEW == $order->getState()) {
+                $this->removeOrderIfExists($order);
+            }
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
         }
     }
@@ -88,33 +93,37 @@ class Manager
 
             $this->deleteOrder($order);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-
         }
     }
+
     /**
      * Create order from quote id and return order id
      *
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
     public function notificationCallbackHandler(\Magento\Sales\Api\Data\OrderInterface $order): array
     {
+        if (\Magento\Sales\Model\Order::STATE_CANCELED == $order->getState()
+            || \Magento\Sales\Model\Order::STATE_COMPLETE == $order->getState()
+        ) {
+            $orderState = $order->getState();
+            throw new \Exception("Order state is $orderState, order status can not be changed");
+        }
+        if ($order->getTotalInvoiced() > 0) {
+            $totalAmount = $order->getTotalInvoiced();
+            throw new \Exception("Order already invoiced in Magento for $totalAmount, order can not be changed");
+        }
+
         $collectorBankPrivateId = $this->orderHandler->getPrivateId($order);
 
         $checkoutAdapter = $this->collectorAdapter->create();
         $checkoutData = $checkoutAdapter->acquireCheckoutInformation($collectorBankPrivateId);
-
         $paymentResult = $checkoutData->getPurchase()->getResult()->getResult();
 
         $result = "";
-
-        if (\Magento\Sales\Model\Order::STATE_CANCELED == $order->getState()) {
-            return [
-                'message' => 'Order is cancelled, order status can not be changed'
-            ];
-        }
-
         switch ($paymentResult) {
             case PurchaseResult::PRELIMINARY:
                 $result = $this->acknowledgeOrder($order, $checkoutData);
@@ -131,6 +140,7 @@ class Manager
             case PurchaseResult::ACTIVATED:
                 $result = $this->activateOrder($order, $checkoutData);
                 break;
+
         }
         $this->orderRepository->save($order);
 
@@ -150,7 +160,7 @@ class Manager
             ];
         }
 
-        $this->unHoldOrderIfHolded($order);
+        $this->unHoldOrder($order);
 
         $this->addPaymentInformation(
             $order->getPayment(),
@@ -169,23 +179,6 @@ class Manager
             'order_status_before' => $orderStatusBefore,
             'order_status_after' => $orderStatusAfter
         ];
-    }
-
-    private function addPaymentInformation(
-        \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
-        \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
-    ) {
-        $info = [
-            'method_title'            => \Webbhuset\CollectorBankCheckout\Gateway\Config::PAYMENT_METHOD_NAME,
-            'payment_name'            => $purchaseData->getPaymentName(),
-            'amount_to_pay'           => $purchaseData->getAmountToPay(),
-            'invoice_delivery_method' => $purchaseData->getInvoiceDeliveryMethod(),
-            'purchase_identifier'     => $purchaseData->getPurchaseIdentifier(),
-            'result'                  => $purchaseData->getResult()->getResult(),
-        ];
-        $payment->setAdditionalInformation($info);
-
-        $payment->authorize(true, $purchaseData->getAmountToPay());
     }
 
     public function holdOrder(
@@ -215,7 +208,7 @@ class Manager
         ];
     }
 
-    public function unHoldOrderIfHolded(
+    public function unHoldOrder(
         \Magento\Sales\Api\Data\OrderInterface $order
     ) {
         if (\Magento\Sales\Model\Order::STATE_HOLDED == $order->getState()) {
@@ -235,7 +228,8 @@ class Manager
                 'message' => 'Order status already set to: ' . $orderStatusAfter
             ];
         }
-        $this->unHoldOrderIfHolded($order);
+
+        $this->unHoldOrder($order);
 
         $this->orderManagement->cancel($order->getId());
 
@@ -255,14 +249,28 @@ class Manager
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ):array {
-        $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
+        $orderStatusBefore = $this->orderManagement->getStatus($order->getEntityId());
 
-        // Do something here?
-        // Should this invoice the order and capture offline?
+        $this->unHoldOrder($order);
+
+        if (!$order->canInvoice()) {
+            return [
+                'message' => 'Can not create invoice'
+            ];
+            // log something
+        }
+
+        $this->updateOrderStatus(
+            $order,
+            \Magento\Sales\Model\Order::STATE_PROCESSING,
+            \Magento\Sales\Model\Order::STATE_PROCESSING
+        );
+
+        $this->invoice->create()->invoiceOrderOffline($order);
 
         return [
             'order_status_before' => $orderStatusBefore,
-            'order_status_after' => $this->orderManagement->getStatus($order->getId())
+            'order_status_after' => \Magento\Sales\Model\Order::STATE_PROCESSING
         ];
     }
 
@@ -286,7 +294,8 @@ class Manager
         $ageInHours = \Webbhuset\CollectorBankCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
 
         $pendingOrderStatus = $this->config->create()->getOrderStatusNew();
-        $to = $this->dateTime->create()->gmtDate(null, "-$ageInHours hours");
+
+        $to   = $this->dateTime->create()->gmtDate(null, "-$ageInHours hours");
         $from = $this->dateTime->create()->gmtDate(null, "-48 hours");
 
         $searchCriteria = $this->searchCriteriaBuilder
@@ -320,12 +329,6 @@ class Manager
         return reset($orderList);
     }
 
-    private function getIncrementIdByOrderId($orderId)
-    {
-        $order = $this->orderRepository->get($orderId);
-
-        return $order->getIncrementId();
-    }
 
     private function updateOrderStatus($order, $status, $state)
     {
@@ -333,5 +336,22 @@ class Manager
             ->setStatus($status);
 
         return $this;
+    }
+
+    private function addPaymentInformation(
+        \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
+        \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
+    ) {
+        $info = [
+            'method_title'            => \Webbhuset\CollectorBankCheckout\Gateway\Config::PAYMENT_METHOD_NAME,
+            'payment_name'            => $purchaseData->getPaymentName(),
+            'amount_to_pay'           => $purchaseData->getAmountToPay(),
+            'invoice_delivery_method' => $purchaseData->getInvoiceDeliveryMethod(),
+            'purchase_identifier'     => $purchaseData->getPurchaseIdentifier(),
+            'result'                  => $purchaseData->getResult()->getResult(),
+        ];
+        $payment->setAdditionalInformation($info);
+
+        $payment->authorize(true, $purchaseData->getAmountToPay());
     }
 }

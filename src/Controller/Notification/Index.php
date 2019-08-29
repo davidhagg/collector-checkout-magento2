@@ -24,19 +24,18 @@ class Index extends \Magento\Framework\App\Action\Action
         $orderManager = $this->orderManager->create();
 
         $reference = $this->getRequest()->getParam('reference');
-        $order = $this->orderManager->create()->getOrderByPublicToken($reference);
-
         try {
+            $order = $this->orderManager->create()->getOrderByPublicToken($reference);
             $result = $orderManager->notificationCallbackHandler($order);
 
             $jsonResult->setHttpResponseCode(200);
             $jsonResult->setData($result);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-            $jsonResult->setHttpResponseCode(404);
+            $jsonResult->setHttpResponseCode(400);
             $jsonResult->setData(['message' => __('Entity not found')]);
 
         } catch (\Exception $e) {
-            $jsonResult->setHttpResponseCode(404);
+            $jsonResult->setHttpResponseCode(400);
             $jsonResult->setData(['message' => __($e->getMessage())]);
 
         }

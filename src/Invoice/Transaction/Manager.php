@@ -4,8 +4,15 @@ namespace Webbhuset\CollectorBankCheckout\Invoice\Transaction;
 
 class Manager
 {
-    public function __construct()
-    {
+    protected $transactionFactory;
+    protected $invoiceService;
+
+    public function __construct(
+        \Magento\Sales\Model\Service\InvoiceService $invoiceService,
+        \Magento\Framework\DB\TransactionFactory $transactionFactory
+    ) {
+        $this->invoiceService        = $invoiceService;
+        $this->transactionFactory    = $transactionFactory;
     }
 
     public function addTransaction(
@@ -32,5 +39,15 @@ class Manager
         }
         $transaction->save();
         $payment->save();
+    }
+
+    public function addInvoiceTransaction(
+        \Magento\Sales\Model\Order\Invoice $invoice
+    ) {
+        $transaction = $this->transactionFactory->create()
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+
+        $transaction->save();
     }
 }
