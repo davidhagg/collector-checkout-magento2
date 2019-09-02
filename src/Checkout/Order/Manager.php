@@ -114,7 +114,7 @@ class Manager
         }
         if ($order->getTotalInvoiced() > 0) {
             $totalAmount = $order->getTotalInvoiced();
-            throw new \Exception("Order already invoiced in Magento for $totalAmount, order can not be changed");
+            throw new \Exception("Order already invoiced in Magento for $totalAmount");
         }
 
         $collectorBankPrivateId = $this->orderHandler->getPrivateId($order);

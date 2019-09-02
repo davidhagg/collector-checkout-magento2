@@ -28,7 +28,7 @@ class QuoteConverter
         foreach ($quoteItems as $quoteItem) {
             $items[] = $this->getCartItem($quoteItem);
 
-            if ($quoteItem->getDiscountAmount()) {
+            if ((float)$quoteItem->getDiscountAmount()) {
                 $items[] = $this->getDiscountItem($quoteItem);
             }
         }
@@ -38,7 +38,7 @@ class QuoteConverter
         return $cart;
     }
 
-    public function getCartItem(\Magento\Quote\Model\Quote\Item\AbstractItem $quoteItem) : Item
+    public function getCartItem(\Magento\Quote\Model\Quote\Item $quoteItem) : Item
     {
         $id                     = (string) $quoteItem->getSku();
         $description            = (string) $quoteItem->getName();
@@ -61,7 +61,7 @@ class QuoteConverter
         return $item;
     }
 
-    public function getDiscountItem(\Magento\Quote\Model\Quote\Item\AbstractItem $quoteItem)
+    public function getDiscountItem(\Magento\Quote\Model\Quote\Item $quoteItem)
     {
         $discountAmount = $quoteItem->getDiscountAmount();
         $taxPercent = $quoteItem->getTaxPercent();
