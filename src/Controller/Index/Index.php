@@ -18,11 +18,11 @@ class Index extends \Magento\Framework\App\Action\Action
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
         \Magento\Framework\View\Result\PageFactory $pageFactory
     ) {
-        $this->pageFactory = $pageFactory;
-        $this->checkoutSession = $checkoutSession;
+        $this->pageFactory      = $pageFactory;
+        $this->checkoutSession  = $checkoutSession;
         $this->collectorAdapter = $collectorAdapter;
         $this->quoteDataHandler = $quoteDataHandler;
-        $this->quoteConverter = $quoteConverter;
+        $this->quoteConverter   = $quoteConverter;
 
         return parent::__construct($context);
     }

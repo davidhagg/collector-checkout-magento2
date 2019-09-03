@@ -10,6 +10,7 @@ class Adapter
     protected $orderDataHandler;
     protected $quoteUpdater;
     protected $quoteRepository;
+    protected $logger;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
@@ -17,7 +18,8 @@ class Adapter
         \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config
+        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->quoteConverter   = $quoteConverter;
         $this->config           = $config;
@@ -25,6 +27,7 @@ class Adapter
         $this->orderDataHandler = $orderDataHandler;
         $this->quoteUpdater     = $quoteUpdater;
         $this->quoteRepository  = $quoteRepository;
+        $this->logger           = $logger;
     }
 
     public function initOrSync(\Magento\Quote\Model\Quote $quote) : string
@@ -104,6 +107,7 @@ class Adapter
 
             $this->quoteRepository->save($quote);
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+            $this->logger->addCritical("Response error when initiating iframe " . $e->getMessage());
             die;
         }
 
@@ -149,6 +153,7 @@ class Adapter
                     ->updateFees($fees);
             }
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+            $this->logger->addCritical("Response error when updating fees. " . $e->getMessage());
             die;
         }
 
@@ -168,7 +173,7 @@ class Adapter
             $collectorSession->setPrivateId($privateId)
                 ->updateCart($cart);
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
-            // error handling here and logging
+            $this->logger->addCritical("Response error when updating cart. " . $e->getMessage());
             die;
         }
 

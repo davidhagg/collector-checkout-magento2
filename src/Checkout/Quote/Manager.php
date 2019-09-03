@@ -6,13 +6,16 @@ class Manager
 {
     protected $searchCriteriaBuilder;
     protected $quoteRepository;
+    protected $logger;
 
     public function __construct(
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->quoteRepository = $quoteRepository;
+        $this->logger = $logger;
     }
 
     public function getQuoteByPublicToken($publicToken): \Magento\Quote\Api\Data\CartInterface
@@ -28,6 +31,8 @@ class Manager
         $quoteList = $this->quoteRepository->getList($searchCriteria)->getItems();
 
         if (sizeof($quoteList) == 0) {
+            $this->logger->addCritical("Could not find a quotes with column: : $column : value $value and quote-table");
+
             throw new \Magento\Framework\Exception\NoSuchEntityException();
         }
 

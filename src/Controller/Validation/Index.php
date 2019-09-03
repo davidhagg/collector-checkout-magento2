@@ -10,6 +10,7 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $checkoutSession;
     protected $quoteRepository;
     protected $quoteManager;
+    protected $logger;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -17,13 +18,15 @@ class Index extends \Magento\Framework\App\Action\Action
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory $quoteManager,
         \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory $customerManager,
-        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+        \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->orderManager    = $orderManager;
         $this->jsonResult      = $jsonResult;
         $this->customerManager = $customerManager;
         $this->quoteRepository = $quoteRepository;
         $this->quoteManager    = $quoteManager;
+        $this->logger          = $logger;
 
         parent::__construct($context);
     }
@@ -53,12 +56,19 @@ class Index extends \Magento\Framework\App\Action\Action
                 'message' => __($e->getMessage())
             ];
             $jsonResult->setHttpResponseCode(404);
+            $this->logger->addCritical(
+                "Validation callback CouldNotSaveException. qouteId: {$quote->getId()} " .
+                " orderId: {$quote->getReservedOrderId()} publicToken: $reference. {$e->getMessage()}"
+            );
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $response = [
                 'title' => __('Cart not found'),
                 'message' => __($e->getMessage())
             ];
             $jsonResult->setHttpResponseCode(404);
+            $this->logger->addCritical(
+                "Validation callback NoSuchEntityException publicToken: $reference. {$e->getMessage()}"
+            );
         }
 
         $jsonResult->setHeader("Content-Type", "application/json", true);

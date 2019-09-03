@@ -13,17 +13,20 @@ class CollectorBankCommand implements CommandInterface
     protected $paymentHandler;
     protected $invoice;
     protected $transaction;
+    protected $logger;
 
     public function __construct(
         $client,
         \Webbhuset\CollectorBankCheckout\Data\PaymentHandlerFactory $paymentHandler,
         \Webbhuset\CollectorBankCheckout\Invoice\Administration $invoice,
-        \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction
+        \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction,
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->method         = $client['method'];
         $this->paymentHandler = $paymentHandler;
         $this->invoice        = $invoice;
         $this->transaction    = $transaction;
+        $this->logger         = $logger;
     }
 
     public function execute(array $commandSubject)
@@ -41,12 +44,19 @@ class CollectorBankCommand implements CommandInterface
         $paymentHandler = $this->paymentHandler->create();
 
         try {
+            $invoiceNo = $paymentHandler->getPurchaseIdentifier($payment);
+            $orderId = $payment->getOrder()->getId();
+
             $response = $this->invoice->activateInvoice(
-                $paymentHandler->getPurchaseIdentifier($payment),
-                $payment->getOrder()->getId()
+                $invoiceNo,
+                $orderId
             );
         } catch (ResponseError $e) {
-            // do something ... logging and output something in admin?
+            $incrementOrderId = (int)$payment->getOrder()->getIncrementOrderId();
+            $this->logger->addCritical(
+                "Response error on capture. increment orderId: {$incrementOrderId} invoiceNo {$invoiceNo}" .
+                $e->getMessage()
+            );
 
             return false;
         }
@@ -77,14 +87,21 @@ class CollectorBankCommand implements CommandInterface
         $paymentHandler = $this->paymentHandler->create();
 
         try {
+            $invoiceNo = $paymentHandler->getPurchaseIdentifier($payment);
+            $orderId = (int)$payment->getOrder()->getId();
+
             $this->invoice->creditInvoice(
-                $paymentHandler->getPurchaseIdentifier($payment),
-                (int)$payment->getOrder()->getId()
+                $invoiceNo,
+                $orderId
             );
         } catch (ResponseError $e) {
+            $incrementOrderId = (int)$payment->getOrder()->getIncrementOrderId();
+            $this->logger->addCritical(
+                "Response error on refund increment orderId: {$incrementOrderId} invoiceNo {$invoiceNo}" .
+                $e->getMessage()
+            );
 
             return false;
-            // do something ... logging and output something in admin?
         }
         $this->transaction->create()->addTransaction(
             $payment->getOrder(),
@@ -102,12 +119,19 @@ class CollectorBankCommand implements CommandInterface
 
         $response = [];
         try {
+            $invoiceNo = $paymentHandler->getPurchaseIdentifier($payment);
+            $orderId = (int)$payment->getOrder()->getId();
+
             $response = $this->invoice->cancelInvoice(
-                $paymentHandler->getPurchaseIdentifier($payment),
-                $payment->getOrder()->getId()
+                $invoiceNo,
+                $orderId
             );
         } catch (ResponseError $e) {
-
+            $incrementOrderId = (int)$payment->getOrder()->getIncrementOrderId();
+            $this->logger->addCritical(
+                "Response error on void / cancel increment orderId: {$incrementOrderId} invoiceNo; {$invoiceNo}" .
+                $e->getMessage()
+            );
             return false;
         }
 

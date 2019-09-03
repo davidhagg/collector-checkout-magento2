@@ -19,6 +19,7 @@ class Manager
     protected $registry;
     protected $dateTime;
     protected $invoice;
+    protected $logger;
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
@@ -32,7 +33,8 @@ class Manager
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime,
-        \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice
+        \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice,
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->cartManagement        = $cartManagement;
         $this->collectorAdapter      = $collectorAdapter;
@@ -46,6 +48,7 @@ class Manager
         $this->registry              = $registry;
         $this->dateTime              = $dateTime;
         $this->invoice               = $invoice;
+        $this->logger                = $logger;
     }
 
     /**
@@ -60,13 +63,23 @@ class Manager
     public function createOrder(\Magento\Quote\Model\Quote $quote): string
     {
         $order = $this->quoteManagement->submit($quote);
-        return $order->getIncrementId();
+        $orderId = $order->getIncrementId();
+
+        $this->logger->addInfo(
+            "Submitted order increment id: {$orderId}. qouteId: {$quote->getId()} "
+        );
+
+        return $orderId;
     }
 
     public function deleteOrder($order)
     {
         $this->registry->register('isSecureArea', 'true');
+
         $this->orderRepository->delete($order);
+        $this->logger->addInfo(
+            "Delete order {$order->getIncrementId()}. qouteId: {$order->getQuoteId()} "
+        );
         $this->registry->unregister('isSecureArea', 'true');
     }
 
@@ -101,7 +114,6 @@ class Manager
      *
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return array
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Exception
      */
     public function notificationCallbackHandler(\Magento\Sales\Api\Data\OrderInterface $order): array
@@ -114,6 +126,10 @@ class Manager
         }
         if ($order->getTotalInvoiced() > 0) {
             $totalAmount = $order->getTotalInvoiced();
+            $this->logger->addCritical(
+                "Can not invoice order, already invoiced: {$order->getIncrementId()}. qouteId: {$order->getQuoteId()} "
+            );
+
             throw new \Exception("Order already invoiced in Magento for $totalAmount");
         }
 
@@ -173,6 +189,10 @@ class Manager
             \Magento\Sales\Model\Order::STATE_PROCESSING
         );
 
+        $this->logger->addInfo(
+            "Acknowledged order orderId: {$order->getIncrementId()}. qouteId: {$order->getQuoteId()} "
+        );
+
         $this->orderManagement->notify($order->getEntityId());
 
         return [
@@ -200,6 +220,10 @@ class Manager
             $order,
             $orderStatusAfter,
             \Magento\Sales\Model\Order::STATE_HOLDED
+        );
+
+        $this->logger->addInfo(
+            "Hold order orderId: {$order->getIncrementId()}. qouteId: {$order->getQuoteId()} "
         );
 
         return [
@@ -233,6 +257,10 @@ class Manager
 
         $this->orderManagement->cancel($order->getId());
 
+        $this->logger->addInfo(
+            "Cancel order orderId: {$order->getIncrementId()}. qouteId: {$order->getQuoteId()} "
+        );
+
         $this->updateOrderStatus(
             $order,
             $this->config->create()->getOrderStatusDenied(),
@@ -254,10 +282,12 @@ class Manager
         $this->unHoldOrder($order);
 
         if (!$order->canInvoice()) {
+            $this->logger->addInfo(
+                "Could not create Magento invoice: {$order->getIncrementId()}. qouteId: {$order->getQuoteId()} "
+            );
             return [
                 'message' => 'Can not create invoice'
             ];
-            // log something
         }
 
         $this->updateOrderStatus(
@@ -328,7 +358,6 @@ class Manager
 
         return reset($orderList);
     }
-
 
     private function updateOrderStatus($order, $status, $state)
     {

@@ -9,18 +9,21 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $collectorAdapter;
     protected $orderManager;
     protected $orderDataHandler;
+    protected $logger;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Webbhuset\CollectorBankCheckout\Adapter $collectorAdapter,
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Webbhuset\CollectorBankCheckout\Data\OrderHandlerFactory $orderDataHandler,
-        \Magento\Framework\View\Result\PageFactory $pageFactory
+        \Magento\Framework\View\Result\PageFactory $pageFactory,
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->pageFactory      = $pageFactory;
         $this->collectorAdapter = $collectorAdapter;
         $this->orderManager     = $orderManager;
         $this->orderDataHandler = $orderDataHandler;
+        $this->logger           = $logger;
 
         parent::__construct($context);
     }
@@ -34,10 +37,12 @@ class Index extends \Magento\Framework\App\Action\Action
         try {
             $order = $orderManager->getOrderByPublicToken($reference);
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
-            // error handling and logging
             $page->getLayout()
                 ->getBlock('collectorbank_success_iframe');
-
+            $this->logger->addCritical(
+                "Failed to load success page - Could not open order by publicToken: $reference. "
+                . $e->getMessage()
+            );
             return $page;
         }
 
