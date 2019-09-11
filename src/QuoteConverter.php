@@ -51,7 +51,7 @@ class QuoteConverter
         $item = new Item(
             $id,
             $description,
-            $unitPrice,
+            round($unitPrice, 2),
             $quantity,
             $vat,
             $requiresElectronicId,
@@ -79,7 +79,7 @@ class QuoteConverter
         $item = new Item(
             $id,
             $description,
-            $unitPrice,
+            round($unitPrice, 2),
             $quantity,
             $vat
         );
