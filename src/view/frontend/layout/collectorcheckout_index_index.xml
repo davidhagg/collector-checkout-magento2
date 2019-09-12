@@ -2,6 +2,14 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="checkout_cart_index" />
     <body>
+        <!-- Cart item renderers -->
+        <referenceBlock name="checkout.cart.item.renderers.bundle" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
+        <referenceBlock name="checkout.cart.item.renderers.virtual" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
+        <referenceBlock name="checkout.cart.item.renderers.default" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
+        <referenceBlock name="checkout.cart.item.renderers.simple" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
+        <referenceBlock name="checkout.cart.item.renderers.configurable" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
+        <referenceBlock name="checkout.cart.item.renderers.grouped" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
+
 
         <referenceContainer name="checkout.cart.items">
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Magento_Checkout::onepage.phtml" cacheable="false" before="-">
