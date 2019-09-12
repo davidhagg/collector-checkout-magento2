@@ -35,6 +35,7 @@
         <move element="checkout.cart.totals.container" destination="checkout.cart.container" after="-"/>
         <move element="checkout.cart.coupon" destination="checkout.cart.container" after="-"/>
         <referenceContainer name="cart.summary" remove="true" />
+        <referenceBlock class="Magento\Checkout\Block\Cart\Grid" name="checkout.cart.form" template="Webbhuset_CollectorBankCheckout::cart/form.phtml" />
         <referenceBlock name="checkout.cart.shipping" template="Webbhuset_CollectorBankCheckout::cart/shipping.phtml">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">
