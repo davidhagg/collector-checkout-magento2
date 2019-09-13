@@ -9,6 +9,11 @@ define([
 
     return function (overriddenFunction) {
         return wrapper.wrap(overriddenFunction, function (originalAction) {
+
+            if (!window.collector) {
+                return originalAction();
+            }
+
             collectorIframe.suspend();
             return originalAction().done(function () {
                 collectorIframe.resume();
