@@ -24,11 +24,20 @@ class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
         $quote = $observer->getQuote();
-        if (!$quote->getIsActive() || !$this->config->getIsActive()) {
+        if (
+            !$quote->getIsActive()
+            || !$this->config->getIsActive()
+            || !$this->isInitialized($quote)
+        ) {
             return;
         }
 
         $this->adapter->updateCart($quote);
         $this->adapter->updateFees($quote);
+    }
+
+    protected function isInitialized($quote)
+    {
+        return null !== $quote->getCollectorbankPrivateId();
     }
 }
