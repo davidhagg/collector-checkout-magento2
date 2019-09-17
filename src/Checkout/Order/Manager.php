@@ -346,7 +346,7 @@ class Manager
         return $pendingCollectorOrders;
     }
 
-    private function getColumnFromSalesOrder($column, $value): \Magento\Sales\Api\Data\OrderInterface
+    protected function getColumnFromSalesOrder($column, $value): \Magento\Sales\Api\Data\OrderInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter($column, $value, 'eq')->create();

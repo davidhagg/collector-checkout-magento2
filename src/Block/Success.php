@@ -70,7 +70,7 @@ class Success extends \Magento\Framework\View\Element\Template
         $this->setEnhancedEcommerceDatalayer($order);
     }
 
-    private function setAnalyticsDatalayer(\Magento\Sales\Api\Data\OrderInterface $order)
+    protected function setAnalyticsDatalayer(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         $products = [];
         foreach ($order->getAllVisibleItems() as $item) {

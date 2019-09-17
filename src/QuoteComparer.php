@@ -43,7 +43,7 @@ class QuoteComparer
         return serialize($collectorCartItems) == serialize($cartItems);
     }
 
-    private function removeColumns(&$item, $key)
+    protected function removeColumns(&$item, $key)
     {
         unset($item['requiresElectronicId'], $item['sku']);
     }

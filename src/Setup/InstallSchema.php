@@ -22,7 +22,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         $setup->endSetup();
     }
 
-    private function addCollectorBankQuoteColumns(\Magento\Framework\Setup\SchemaSetupInterface $setup)
+    protected function addCollectorBankQuoteColumns(\Magento\Framework\Setup\SchemaSetupInterface $setup)
     {
         $table = $setup->getTable('quote');
 

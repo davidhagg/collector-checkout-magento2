@@ -249,7 +249,7 @@ class Config implements
         return $this->getConfigValue('test_mode_b2b') ? $this->getConfigValue('test_mode_b2b') : "";
     }
 
-    private function getConfigValue($name)
+    protected function getConfigValue($name)
     {
         $value = $this->scopeConfig->getValue('payment/collectorbank_checkout/' . $name);
 

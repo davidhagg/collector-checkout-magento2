@@ -23,7 +23,7 @@ class Manager
         return $this->getColumnFromQuote("collectorbank_public_id", $publicToken);
     }
 
-    private function getColumnFromQuote($column, $value): \Magento\Quote\Api\Data\CartInterface
+    protected function getColumnFromQuote($column, $value): \Magento\Quote\Api\Data\CartInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter($column, $value, 'eq')->create();

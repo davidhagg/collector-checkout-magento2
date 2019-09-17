@@ -52,7 +52,7 @@ class PaymentHandler
         return $this->extractValue($info, "result");
     }
 
-    private function extractValue($array, $key)
+    protected function extractValue($array, $key)
     {
         if (!isset($array[$key])) {
 
