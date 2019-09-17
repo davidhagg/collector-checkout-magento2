@@ -1,9 +1,17 @@
 define([
     'uiElement',
-    'Magento_Checkout/js/model/url-builder',
     'mage/storage',
     'Webbhuset_CollectorBankCheckout/js/iframe',
-], function (Element, urlBuilder, storage, collectorIframe) {
+    'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/model/shipping-rate-registry',
+    'Magento_Checkout/js/model/shipping-rate-processor/new-address',
+    'Magento_Checkout/js/model/cart/totals-processor/default',
+    'Magento_Checkout/js/action/select-shipping-address',
+    'Magento_Checkout/js/model/cart/cache',
+    'Magento_Customer/js/customer-data',
+    'Magento_Checkout/js/action/create-shipping-address',
+    'Magento_Checkout/js/checkout-data',
+], function (Element, storage, collectorIframe, quote, rateRegistry, defaultProcessor, totalsDefaultProvider, selectShippingAddress, cartCache, customerData, createNewShippingAddress, checkoutData) {
     'use strict';
     return Element.extend({
         defaults: {
@@ -96,10 +104,32 @@ define([
                     console.error(response);
                 }
             ).success(
-                function () {
+                function (response) {
+                    var address = quote.shippingAddress();
+                    var type = address.getType();
+                    var rateProcessors = [];
+
+                    address.postcode = response.postcode;
+                    address.region = response.region;
+                    address.countryId = response.country_id;
+
+                    checkoutData.setSelectedShippingRate(response.shipping_method);
+
+                    cartCache.clear('address');
+                    cartCache.clear('totals');
+
+                    rateRegistry.set(address.getCacheKey(), null);
+                    rateRegistry.set(address.getKey(), null);
+
+                    rateProcessors['default'] = defaultProcessor;
+                    rateProcessors[type] ?
+                        rateProcessors[type].getRates(quote.shippingAddress()) :
+                        rateProcessors['default'].getRates(quote.shippingAddress());
+
+                    totalsDefaultProvider.estimateTotals(quote.shippingAddress());
                     collectorIframe.resume();
                 }
             );
-        }
+        },
     });
 });

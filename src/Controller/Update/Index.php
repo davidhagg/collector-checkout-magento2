@@ -50,9 +50,14 @@ class Index extends \Magento\Framework\App\Action\Action
         }
 
         $quote = $this->collectorAdapter->synchronize($quote);
+        $shippingAddress = $quote->getShippingAddress();
 
         $result->setData(
             [
+                'postcode' => $shippingAddress->getPostcode(),
+                'region' => $shippingAddress->getRegion(),
+                'country_id' => $shippingAddress->getCountryId(),
+                'shipping_method' => $shippingAddress->getShippingMethod(),
                 'updated' => true
             ]
         );

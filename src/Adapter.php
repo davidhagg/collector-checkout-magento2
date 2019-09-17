@@ -61,18 +61,16 @@ class Adapter
 
         $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
 
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true)
+            ->collectShippingRates()->save();
+
+        if (!$shippingAddress->getShippingMethod()) {
+            $this->quoteUpdater->setDefaultShippingMethod($quote);
+        }
+
         $quote->collectTotals()
-            ->save();
-
-        $newFees = $this->quoteConverter->getFees($quote);
-        if ($oldFees != $newFees) {
-            $this->updateFees($quote);
-        }
-
-        $newCart = $this->quoteConverter->getCart($quote);
-        if ($oldCart != $newCart) {
-            $this->updateCart($quote);
-        }
+            ->save(); // Save observer triggers update fees and update cart
 
         return $quote;
     }

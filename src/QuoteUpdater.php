@@ -81,23 +81,29 @@ class QuoteUpdater
         if ($quote->getShippingAddress()->getShippingMethod()) {
             return $quote;
         }
-        $shippingAdress = $quote->getShippingAddress();
+        $shippingAddress = $quote->getShippingAddress();
         $countryCode = $this->config->create()->getCountryCode();
 
-        $shippingAdress->setCountryId($countryCode)
+        $shippingAddress->setCountryId($countryCode)
             ->setCollectShippingRates(true)
             ->collectShippingRates();
-        $defaultShippingMethod = $this->getDefaultShippingMethod($quote);
 
-        if ($defaultShippingMethod) {
-            $shippingAdress
-                ->setShippingMethod($defaultShippingMethod);
-        }
+        $this->setDefaultShippingMethod($quote);
 
         return $quote;
     }
 
-    private function getDefaultShippingMethod(Quote $quote)
+    public function setDefaultShippingMethod($quote)
+    {
+        $defaultShippingMethod = $this->getDefaultShippingMethod($quote);
+
+        if ($defaultShippingMethod) {
+            $quote->getShippingAddress()
+                ->setShippingMethod($defaultShippingMethod);
+        }
+    }
+
+    protected function getDefaultShippingMethod(Quote $quote)
     {
         $shippingAddress = $quote->getShippingAddress();
         $rates = $this->shippingMethodManagement->getList($quote->getId());
