@@ -45,7 +45,7 @@ class QuoteConverter
         $unitPrice              = (float) $quoteItem->getPriceInclTax();
         $quantity               = (int) $quoteItem->getQty();
         $vat                    = (float) $quoteItem->getTaxPercent();
-        $requiresElectronicId   = (bool) $quoteItem->getIsVirtual();
+        $requiresElectronicId   = (bool) $this->requiresElectronicId($quoteItem);
         $sku                    = (string) $quoteItem->getSku();
 
         $item = new Item(
@@ -195,5 +195,18 @@ class QuoteConverter
     public function getReference(\Magento\Quote\Model\Quote $quote)
     {
         return $quote->getReservedOrderId();
+    }
+
+    public function requiresElectronicId($quoteItem)
+    {
+        if ($quoteItem->getIsVirtual()) {
+            return true;
+        }
+
+        if ($quoteItem->getProductType() == \Magento\Downloadable\Model\Product\Type::TYPE_DOWNLOADABLE) {
+            return true;
+        }
+
+        return false;
     }
 }
