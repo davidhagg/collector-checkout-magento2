@@ -58,12 +58,8 @@ class Adapter
         $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
         $oldFees = $checkoutData->getFees();
         $oldCart = $checkoutData->getCart();
-
         $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
-
         $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->setCollectShippingRates(true)
-            ->collectShippingRates()->save();
 
         if (!$shippingAddress->getShippingMethod()) {
             $this->quoteUpdater->setDefaultShippingMethod($quote);
