@@ -64,9 +64,6 @@ class QuoteUpdater
             $customerId = $this->session->getCustomer()->getId();
             $customer = $this->customerRepositoryInterface->getById($customerId);
 
-            $customer->setDefaultBilling($billingAddress);
-            $customer->setDefaultShipping($shippingAddress);
-
             $this->customerRepositoryInterface->save($customer);
 
             $quote->setCustomer($customer);
