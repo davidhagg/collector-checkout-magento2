@@ -1,0 +1,17 @@
+<?php
+    $customerTypes = $block->getAllowedCustomerTypesData();
+?>
+<?php if (count($customerTypes) > 1): ?>
+<div style="float: right;">
+    <?php foreach ($customerTypes as $num => $customerType): ?>
+        <?php if (isset($customerType['isActive'])): ?>
+            <?= $customerType['title'] ?>
+        <?php else: ?>
+            <a href ="<?= $customerType['checkoutUrl'] ?>">
+                <?= $customerType['title'] ?>
+            </a>
+        <?php endif; ?>
+        <?= (1 == $num) ? '|' : '' ?>
+    <?php endforeach; ?>
+</div>
+<?php endif; ?>

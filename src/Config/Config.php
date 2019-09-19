@@ -137,7 +137,8 @@ class Config implements
 
     public function getRedirectPageUri(): string
     {
-        $urlKey = "collectorcheckout/success/index/reference/{checkout.publictoken}";
+        $checkoutUrl = \Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_URL_KEY;
+        $urlKey = $checkoutUrl . "/success/index/reference/{checkout.publictoken}";
 
         $url = $this->storeManager->getStore()->getUrl($urlKey);
 
@@ -149,7 +150,6 @@ class Config implements
         $urlKey = "collectorbank/notification/index/reference/{checkout.publictoken}";
 
         if ($this->getCustomBaseUrl()) {
-
             return $this->getCustomBaseUrl() . $urlKey;
         }
 
@@ -161,7 +161,6 @@ class Config implements
         $urlKey = "collectorbank/validation/index/reference/{checkout.publictoken}";
 
         if ($this->getCustomBaseUrl()) {
-
             return $this->getCustomBaseUrl() . $urlKey;
         }
 
@@ -202,7 +201,6 @@ class Config implements
     {
         $value = $this->getConfigValue('password');
         if (!$value) {
-
             return "";
         }
 
@@ -230,7 +228,6 @@ class Config implements
     {
         $value = $this->getConfigValue('test_mode_password');
         if (!$value) {
-
             return "";
         }
 
@@ -276,5 +273,39 @@ class Config implements
     public function getCustomBaseUrl()
     {
         return $this->getConfigValue('custom_base_url');
+    }
+
+    public function getCustomerType()
+    {
+        $quote = $this->checkoutSession->getQuote();
+        $customerType = $this->quoteDataHandler->getCustomerType($quote);
+
+        if ($customerType) {
+
+            return $customerType;
+        }
+
+        return $this->getDefaultCustomerType();
+    }
+
+    public function getCustomerStoreId()
+    {
+        $customerType = $this->getCustomerType();
+
+        if (\Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
+
+            return $this->getB2C();
+        } else {
+
+            return $this->getB2B();
+        }
+    }
+
+    public function getCheckoutUrl()
+    {
+        $urlKey = \Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_URL_KEY;
+        $url = $this->storeManager->getStore()->getUrl($urlKey);
+
+        return $url;
     }
 }

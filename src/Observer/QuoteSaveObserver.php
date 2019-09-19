@@ -5,7 +5,7 @@ namespace Webbhuset\CollectorBankCheckout\Observer;
 class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
 {
     protected $config;
-    protected $adpter;
+    protected $adapter;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\Config\Config $config,

@@ -80,7 +80,7 @@ class Adapter
         $fees = $this->quoteConverter->getFees($quote);
         $initCustomer = $this->quoteConverter->getInitializeCustomer($quote);
 
-        $config = $this->getConfig($quote->getStoreId());
+        $config = $this->getConfig($this->config->getCustomerStoreId());
         $countryCode = $config->getCountryCode();
         $adapter = $this->getAdapter($config);
 
@@ -97,7 +97,7 @@ class Adapter
 
             $this->quoteDataHandler->setPrivateId($quote, $collectorSession->getPrivateId())
                 ->setPublicToken($quote, $collectorSession->getPublicToken())
-                ->setStoreId($quote, $config->getStoreId());
+                ->setCustomerType($quote, $this->config->getCustomerStoreId());
 
             $this->quoteRepository->save($quote);
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {

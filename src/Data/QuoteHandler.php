@@ -30,14 +30,14 @@ class QuoteHandler
         return $this;
     }
 
-    public function getStoreId(Quote $quote)
+    public function getCustomerType(Quote $quote)
     {
         return $quote->getCollectorbankStoreId();
     }
 
-    public function setStoreId(Quote $quote, $id)
+    public function setCustomerType(Quote $quote, $customerType)
     {
-        $quote->setCollectorbankStoreId($id);
+        $quote->setCollectorbankStoreId($customerType);
 
         return $this;
     }
