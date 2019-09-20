@@ -108,10 +108,10 @@ class QuoteConverter
             return null;
         }
 
-        $id             = (string) $method;
-        $description    = (string) $shippingAddress->getShippingDescription();
-        $unitPrice      = (float) $shippingAddress->getShippingInclTax();
-        $vatPercent     = (float) $this->getShippingTaxPercent($quote);
+        $id          = (string) $method;
+        $description = ((string) $shippingAddress->getShippingDescription()) ? ((string) $shippingAddress->getShippingDescription()): (string) $method;
+        $unitPrice   = (float) $shippingAddress->getShippingInclTax();
+        $vatPercent  = (float) $this->getShippingTaxPercent($quote);
 
         $fee = new Fee(
             $id,
