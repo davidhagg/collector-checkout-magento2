@@ -48,7 +48,9 @@ class Index extends \Magento\Framework\App\Action\Action
             && $customerType
         ) {
             $this->quoteDataHandler->setCustomerType($quote, $customerType);
-            $this->quoteDataHandler->setPublicToken($quote, "");
+            $this->quoteDataHandler->setPublicToken($quote, null);
+            $this->quoteDataHandler->setPrivateId($quote, null);
+            $this->quoteRepository->save($quote);
         }
 
         $publicToken = $this->collectorAdapter->initOrSync($quote);
