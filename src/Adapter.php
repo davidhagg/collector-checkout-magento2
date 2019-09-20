@@ -73,7 +73,7 @@ class Adapter
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $quote = $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
-        // $this->quoteRepository->save($quote);
+        $this->quoteRepository->save($quote);
 
         $cart = $this->quoteConverter->getCart($quote);
         $fees = $this->quoteConverter->getFees($quote);
@@ -159,7 +159,6 @@ class Adapter
         $config = $this->getConfig($this->config->getCustomerStoreId());
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
-
         $cart = $this->quoteConverter->getCart($quote);
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
