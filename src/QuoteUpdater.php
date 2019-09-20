@@ -54,6 +54,8 @@ class QuoteUpdater
                 ->setCountryId($checkoutData->getCountryCode());
         }
 
+        $shippingAddress->setCollectShippingRates(true);
+
         $this->setCustomerData($quote, $checkoutData);
         $this->setPaymentMethod($quote);
 
