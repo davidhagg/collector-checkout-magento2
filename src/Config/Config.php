@@ -248,7 +248,10 @@ class Config implements
 
     protected function getConfigValue($name)
     {
-        $value = $this->scopeConfig->getValue('payment/collectorbank_checkout/' . $name);
+        $value = $this->scopeConfig->getValue(
+            'payment/collectorbank_checkout/' . $name,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
 
         return $value;
     }
@@ -281,7 +284,6 @@ class Config implements
         $customerType = $this->quoteDataHandler->getCustomerType($quote);
 
         if ($customerType) {
-
             return $customerType;
         }
 
@@ -293,10 +295,8 @@ class Config implements
         $customerType = $this->getCustomerType();
 
         if (\Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
-
             return $this->getB2C();
         } else {
-
             return $this->getB2B();
         }
     }
