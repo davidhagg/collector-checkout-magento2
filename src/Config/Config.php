@@ -92,7 +92,7 @@ class Config implements
 
     public function getCountryCode() : string
     {
-        return 'SE';
+        return $this->getConfigValue('country_code');
     }
 
     public function getStoreId() : string
