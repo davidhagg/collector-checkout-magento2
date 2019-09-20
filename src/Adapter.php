@@ -33,7 +33,6 @@ class Adapter
     public function initOrSync(\Magento\Quote\Model\Quote $quote) : string
     {
         $publicToken = $this->quoteDataHandler->getPublicToken($quote);
-
         if ($publicToken) {
             $this->synchronize($quote);
         } else {
@@ -73,14 +72,15 @@ class Adapter
 
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
-        $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
-        $this->quoteRepository->save($quote);
+        $quote = $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
+        // $this->quoteRepository->save($quote);
 
         $cart = $this->quoteConverter->getCart($quote);
         $fees = $this->quoteConverter->getFees($quote);
         $initCustomer = $this->quoteConverter->getInitializeCustomer($quote);
 
-        $config = $this->getConfig($this->config->getCustomerStoreId());
+        $config = $this->getConfig($this->config->getStoreId());
+
         $countryCode = $config->getCountryCode();
         $adapter = $this->getAdapter($config);
 
@@ -97,7 +97,7 @@ class Adapter
 
             $this->quoteDataHandler->setPrivateId($quote, $collectorSession->getPrivateId())
                 ->setPublicToken($quote, $collectorSession->getPublicToken())
-                ->setCustomerType($quote, $this->config->getCustomerStoreId());
+                ->setCustomerType($quote, $this->config->getCustomerType());
 
             $this->quoteRepository->save($quote);
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
@@ -134,7 +134,7 @@ class Adapter
 
     public function updateFees(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
-        $config = $this->getConfig($quote->getStoreId());
+        $config = $this->getConfig($this->config->getCustomerStoreId());
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
@@ -156,7 +156,7 @@ class Adapter
 
     public function updateCart(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
-        $config = $this->getConfig($quote->getStoreId());
+        $config = $this->getConfig($this->config->getCustomerStoreId());
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 

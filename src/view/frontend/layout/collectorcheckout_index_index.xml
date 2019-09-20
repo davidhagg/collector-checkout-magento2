@@ -12,6 +12,7 @@
 
 
         <referenceContainer name="checkout.cart.items">
+            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout\CustomerTypeSwitcher" name="collectorbank_checkout_customer_type" template="Webbhuset_CollectorBankCheckout::checkout/customerTypeSwitcher.phtml" cacheable="false" before="-" />
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Magento_Checkout::onepage.phtml" cacheable="false" before="-">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
@@ -26,7 +27,6 @@
                     </argument>
                 </arguments>
             </block>
-            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout\CustomerTypeSwitcher" name="collectorbank_checkout_customer_type" template="Webbhuset_CollectorBankCheckout::checkout/customerTypeSwitcher.phtml" cacheable="false" />
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorBankCheckout::iframe.phtml" cacheable="false" />
         </referenceContainer>
 

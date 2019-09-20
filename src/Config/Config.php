@@ -97,7 +97,7 @@ class Config implements
 
     public function getStoreId() : string
     {
-        return $this->getB2C();
+        return $this->getCustomerStoreId();
     }
 
     public function getB2C() : string
