@@ -349,6 +349,25 @@
                     </comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
+
+
+                <field
+                        id="profile_name"
+                        translate="label"
+                        type="text"
+                        sortOrder="106"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Profile name</label>
+                    <comment>
+                       If you have been provided with a profile name from Collector Bank, enter it here, otherwise leave this field empty.
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
             </group>
         </section>
     </system>

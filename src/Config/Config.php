@@ -69,7 +69,7 @@ class Config implements
             'productionModeB2C'       => $this->getProductionModeB2C(),
             'productionModeB2B'       => $this->getProductionModeB2B(),
             'customBaseUrl'           => $this->getCustomBaseUrl(),
-            'createCustomerAccount'   => $this->getCreateCustomerAccount(),
+            'createCustomerAccount'   => $this->getCreateCustomerAccount()
         ];
 
         return $data;
@@ -189,7 +189,7 @@ class Config implements
 
     public function getProfileName(): string
     {
-        return "profilename";
+        return $this->getConfigValue('profile_name');
     }
 
     public function getProductionModeUsername(): string
