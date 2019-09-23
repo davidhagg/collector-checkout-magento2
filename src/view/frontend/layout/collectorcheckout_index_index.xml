@@ -2,6 +2,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="checkout_cart_index" />
     <body>
+        <referenceBlock name="checkout.cart.crosssell" remove="true"/>
+
         <!-- Cart item renderers -->
         <referenceBlock name="checkout.cart.item.renderers.bundle" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
         <referenceBlock name="checkout.cart.item.renderers.virtual" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
@@ -29,7 +31,6 @@
             </block>
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorBankCheckout::iframe.phtml" cacheable="false" />
         </referenceContainer>
-
         <referenceBlock class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon" remove="true"/>
         <move element="checkout.cart.shipping" destination="checkout.cart.items" before="collectorbank_checkout_iframe"/>
         <move element="checkout.cart.totals.container" destination="checkout.cart.container" after="-"/>
