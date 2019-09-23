@@ -163,8 +163,10 @@ class Adapter
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         try {
-            $collectorSession->setPrivateId($privateId)
-                ->updateCart($cart);
+            if (empty($cart->getItems())) {
+                $collectorSession->setPrivateId($privateId)
+                    ->updateCart($cart);
+            }
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
             $this->logger->addCritical("Response error when updating cart. " . $e->getMessage());
             die;
