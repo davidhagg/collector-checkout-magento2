@@ -55,6 +55,7 @@ class QuoteUpdater
         }
 
         $shippingAddress->setCollectShippingRates(true);
+        $quote->setNeedsCollectorUpdate(true);
 
         $this->setCustomerData($quote, $checkoutData);
         $this->setPaymentMethod($quote);

@@ -2,7 +2,7 @@
 
 namespace Webbhuset\CollectorBankCheckout\Observer;
 
-class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
+class UpdateOrderItemsChanged implements \Magento\Framework\Event\ObserverInterface
 {
     protected $config;
     protected $adapter;
@@ -15,27 +15,16 @@ class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
         $this->adapter = $adapter;
     }
 
-    /**
-     * On quote save, update collector order
-     *
-     * @param \Magento\Framework\Event\Observer $observer
-     * @return void
-     */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        $quote = $observer->getQuote();
-
-        if (
-            !$quote->getIsActive()
-            || !$quote->getNeedsCollectorUpdate()
-            || !$this->config->getIsActive()
-            || !$this->isInitialized($quote)
-        ) {
+        if (!$this->config->getIsActive()) {
             return;
         }
 
-        $this->adapter->updateCart($quote);
-        $this->adapter->updateFees($quote);
+        if ($observer->getCart()) {
+            $quote = $observer->getCart()->getQuote();
+            $quote->setNeedsCollectorUpdate(true);
+        }
     }
 
     protected function isInitialized($quote)

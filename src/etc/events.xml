@@ -5,4 +5,7 @@
     <event name="sales_quote_save_after">
         <observer name="Webbhuset_CollectorBankCheckout_sales_quote_save_after" instance="Webbhuset\CollectorBankCheckout\Observer\QuoteSaveObserver" />
     </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="Webbhuset_CollectorBankCheckout_update_order_items_changed" instance="Webbhuset\CollectorBankCheckout\Observer\UpdateOrderItemsChanged" />
+    </event>
 </config>
