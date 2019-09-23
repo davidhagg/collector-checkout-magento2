@@ -69,6 +69,15 @@ class Index extends \Magento\Framework\App\Action\Action
             $this->logger->addCritical(
                 "Validation callback NoSuchEntityException publicToken: $reference. {$e->getMessage()}"
             );
+        } catch (\Exception $e) {
+            $response = [
+                'title' => __('Exception'),
+                'message' => __($e->getMessage())
+            ];
+            $jsonResult->setHttpResponseCode(404);
+            $this->logger->addCritical(
+                "Validation callback Unrecoverable exception publicToken: $reference. {$e->getMessage()}"
+            );
         }
 
         $jsonResult->setHeader("Content-Type", "application/json", true);
