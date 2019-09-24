@@ -54,6 +54,9 @@ class QuoteUpdater
                 ->setCountryId($checkoutData->getCountryCode());
         }
 
+        $quote->setDefaultShippingAddress($shippingAddress);
+        $quote->setDefaultBillingAddress($billingAddress);
+
         $shippingAddress->setCollectShippingRates(true);
         $quote->setNeedsCollectorUpdate(true);
 
@@ -179,7 +182,7 @@ class QuoteUpdater
             ->setTelephone($customer->getMobilePhoneNumber())
             ->setFirstname($customer->getFirstName())
             ->setLastname($customer->getLastName())
-            ->setCompany($collectorAddress->getCompanyName)
+            ->setCompany($collectorAddress->getCompanyName())
             ->setStreet([
                 $collectorAddress->getCoAddress(),
                 $collectorAddress->getAddress(),

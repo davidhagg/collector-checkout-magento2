@@ -111,8 +111,9 @@ class Adapter
     public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
+        $data = $this->acquireCheckoutInformation($privateId);
 
-        return $this->acquireCheckoutInformation($privateId);
+        return $data;
     }
 
     public function acquireCheckoutInformationFromOrder(\Magento\Quote\Model\Quote $order): \CollectorBank\CheckoutSDK\CheckoutData
@@ -122,10 +123,11 @@ class Adapter
         return $this->acquireCheckoutInformation($privateId);
     }
 
-    public function acquireCheckoutInformation($privateId): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformation($privateId, $storeId = 0): \CollectorBank\CheckoutSDK\CheckoutData
     {
-        $config = $this->getConfig();
+        $config = $this->getConfig($storeId);
         $adapter = $this->getAdapter($config);
+
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
         $collectorSession->load($privateId);
 
@@ -177,6 +179,10 @@ class Adapter
 
     public function getConfig($storeId = null) : \CollectorBank\CheckoutSDK\Config\ConfigInterface
     {
+        if ($storeId) {
+            $this->config->setStoreId($storeId);
+        }
+
         return $this->config;
     }
 

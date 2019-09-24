@@ -2,6 +2,8 @@
 
 namespace Webbhuset\CollectorBankCheckout\Config;
 
+use Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustomerType;
+
 class Config implements
     \CollectorBank\CheckoutSDK\Config\ConfigInterface,
     \CollectorBank\PaymentSDK\Config\ConfigInterface
@@ -11,19 +13,23 @@ class Config implements
     protected $encryptor;
     protected $checkoutSession;
     protected $quoteDataHandler;
+    protected $orderDataHandler;
+    protected $storeId;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
+        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler
     ) {
         $this->scopeConfig      = $scopeConfig;
         $this->encryptor        = $encryptor;
         $this->checkoutSession  = $checkoutSession;
         $this->storeManager     = $storeManager;
         $this->quoteDataHandler = $quoteDataHandler;
+        $this->orderDataHandler = $orderDataHandler;
     }
 
     public function getIsActive(): bool
@@ -95,8 +101,18 @@ class Config implements
         return $this->getConfigValue('country_code');
     }
 
+    public function setStoreId($storeId)
+    {
+        $this->storeId = $storeId;
+    }
+
     public function getStoreId() : string
     {
+        if ($this->storeId) {
+
+            return $this->storeId;
+        }
+
         return $this->getCustomerStoreId();
     }
 
@@ -299,6 +315,17 @@ class Config implements
         } else {
             return $this->getB2B();
         }
+    }
+
+    public function getStoreIdForOrder(\Magento\Sales\Api\Data\OrderInterface $order)
+    {
+        $customerType = $this->orderDataHandler->getStoreId($order);
+        if (AllowedCustomerType::PRIVATE_CUSTOMERS == $customerType) {
+
+            return $this->getB2C();
+        }
+
+        return $this->getB2B();
     }
 
     public function getCheckoutUrl()
