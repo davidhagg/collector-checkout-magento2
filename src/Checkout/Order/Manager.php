@@ -136,7 +136,7 @@ class Manager
         $collectorBankPrivateId = $this->orderHandler->getPrivateId($order);
 
         $checkoutAdapter = $this->collectorAdapter->create();
-        $storeId = $this->config->create()->getStoreIdForOrder($order);
+        $storeId = $this->orderHandler->getStoreId($order);
 
         $checkoutData = $checkoutAdapter->acquireCheckoutInformation($collectorBankPrivateId, $storeId);
 
