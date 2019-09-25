@@ -11,22 +11,31 @@ class Administration
     protected $invoiceService;
     protected $transaction;
     protected $logger;
+    protected $orderRepository;
+    protected $orderHandler;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction,
+        \Magento\Sales\Model\OrderRepository $orderRepository,
+        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler,
         \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
-        $this->config         = $config;
-        $this->invoiceService = $invoiceService;
-        $this->transaction    = $transaction;
-        $this->logger         = $logger;
+        $this->config          = $config;
+        $this->invoiceService  = $invoiceService;
+        $this->transaction     = $transaction;
+        $this->logger          = $logger;
+        $this->orderRepository = $orderRepository;
+        $this->orderHandler    = $orderHandler;
     }
 
     public function activateInvoice(string $invoiceNo, string $orderId):array
     {
-        $adapter = new SoapAdapter($this->config->create());
+        $config = $this->config->create();
+        $config = $this->setStoreIdOnConfig($config, $orderId);
+
+        $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
 
         $this->logger->addInfo(
@@ -38,7 +47,10 @@ class Administration
 
     public function cancelInvoice(string $invoiceNo, string $orderId):array
     {
-        $adapter = new SoapAdapter($this->config->create());
+        $config = $this->config->create();
+        $config = $this->setStoreIdOnConfig($config, $orderId);
+
+        $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
 
         $this->logger->addInfo(
@@ -50,7 +62,10 @@ class Administration
 
     public function creditInvoice(string $invoiceNo, string $orderId):array
     {
-        $adapter = new SoapAdapter($this->config->create());
+        $config = $this->config->create();
+        $config = $this->setStoreIdOnConfig($config, $orderId);
+
+        $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
 
         $this->logger->addInfo(
@@ -62,7 +77,10 @@ class Administration
 
     public function getInvoiceInformation(int $invoiceNo, int $orderId, string $clientIp):array
     {
-        $adapter = new SoapAdapter($this->config->create());
+        $config = $this->config->create();
+        $config = $this->setStoreIdOnConfig($config, $orderId);
+
+        $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
 
         return $invoiceAdmin->getInvoiceInformation($invoiceNo, $clientIp, $orderId);
@@ -79,5 +97,15 @@ class Administration
         );
 
         $this->transaction->create()->addInvoiceTransaction($invoice);
+    }
+
+    private function setStoreIdOnConfig(
+        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        string $orderId
+    ) {
+        $order = $this->orderRepository->get($orderId);
+        $storeId = $this->orderHandler->getStoreId($order);
+        $config->setStoreId($storeId);
+        return $config;
     }
 }
