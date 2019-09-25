@@ -4,6 +4,7 @@ namespace Webbhuset\CollectorBankCheckout;
 
 use CollectorBank\CheckoutSDK\Checkout\Customer as SDK;
 use Magento\Quote\Model\Quote as Quote;
+use Webbhuset\CollectorBankCheckout\Data\QuoteHandler;
 
 class QuoteUpdater
 {
@@ -13,6 +14,7 @@ class QuoteUpdater
     protected $config;
     protected $session;
     protected $customerRepositoryInterface;
+    protected $quoteHandler;
 
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
@@ -20,6 +22,7 @@ class QuoteUpdater
         \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Customer\Model\Session $session,
+        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler,
         \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManagement
     ) {
         $this->taxConfig                   = $taxConfig;
@@ -28,6 +31,7 @@ class QuoteUpdater
         $this->shippingMethodManagement    = $shippingMethodManagement;
         $this->session                     = $session;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
+        $this->quoteHandler                = $quoteHandler;
     }
 
     public function setQuoteData(
@@ -52,7 +56,12 @@ class QuoteUpdater
                 ->setCountryId($checkoutData->getCountryCode());
             $shippingAddress = $this->setBusinessAddressData($shippingAddress, $customer, $collectorDeliveryAddress)
                 ->setCountryId($checkoutData->getCountryCode());
+
+            $this->quoteHandler->setOrgNumber($quote, $customer->getOrganizationNumber())
+                ->setReference($quote, $customer->getInvoiceReference());
         }
+
+        $this->quoteHandler->setStoreId($this->config->create()->getCustomerStoreId());
 
         $quote->setDefaultShippingAddress($shippingAddress);
         $quote->setDefaultBillingAddress($billingAddress);

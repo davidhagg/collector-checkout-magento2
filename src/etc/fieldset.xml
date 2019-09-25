@@ -7,7 +7,10 @@
             <field name="collectorbank_public_id">
                 <aspect name="to_order" />
             </field>
-            <field name="collectorbank_store_id">
+            <field name="collectorbank_customer_type">
+                <aspect name="to_order" />
+            </field>
+            <field name="collectorbank_data">
                 <aspect name="to_order" />
             </field>
         </fieldset>

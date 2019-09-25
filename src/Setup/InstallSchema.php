@@ -39,11 +39,17 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
                 'nullable' => true,
                 'comment' => 'Collector Bank public id',
             ],
-            'collectorbank_store_id' => [
+            'collectorbank_customer_type' => [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 'length' => '255',
                 'nullable' => true,
-                'comment' => 'Collector Bank store id',
+                'comment' => 'Collector Bank customer type',
+            ],
+            'collectorbank_data' => [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'length' => '64k',
+                'nullable' => true,
+                'comment' => 'Collector Bank data'
             ]
         ];
         $this->addColumns($columns, $table, $setup);
@@ -66,11 +72,17 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
                 'nullable' => true,
                 'comment' => 'Collector Bank public id',
             ],
-            'collectorbank_store_id' => [
+            'collectorbank_customer_type' => [
                 'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
                 'length' => '255',
                 'nullable' => true,
-                'comment' => 'Collector Bank store id',
+                'comment' => 'Collector Bank customer type',
+            ],
+            'collectorbank_data' => [
+                'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                'length' => '64k',
+                'nullable' => true,
+                'comment' => 'Collector Bank data',
             ]
         ];
         $this->addColumns($columns, $table, $setup);
