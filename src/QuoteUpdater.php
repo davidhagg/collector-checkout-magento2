@@ -4,7 +4,6 @@ namespace Webbhuset\CollectorBankCheckout;
 
 use CollectorBank\CheckoutSDK\Checkout\Customer as SDK;
 use Magento\Quote\Model\Quote as Quote;
-use Webbhuset\CollectorBankCheckout\Data\QuoteHandler;
 
 class QuoteUpdater
 {
@@ -61,7 +60,7 @@ class QuoteUpdater
                 ->setReference($quote, $customer->getInvoiceReference());
         }
 
-        $this->quoteHandler->setStoreId($this->config->create()->getCustomerStoreId());
+        $this->quoteHandler->setStoreId($quote, $this->config->create()->getCustomerStoreId());
 
         $quote->setDefaultShippingAddress($shippingAddress);
         $quote->setDefaultBillingAddress($billingAddress);
