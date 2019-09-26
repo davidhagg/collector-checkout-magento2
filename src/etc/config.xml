@@ -26,6 +26,10 @@
                 <can_use_for_multishipping>false</can_use_for_multishipping>
                 <debug_mode>false</debug_mode>
                 <is_gateway>1</is_gateway>
+
+                <configuration>
+                    <country_code>SE</country_code>
+                </configuration>
             </collectorbank_checkout>
         </payment>
     </default>
