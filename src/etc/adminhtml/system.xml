@@ -13,7 +13,28 @@
                     showInWebsite="1"
                     showInStore="1"
             >
-                <label>Collector Bank Checkout</label>
+                <label>
+                    <![CDATA[
+                    <div class="collectorbank-payment-logo"></div>
+                    <div class="collectorbank-payment-byline">
+                        The Collector Checkout is a user-friendly payment solution, both for you as a merchant but also for the most important part, the end customer.
+                        </div>
+                ]]>
+                </label>
+                <fieldset_css>complex collectorbank-payment-section</fieldset_css>
+                <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Fieldset\Payment</frontend_model>
+            <group
+                    id="configuration"
+                    translate="label"
+                    type="text"
+                    sortOrder="30"
+                    showInDefault="1"
+                    showInWebsite="1"
+                    showInStore="1"
+            >
+
+
+                <label>Collector Bank Checkout Configuration</label>
                 <field
                         id="active"
                         translate="label"
@@ -347,6 +368,7 @@
 
                         No = Customers are checked out as guests no customer accounts are created.
                     </comment>
+                    <field id='active'>1</field>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
@@ -368,6 +390,7 @@
                         <field id='active'>1</field>
                     </depends>
                 </field>
+            </group>
             </group>
         </section>
     </system>

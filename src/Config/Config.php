@@ -109,7 +109,6 @@ class Config implements
     public function getStoreId() : string
     {
         if ($this->storeId) {
-
             return $this->storeId;
         }
 
@@ -205,7 +204,8 @@ class Config implements
 
     public function getProfileName(): string
     {
-        return $this->getConfigValue('profile_name');
+        $profileName = $this->getConfigValue('profile_name');
+        return $profileName ? $profileName : "";
     }
 
     public function getProductionModeUsername(): string
@@ -244,9 +244,9 @@ class Config implements
     {
         $value = $this->getConfigValue('test_mode_password');
         if (!$value) {
+
             return "";
         }
-
         $value = $this->encryptor->decrypt($value);
 
         return $value;
@@ -265,7 +265,7 @@ class Config implements
     protected function getConfigValue($name)
     {
         $value = $this->scopeConfig->getValue(
-            'payment/collectorbank_checkout/' . $name,
+            'payment/collectorbank_checkout/configuration/' . $name,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
@@ -321,7 +321,6 @@ class Config implements
     {
         $customerType = $this->orderDataHandler->getStoreId($order);
         if (AllowedCustomerType::PRIVATE_CUSTOMERS == $customerType) {
-
             return $this->getB2C();
         }
 
