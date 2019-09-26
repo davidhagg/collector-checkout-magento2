@@ -372,7 +372,6 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
-
                 <field
                         id="profile_name"
                         translate="label"
@@ -385,6 +384,97 @@
                     <label>Profile name</label>
                     <comment>
                        If you have been provided with a profile name from Collector Bank, enter it here, otherwise leave this field empty.
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
+
+
+                <field
+                        id="style_data_lang"
+                        translate="label"
+                        type="text"
+                        sortOrder="155"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Style iframe data-lang</label>
+                    <comment>
+                        (optional) The display language. Currently supported combinations are: sv-SE, en-SE, nb-NO, fi-FI, da-DK and en-DE. Both sv-SE and en-SE are available for use with swedish partners. In the other cases, the country part must match the country code used when initializing the checkout session or it will be ignored. Setting this attribute is optional and will only be of interest when there is more than one language for any single country.
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="style_data_padding"
+                        translate="label"
+                        type="text"
+                        sortOrder="160"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Style iframe data-padding</label>
+                    <comment>
+                        (optional) Set this to none in order to cancel out the left and right padding inside the iframe (by adjusting its margins and width).
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="style_data_container_id"
+                        translate="label"
+                        type="text"
+                        sortOrder="170"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Style iframe data-container-id</label>
+                    <comment>
+                        (optional) Set this to the id of an element on the page and the iframe will render inside this element instead of immediately above the script element of the loader script. Put the container element somewhere above the script element. This is to make sure the container element is loaded before trying to populate it with the iframe.
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="style_data_action_color"
+                        translate="label"
+                        type="text"
+                        sortOrder="180"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Style iframe data-action-color</label>
+                    <comment>
+                        (optional) Set this to a hexadecimal color code to change the background color of call to action buttons, formatted as the following example #582f87. Button text color will automatically be set to dark gray instead of white if not enough contrast according to WCAG 2.0 level AA for large text.
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
+
+                <field
+                        id="style_data_action_text_color"
+                        translate="label"
+                        type="text"
+                        sortOrder="190"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Style iframe data-action-text-color</label>
+                    <comment>
+                        (optional) Set this to override the automatic text color of call to action buttons. Valid values are black, white, #000000 and #ffffff. Other hexadecimal color values are also valid, but will be interpreted as either black or white (and instead of black, the actual text color will be dark gray).
                     </comment>
                     <depends>
                         <field id='active'>1</field>

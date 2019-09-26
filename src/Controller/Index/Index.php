@@ -54,8 +54,14 @@ class Index extends \Magento\Framework\App\Action\Action
         }
 
         $publicToken = $this->collectorAdapter->initOrSync($quote);
+
         $iframeConfig = new \CollectorBank\CheckoutSDK\Config\IframeConfig(
-            $publicToken
+            $publicToken,
+            $this->config->getStyleDataLang(),
+            $this->config->getStyleDataPadding(),
+            $this->config->getStyleDataContainerId(),
+            $this->config->getStyleDataActionColor(),
+            $this->config->getStyleDataActionTextColor()
         );
         $iframe = \CollectorBank\CheckoutSDK\Iframe::getScript($iframeConfig);
 

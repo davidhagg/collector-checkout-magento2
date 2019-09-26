@@ -75,7 +75,12 @@ class Config implements
             'productionModeB2C'       => $this->getProductionModeB2C(),
             'productionModeB2B'       => $this->getProductionModeB2B(),
             'customBaseUrl'           => $this->getCustomBaseUrl(),
-            'createCustomerAccount'   => $this->getCreateCustomerAccount()
+            'createCustomerAccount'   => $this->getCreateCustomerAccount(),
+            'styleDataLang'           => $this->getStyleDataLang(),
+            'styleDataPadding'        => $this->getStyleDataPadding(),
+            'styleDataContainerId'    => $this->getStyleDataContainerId(),
+            'styleDataActionColor'    => $this->getStyleDataActionColor(),
+            'styleDataActionTextColor'=> $this->getStyleDataActionTextColor()
         ];
 
         return $data;
@@ -333,5 +338,40 @@ class Config implements
         $url = $this->storeManager->getStore()->getUrl($urlKey);
 
         return $url;
+    }
+
+    public function getStyleDataLang()
+    {
+        $data = $this->getConfigValue('style_data_lang');
+
+        return ($data) ? $data : null;
+    }
+
+    public function getStyleDataPadding()
+    {
+        $data = $this->getConfigValue('style_data_padding');
+
+        return ($data) ? $data : null;
+    }
+
+    public function getStyleDataContainerId()
+    {
+        $data = $this->getConfigValue('style_data_container_id');
+
+        return ($data) ? $data : null;
+    }
+
+    public function getStyleDataActionColor()
+    {
+        $data = $this->getConfigValue('style_data_action_color');
+
+        return ($data) ? $data : null;
+    }
+
+    public function getStyleDataActionTextColor()
+    {
+        $data = $this->getConfigValue('style_data_action_text_color');
+
+        return ($data) ? $data : null;
     }
 }
