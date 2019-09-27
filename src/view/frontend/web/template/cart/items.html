@@ -1,0 +1,68 @@
+<div class="collector-items" id="mini-cart">
+    <ol id="mini-cart" class="minicart-items" data-bind="foreach: { data: getCartItems(), as: 'item' }">
+        <div data-bind="template: { name: 'Webbhuset_CollectorBankCheckout/cart/item/default' }"></div>
+    </ol>
+</div>
+
+
+<style>
+    .collector-items .product-item-details {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        max-width: 60%;
+        border-bottom: 1px solid #ccc;
+    }
+
+    .collector-items .product-item-details>* {
+        margin-right: 40px;
+    }
+
+    .collector-items .details-qty {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .collector-items .minicart-items .item-qty {
+        margin: 0 10px;
+    }
+
+    .collector-items .product-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .collector.qty-input {
+        display: flex;
+        flex-direction: row;
+    }
+    .collector.qty-input input {
+        border: 0
+    }
+
+    .collector.qty-input input:focus {
+        outline: 0;
+        box-shadow: none;
+    }
+
+    .collector.qty-button {
+        width: 20px;
+        height: 20px;
+        background: white;
+        padding: 0;
+        border: 2px solid black;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        font-weight: 700;
+
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .collector.qty-button:focus {
+        outline: 0;
+    }
+
+</style>

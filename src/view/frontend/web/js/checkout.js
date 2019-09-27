@@ -1,29 +1,45 @@
 define([
     'uiElement',
+    'jquery',
     'mage/storage',
     'Webbhuset_CollectorBankCheckout/js/iframe',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/model/shipping-rate-registry',
     'Magento_Checkout/js/model/shipping-rate-processor/new-address',
     'Magento_Checkout/js/model/cart/totals-processor/default',
-    'Magento_Checkout/js/action/select-shipping-address',
     'Magento_Checkout/js/model/cart/cache',
     'Magento_Customer/js/customer-data',
-    'Magento_Checkout/js/action/create-shipping-address',
     'Magento_Checkout/js/checkout-data',
-], function (Element, storage, collectorIframe, quote, rateRegistry, defaultProcessor, totalsDefaultProvider, selectShippingAddress, cartCache, customerData, createNewShippingAddress, checkoutData) {
+    'Magento_Ui/js/modal/confirm',
+], function (Element, $, storage, collectorIframe, quote, rateRegistry, defaultProcessor, totalsDefaultProvider, cartCache, customerData, checkoutData, confirm) {
     'use strict';
     return Element.extend({
         defaults: {
             template: 'Webbhuset_CollectorBankCheckout/checkout',
         },
         updateUrl: '',
+        timeout: null,
         getUpdateUrl: function(eventName, publicId) {
             return this.updateUrl + '?event=' + eventName + '&quoteid=' + publicId
         },
+        cartData: {},
         initialize: function (config) {
             var self = this;
             self.updateUrl = window.checkoutConfig.updateUrl;
+
+            this.cartData = customerData.get('cart');
+
+            $(document).on('ajax:updateCartItemQty', function() {
+                collectorIframe.suspend();
+                collectorIframe.resume();
+                self.fetchShippingRates();
+            });
+
+            $(document).on('ajax:removeFromCart', function() {
+                collectorIframe.suspend();
+                collectorIframe.resume();
+                self.fetchShippingRates();
+            });
 
             document.addEventListener('collectorCheckoutCustomerUpdated', self.listener.bind(self));
             document.addEventListener('collectorCheckoutOrderValidationFailed', self.listener.bind(self));
@@ -43,7 +59,7 @@ define([
                         such as a changed email, mobile phone number or delivery address.
                         This event is also fired the first time the customer is identified.
                     */
-                    this.updateCart(event);
+                    this.addressUpdated(event);
                     break;
 
                 case 'collectorCheckoutOrderValidationFailed':
@@ -92,7 +108,22 @@ define([
                     break;
             }
         },
-        updateCart: function(event) {
+        fetchShippingRates() {
+            var address = quote.shippingAddress();
+            var type = address.getType();
+            var rateProcessors = [];
+
+            rateRegistry.set(address.getCacheKey(), null);
+            rateRegistry.set(address.getKey(), null);
+
+            rateProcessors['default'] = defaultProcessor;
+            rateProcessors[type] ?
+                rateProcessors[type].getRates(quote.shippingAddress()) :
+                rateProcessors['default'].getRates(quote.shippingAddress());
+
+            totalsDefaultProvider.estimateTotals(quote.shippingAddress());
+        },
+        addressUpdated: function(event) {
             var self = this;
             collectorIframe.suspend();
             var payload = {}
@@ -106,8 +137,6 @@ define([
             ).success(
                 function (response) {
                     var address = quote.shippingAddress();
-                    var type = address.getType();
-                    var rateProcessors = [];
 
                     address.postcode = response.postcode;
                     address.region = response.region;
@@ -118,18 +147,153 @@ define([
                     cartCache.clear('address');
                     cartCache.clear('totals');
 
-                    rateRegistry.set(address.getCacheKey(), null);
-                    rateRegistry.set(address.getKey(), null);
-
-                    rateProcessors['default'] = defaultProcessor;
-                    rateProcessors[type] ?
-                        rateProcessors[type].getRates(quote.shippingAddress()) :
-                        rateProcessors['default'].getRates(quote.shippingAddress());
+                    self.fetchShippingRates();
 
                     totalsDefaultProvider.estimateTotals(quote.shippingAddress());
                     collectorIframe.resume();
                 }
             );
+        },
+        getCartItems: function() {
+
+            return this.cartData().items;
+        },
+
+        plusQty(itemId) {
+            return function () {
+                var inputElem = $('#collector-cart-item-' + itemId + '-qty');
+                var val = Number(inputElem.val());
+
+                inputElem.val(++val).change();
+            }
+        },
+
+        minusQty(itemId) {
+            return function () {
+                var inputElem = $('#collector-cart-item-' + itemId + '-qty');
+                var val = Number(inputElem.val());
+
+                inputElem.val(--val).change();
+            }
+        },
+
+        debounce(func, wait, immediate) {
+            var self = this;
+            return function() {
+                var context = this, args = arguments;
+                var later = function() {
+                    self.timeout = null;
+                    if (!immediate) func.apply(context, args);
+                };
+                var callNow = immediate && !timeout;
+                clearTimeout(self.timeout);
+                self.timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            };
+        },
+
+        updateItemQty(itemId) {
+            var self = this;
+
+            return function() {
+
+                self._ajax(window.checkout.updateItemQtyUrl, {
+                    'item_id': itemId,
+                    'item_qty': $('#collector-cart-item-' + itemId + '-qty').val()
+                }, itemId, self._updateItemQtyAfter);
+
+            };
+        },
+
+        _updateItemQtyAfter: function (itemId) {
+            var productData = this._getProductById(Number(itemId));
+
+            if (!_.isUndefined(productData)) {
+                $(document).trigger('ajax:updateCartItemQty');
+
+                if (window.location.href === this.shoppingCartUrl) {
+                    window.location.reload(false);
+                }
+            }
+        },
+
+        removeItem(itemId) {
+            var self = this;
+            return function() {
+                confirm({
+                    content: $.mage.__('Are you sure you would like to remove this item from the shopping cart?'),
+                    actions: {
+                        /** @inheritdoc */
+                        confirm: function () {
+                            self._ajax(window.checkout.removeItemUrl, {
+                                'item_id': itemId
+                            }, itemId, self._removeItemAfter);
+                        },
+
+                        /** @inheritdoc */
+                        always: function (e) {
+                            e.stopImmediatePropagation();
+                        }
+                    }
+                });
+            }
+        },
+
+       _removeItemAfter: function (itemId) {
+           var productData = this._getProductById(Number(itemId));
+
+           if (!_.isUndefined(productData)) {
+               $(document).trigger('ajax:removeFromCart', {
+                   productIds: [productData['product_id']]
+               });
+           }
+       },
+
+       _getProductById: function (productId) {
+           return _.find(customerData.get('cart')().items, function (item) {
+               return productId === Number(item['item_id']);
+           });
+       },
+
+        _ajax: function (url, data, itemId, callback) {
+            $.extend(data, {
+               'form_key': $.mage.cookies.get('form_key')
+            });
+
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'post',
+                dataType: 'json',
+                context: this,
+
+                /** @inheritdoc */
+                beforeSend: function () {
+                    collectorIframe.suspend();
+                },
+
+                /** @inheritdoc */
+                complete: function () {
+                }
+            })
+            .done(function (response) {
+                var msg;
+
+                if (response.success) {
+                    callback.call(this, itemId, response);
+                } else {
+                    msg = response['error_message'];
+
+                    if (msg) {
+                        alert({
+                            content: msg
+                        });
+                    }
+                }
+            })
+            .fail(function (error) {
+                console.log(JSON.stringify(error));
+            });
         },
     });
 });

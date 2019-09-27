@@ -1,0 +1,76 @@
+<li class="item product product-item" data-role="product-item">
+    <div class="product">
+
+        <div class="product-item-details">
+            <div class="product actions">
+                <div class="secondary">
+                    <a href="#" data-bind="attr: {'data-cart-item': item_id, title: $t('Remove item')}, click: $parent.removeItem(item_id)"
+                        class="action delete">
+                        <span data-bind="i18n: 'Remove'"></span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="product-info">
+                <strong class="product-item-name">
+                    <!-- ko if: is_visible_in_site_visibility -->
+                        <a data-bind="attr: {href: configure_url}, html: product_name"></a>
+                    <!-- /ko -->
+                    <!-- ko ifnot: is_visible_in_site_visibility-->
+                        <!-- ko if: product_has_url -->
+                        <a data-bind="attr: {href: product_url}, html: product_name"></a>
+                        <!-- /ko -->
+                        <!-- ko ifnot: product_has_url -->
+                            <!-- ko text: product_name --><!-- /ko -->
+                        <!-- /ko -->
+                    <!-- /ko -->
+                </strong>
+
+                <!-- ko if: options.length -->
+                <div class="product options">
+
+                    <div data-role="content" class="content">
+                        <strong class="subtitle"><!-- ko i18n: 'Options Details' --><!-- /ko --></strong>
+                        <dl class="product options list">
+                            <!-- ko foreach: { data: options, as: 'option' } -->
+                            <dt class="label"><!-- ko text: option.label --><!-- /ko --></dt>
+                            <dd class="values">
+                                <!-- ko if: Array.isArray(option.value) -->
+                                    <span data-bind="html: option.value.join('<br>')"></span>
+                                <!-- /ko -->
+                                <!-- ko ifnot: Array.isArray(option.value) -->
+                                    <span data-bind="text: option.value"></span>
+                                <!-- /ko -->
+                            </dd>
+                            <!-- /ko -->
+                        </dl>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+
+            <div class="details-qty qty">
+                <button class="collector qty-button" data-bind="click: $parent.minusQty(item_id)">-</button>
+
+                <input data-bind="attr: {
+                        id: 'collector-cart-item-'+item_id+'-qty',
+                        'data-cart-item': item_id,
+                        'data-item-qty': qty,
+                        'data-cart-item-id': product_sku
+                        }, value: qty,
+                        event: {change: $parent.debounce($parent.updateItemQty(item_id), 500)}
+                        "
+                        type="number"
+                        size="4"
+                        class="item-qty cart-item-qty">
+
+                <button class="collector qty-button" data-bind="click: $parent.plusQty(item_id)">+</button>
+
+            </div>
+
+            <div class="product-item-pricing">
+                <div data-bind="template: { name: 'Magento_Checkout/minicart/item/price', data: item.product_price, as: 'price'}"></div>
+            </div>
+        </div>
+    </div>
+</li>

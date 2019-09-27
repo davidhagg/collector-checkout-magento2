@@ -168,7 +168,7 @@ class Adapter
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
         try {
-            if (empty($cart->getItems())) {
+            if (!empty($cart->getItems())) {
                 $collectorSession->setPrivateId($privateId)
                     ->updateCart($cart);
             }
