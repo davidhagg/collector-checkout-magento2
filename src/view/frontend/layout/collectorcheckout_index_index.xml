@@ -4,15 +4,6 @@
     <body>
         <referenceBlock name="checkout.cart.crosssell" remove="true"/>
 
-        <!-- Cart item renderers -->
-        <referenceBlock name="checkout.cart.item.renderers.bundle" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
-        <referenceBlock name="checkout.cart.item.renderers.virtual" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
-        <referenceBlock name="checkout.cart.item.renderers.default" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
-        <referenceBlock name="checkout.cart.item.renderers.simple" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
-        <referenceBlock name="checkout.cart.item.renderers.configurable" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
-        <referenceBlock name="checkout.cart.item.renderers.grouped" template="Webbhuset_CollectorBankCheckout::cart/item/default.phtml" />
-
-
         <referenceContainer name="checkout.cart.items">
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout\CustomerTypeSwitcher" name="collectorbank_checkout_customer_type" template="Webbhuset_CollectorBankCheckout::checkout/customerTypeSwitcher.phtml" cacheable="false" before="-" />
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Magento_Checkout::onepage.phtml" cacheable="false" before="-">
@@ -22,7 +13,7 @@
                             <item name="checkout" xsi:type="array">
                                 <item name="component" xsi:type="string">collectorCheckout</item>
                                 <item name="config" xsi:type="array">
-                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/checkout</item>
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/items</item>
                                 </item>
                             </item>
                         </item>
@@ -31,6 +22,7 @@
             </block>
             <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorBankCheckout::iframe.phtml" cacheable="false" />
         </referenceContainer>
+        <referenceBlock name="checkout.cart.form" remove="true"/>
         <referenceBlock class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon" remove="true"/>
         <move element="checkout.cart.shipping" destination="checkout.cart.items" before="collectorbank_checkout_iframe"/>
         <move element="checkout.cart.totals.container" destination="checkout.cart.container" after="-"/>
