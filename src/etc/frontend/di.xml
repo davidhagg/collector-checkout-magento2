@@ -4,4 +4,7 @@
     <type name="Magento\Framework\UrlInterface">
         <plugin name="checkout_url_replacer" type="Webbhuset\CollectorBankCheckout\Plugin\CheckoutUrlReplacer" sortOrder="1" disabled="false"/>
     </type>
+    <type name="Magento\Checkout\Model\Cart">
+        <plugin name="collector_update_quote_item_change" type="Webbhuset\CollectorBankCheckout\Plugin\SetNeedsUpdateOnItemChange" sortOrder="1" disabled="false"/>
+    </type>
 </config>

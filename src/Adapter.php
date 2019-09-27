@@ -64,8 +64,11 @@ class Adapter
             $this->quoteUpdater->setDefaultShippingMethod($quote);
         }
 
-        $quote->collectTotals()
-            ->save(); // Save observer triggers update fees and update cart
+        $quote->collectTotals();
+        $this->quoteRepository->save($quote);
+
+        $this->updateFees($quote);
+        $this->updateCart($quote);
 
         return $quote;
     }
