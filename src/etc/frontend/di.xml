@@ -7,4 +7,11 @@
     <type name="Magento\Checkout\Model\Cart">
         <plugin name="collector_update_quote_item_change" type="Webbhuset\CollectorBankCheckout\Plugin\SetNeedsUpdateOnItemChange" sortOrder="1" disabled="false"/>
     </type>
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="collector_checkout_provider" xsi:type="object">Webbhuset\CollectorBankCheckout\Gateway\Config</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

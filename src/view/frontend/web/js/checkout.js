@@ -1,5 +1,5 @@
 define([
-    'uiElement',
+    'uiComponent',
     'jquery',
     'mage/storage',
     'Webbhuset_CollectorBankCheckout/js/iframe',
@@ -108,6 +108,22 @@ define([
                     break;
             }
         },
+
+        getRemoveItemImage() {
+
+            return window.checkoutConfig.payment.collector_checkout.image_remove_item;
+        },
+
+        getPlusQtyImage() {
+
+            return window.checkoutConfig.payment.collector_checkout.image_plus_qty;
+        },
+
+        getMinusQtyImage() {
+
+            return window.checkoutConfig.payment.collector_checkout.image_minus_qty;
+        },
+
         fetchShippingRates() {
             var address = quote.shippingAddress();
             var type = address.getType();

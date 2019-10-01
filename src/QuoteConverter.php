@@ -26,10 +26,20 @@ class QuoteConverter
         $quoteItems = $quote->getAllVisibleItems();
         $items = [];
         foreach ($quoteItems as $quoteItem) {
-            $items[] = $this->getCartItem($quoteItem);
+            if ($quoteItem->getProductType() === 'bundle') {
+                foreach ($quoteItem->getChildren() as $child) {
+                    $items[] = $this->getCartItem($child);
 
-            if ((float)$quoteItem->getDiscountAmount()) {
-                $items[] = $this->getDiscountItem($quoteItem);
+                    if ((float)$child->getDiscountAmount()) {
+                        $items[] = $this->getDiscountItem($child);
+                    }
+                }
+            } else {
+                $items[] = $this->getCartItem($quoteItem);
+
+                if ((float)$quoteItem->getDiscountAmount()) {
+                    $items[] = $this->getDiscountItem($quoteItem);
+                }
             }
         }
 
