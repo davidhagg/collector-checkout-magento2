@@ -2,13 +2,13 @@
     $customerTypes = $block->getAllowedCustomerTypesData();
 ?>
 <?php if (count($customerTypes) > 1): ?>
-<div style="float: right;">
+<div class="customer-type-switcher">
     <?php foreach ($customerTypes as $num => $customerType): ?>
         <?php if (isset($customerType['isActive'])): ?>
-            <?= $customerType['title'] ?>
+            <?= __($customerType['title']) ?>
         <?php else: ?>
             <a href ="<?= $customerType['checkoutUrl'] ?>">
-                <?= $customerType['title'] ?>
+                <?= __($customerType['title']) ?>
             </a>
         <?php endif; ?>
         <?= (1 == $num) ? '|' : '' ?>
