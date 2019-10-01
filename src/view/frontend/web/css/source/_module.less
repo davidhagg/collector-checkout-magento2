@@ -1,3 +1,7 @@
+@collector-green: #5CA375;
+@collector-dark-green: #599E71;
+@collector-grey: #b1b1b1;
+
 .collectorcheckout-index-index {
     .customer-type-switcher {
         display: flex;
@@ -10,7 +14,7 @@
 
         a {
             font-weight: 700;
-            color: #b1b1b1;
+            color: @collector-grey;
         }
     }
 
@@ -47,7 +51,7 @@
             button {
                 width: 100%;
                 height: 100%;
-                background: #5CA375;
+                background: @collector-green;
 
                 -webkit-box-shadow: none;
                 -moz-box-shadow: none;
@@ -58,7 +62,7 @@
                 font-size: 18px;
 
                 &:hover {
-                    background: #599E71;
+                    background: @collector-dark-green;
                 }
             }
         }
@@ -79,7 +83,7 @@
     }
 
     .shipping-header {
-        color: #b1b1b1;
+        color: @collector-grey;
         font-weight: 700;
         font-size: 14px;
     }
@@ -107,7 +111,7 @@
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
-        border-bottom: 1px solid #cccccc;
+        border-bottom: 1px solid @collector-grey;
         padding: 16px 8px;
 
         >* {
