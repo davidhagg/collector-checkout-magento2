@@ -3,7 +3,6 @@
 namespace Webbhuset\CollectorBankCheckout\Gateway;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
-use Magento\Framework\View\Asset\Repository;
 
 class Config implements ConfigProviderInterface
 {
@@ -41,9 +40,15 @@ class Config implements ConfigProviderInterface
                     'image_remove_item' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/times-solid.svg'),
                     'image_plus_qty' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/plus-solid.svg'),
                     'image_minus_qty' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/minus-solid.svg'),
+                    'newsletter_url' => $this->getNewsletterUrl()
                 ],
             ],
         ];
+    }
+
+    public function getNewsletterUrl()
+    {
+        return $this->urlBuilder->getUrl('collectorcheckout/newsletter');
     }
 
     public function getViewFileUrl($fileId, array $params = [])

@@ -38,7 +38,7 @@
         <referenceContainer name="cart.summary" remove="true" />
 
         <referenceContainer name="checkout.cart.container">
-            <block class="Magento\Framework\View\Element\Template" name="collector-discount" after="-" template="Webbhuset_CollectorBankCheckout::cart/discount.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="collector-discount" before="collector-newsletter" template="Webbhuset_CollectorBankCheckout::cart/discount.phtml">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
@@ -58,6 +58,20 @@
                                         <item name="formId" xsi:type="string">sales_rule_coupon_request</item>
                                         <item name="configSource" xsi:type="string">checkoutConfig</item>
                                     </item>
+                                </item>
+                            </item>
+                        </item>
+                    </argument>
+                </arguments>
+            </block>
+            <block class="Magento\Framework\View\Element\Template" name="collector-newsletter" template="Webbhuset_CollectorBankCheckout::checkout/newsletter.phtml" after="collector-discount">
+                <arguments>
+                    <argument name="jsLayout" xsi:type="array">
+                        <item name="components" xsi:type="array">
+                            <item name="newsletter" xsi:type="array">
+                                <item name="component" xsi:type="string">collectorCheckout</item>
+                                <item name="config" xsi:type="array">
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/newsletter</item>
                                 </item>
                             </item>
                         </item>

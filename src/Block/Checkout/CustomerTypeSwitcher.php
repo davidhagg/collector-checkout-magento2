@@ -2,8 +2,8 @@
 
 namespace Webbhuset\CollectorBankCheckout\Block\Checkout;
 
-use \Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustomerType;
-use \Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType as CustomerType;
+use Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType as CustomerType;
+use Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustomerType;
 
 class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
 {

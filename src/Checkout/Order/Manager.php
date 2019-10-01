@@ -20,6 +20,7 @@ class Manager
     protected $dateTime;
     protected $invoice;
     protected $logger;
+    protected $subscriberFactory;
 
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
@@ -34,7 +35,8 @@ class Manager
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime,
         \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger,
+        \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory
     ) {
         $this->cartManagement        = $cartManagement;
         $this->collectorAdapter      = $collectorAdapter;
@@ -49,6 +51,7 @@ class Manager
         $this->dateTime              = $dateTime;
         $this->invoice               = $invoice;
         $this->logger                = $logger;
+        $this->subscriberFactory     = $subscriberFactory;
     }
 
     /**
@@ -197,6 +200,10 @@ class Manager
         );
 
         $this->orderManagement->notify($order->getEntityId());
+
+        if ($this->orderHandler->getNewsletterSubscribe($order)) {
+            $this->subscriberFactory->create()->subscribe($order->getCustomerEmail());
+        }
 
         return [
             'order_status_before' => $orderStatusBefore,

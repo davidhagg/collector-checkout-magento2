@@ -97,6 +97,13 @@ class OrderHandler
         return $data[$name];
     }
 
+    public function getNewsletterSubscribe(Order $order):bool
+    {
+        $newsletterSubscribe = $this->getAdditionalData($order, 'newsletter_subscribe');
+
+        return (1 == (int)$newsletterSubscribe) ? true : false;
+    }
+
     private function setAdditionalData(Order $order, string $name, string $value)
     {
         $data = $this->getData($order);

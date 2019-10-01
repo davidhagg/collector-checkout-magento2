@@ -86,11 +86,20 @@ class QuoteHandler
         return $this->getAdditionalData($quote, 'store_id');
     }
 
+    public function setNewsletterSubscribe(Quote $quote, int $subscribe)
+    {
+        return $this->setAdditionalData($quote, 'newsletter_subscribe', $subscribe);
+    }
+
+    public function getNewsletterSubscribe(Quote $quote):bool
+    {
+        return $this->getAdditionalData($quote, 'newsletter_subscribe');
+    }
+
     private function getAdditionalData(Quote $quote, string $name)
     {
         $data = $this->getData($quote);
         if (!isset($data[$name])) {
-
             return null;
         }
 
