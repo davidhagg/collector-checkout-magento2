@@ -6,13 +6,16 @@ class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
 {
     protected $config;
     protected $adapter;
+    protected $quoteValidator;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\Config\Config $config,
-        \Webbhuset\CollectorBankCheckout\Adapter $adapter
+        \Webbhuset\CollectorBankCheckout\Adapter $adapter,
+        \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator
     ) {
         $this->config = $config;
         $this->adapter = $adapter;
+        $this->quoteValidator = $quoteValidator;
     }
 
     /**
@@ -30,6 +33,7 @@ class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
             || !$quote->getNeedsCollectorUpdate()
             || !$this->config->getIsActive()
             || !$this->isInitialized($quote)
+            || !$this->quoteValidator->canUseCheckout($quote)
         ) {
             return;
         }

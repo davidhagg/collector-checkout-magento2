@@ -11,6 +11,7 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $quoteConverter;
     protected $quoteRepository;
     protected $config;
+    protected $quoteValidator;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -20,7 +21,8 @@ class Index extends \Magento\Framework\App\Action\Action
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config
+        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator
     ) {
         $this->pageFactory      = $pageFactory;
         $this->checkoutSession  = $checkoutSession;
@@ -29,6 +31,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->quoteConverter   = $quoteConverter;
         $this->quoteRepository  = $quoteRepository;
         $this->config           = $config;
+        $this->quoteValidator   = $quoteValidator;
 
         return parent::__construct($context);
     }
@@ -38,8 +41,13 @@ class Index extends \Magento\Framework\App\Action\Action
         $page = $this->pageFactory->create();
         $quote = $this->checkoutSession->getQuote();
 
-        if (!$quote->hasItems()) {
-            return $page;
+        $quoteCheckoutErrors = $this->quoteValidator->getErrors($quote);
+        if (!empty($quoteCheckoutErrors)) {
+            foreach ($quoteCheckoutErrors as $error) {
+                $this->messageManager->addErrorMessage(__('Cannot use Collector Checkout: ') . $error);
+            }
+
+            return $this->resultRedirectFactory->create()->setPath('checkout/index');
         }
 
         $customerType = $this->getRequest()->getParam('customerType');
