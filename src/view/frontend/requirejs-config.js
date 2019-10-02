@@ -2,6 +2,7 @@ var config = {
     map: {
         '*': {
             collectorCheckout: 'Webbhuset_CollectorBankCheckout/js/checkout',
+            collectorNewsletter: 'Webbhuset_CollectorBankCheckout/js/newsletter',
         }
     },
     config: {

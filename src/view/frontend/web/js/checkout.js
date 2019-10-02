@@ -131,10 +131,6 @@ define([
             return window.checkoutConfig.payment.collector_checkout.image_minus_qty;
         },
 
-        getNewsletterUrl() {
-            return window.checkoutConfig.payment.collector_checkout.newsletter_url;
-        },
-
         fetchShippingRates() {
             var address = quote.shippingAddress();
             var type = address.getType();
@@ -277,21 +273,6 @@ define([
                });
            }
        },
-
-        newsletterSubscribe() {
-            var self = this;
-
-            return function() {
-
-                $.ajax({
-                    url: self.getNewsletterUrl(),
-                    data: {'subscribe': $('#checkout-newsletter-subscribe-checkbox').is(":checked")},
-                    type: 'post',
-                    dataType: 'json',
-                    context: this
-                });
-            };
-        },
 
        _getProductById: function (productId) {
            return _.find(customerData.get('cart')().items, function (item) {

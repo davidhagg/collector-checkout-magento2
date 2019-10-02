@@ -69,7 +69,7 @@
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="newsletter" xsi:type="array">
-                                <item name="component" xsi:type="string">collectorCheckout</item>
+                                <item name="component" xsi:type="string">collectorNewsletter</item>
                                 <item name="config" xsi:type="array">
                                     <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/newsletter</item>
                                 </item>
