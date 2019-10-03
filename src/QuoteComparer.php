@@ -9,13 +9,19 @@ class QuoteComparer
 {
     protected $adapter;
     protected $quoteConverter;
+    protected $config;
+    protected $storeManager;
 
     public function __construct(
         \Webbhuset\CollectorBankCheckout\AdapterFactory $adapter,
-        \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter
+        \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->adapter        = $adapter;
         $this->quoteConverter = $quoteConverter;
+        $this->config         = $config;
+        $this->storeManager   = $storeManager;
     }
 
     public function isQuoteInSync(
@@ -62,6 +68,14 @@ class QuoteComparer
         array_walk($cartItems, [$this, 'serializeElements']);
 
         return empty(array_diff($collectorCartItems, $cartItems));
+    }
+
+    public function isCurrencyMatching()
+    {
+        $collectorCurrency = $this->config->getCurrency();
+        $storeCurrency = $this->storeManager->getStore()->getCurrentCurrencyCode();
+
+        return ($collectorCurrency == $storeCurrency);
     }
 
     private function getQuoteItemsAsArray(

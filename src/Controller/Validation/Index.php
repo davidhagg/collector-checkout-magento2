@@ -77,7 +77,7 @@ class Index extends \Magento\Framework\App\Action\Action
         } catch (\Webbhuset\CollectorBankCheckout\Exception\QuoteNotInSyncException $e) {
             $response = [
                 'title' => __('Cart not in sync'),
-                'message' => __('Please add products to cart and try again')
+                'message' => __('Please refresh the page and try again.')
             ];
             $jsonResult->setHttpResponseCode(404);
             $this->logger->addCritical(

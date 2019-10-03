@@ -15,6 +15,7 @@ class Config implements
     protected $quoteDataHandler;
     protected $orderDataHandler;
     protected $storeId;
+    protected $countryData;
 
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
@@ -22,7 +23,8 @@ class Config implements
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler
+        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
+        \Webbhuset\CollectorBankCheckout\Config\Source\Country\Country $countryData
     ) {
         $this->scopeConfig      = $scopeConfig;
         $this->encryptor        = $encryptor;
@@ -30,6 +32,7 @@ class Config implements
         $this->storeManager     = $storeManager;
         $this->quoteDataHandler = $quoteDataHandler;
         $this->orderDataHandler = $orderDataHandler;
+        $this->countryData      = $countryData;
     }
 
     public function getIsActive(): bool
@@ -249,7 +252,6 @@ class Config implements
     {
         $value = $this->getConfigValue('test_mode_password');
         if (!$value) {
-
             return "";
         }
         $value = $this->encryptor->decrypt($value);
@@ -373,5 +375,13 @@ class Config implements
         $data = $this->getConfigValue('style_data_action_text_color');
 
         return ($data) ? $data : null;
+    }
+
+    public function getCurrency()
+    {
+        $currencies = $this->countryData->getCurrencyPerCountry();
+        $countryCode = $this->getCountryCode();
+
+        return $currencies[$countryCode];
     }
 }

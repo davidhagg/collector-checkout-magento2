@@ -12,6 +12,7 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $quoteRepository;
     protected $config;
     protected $quoteValidator;
+    protected $quoteComparer;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -22,7 +23,8 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Webbhuset\CollectorBankCheckout\Config\Config $config,
-        \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator
+        \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator,
+        \Webbhuset\CollectorBankCheckout\QuoteComparerFactory $quoteComparer
     ) {
         $this->pageFactory      = $pageFactory;
         $this->checkoutSession  = $checkoutSession;
@@ -32,6 +34,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->quoteRepository  = $quoteRepository;
         $this->config           = $config;
         $this->quoteValidator   = $quoteValidator;
+        $this->quoteComparer    = $quoteComparer;
 
         return parent::__construct($context);
     }
@@ -40,6 +43,10 @@ class Index extends \Magento\Framework\App\Action\Action
     {
         $page = $this->pageFactory->create();
         $quote = $this->checkoutSession->getQuote();
+
+        if (!$this->quoteComparer->create()->isCurrencyMatching()) {
+            $this->messageManager->addErrorMessage(__('Currencies are not matching with what is allowed in CollectorBank checkout'));
+        }
 
         $quoteCheckoutErrors = $this->quoteValidator->getErrors($quote);
         if (!empty($quoteCheckoutErrors)) {
