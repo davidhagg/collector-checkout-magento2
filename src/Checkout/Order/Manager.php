@@ -100,9 +100,9 @@ class Manager
     public function removeOrderIfExists(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         try {
-            $order = $this->orderHandler->setPrivateId($order, "");
-            $order = $this->orderHandler->setPublicToken($order, "");
-            $order = $this->orderHandler->setStoreId($order, "");
+            $this->orderHandler->setPrivateId($order, "")
+                ->setPublicToken($order, "")
+                ->setStoreId($order, "");
 
             $this->orderRepository->save($order);
             $this->orderManagement->cancel($order->getId());
