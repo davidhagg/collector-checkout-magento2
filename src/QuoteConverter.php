@@ -12,13 +12,16 @@ class QuoteConverter
 {
     protected $taxConfig;
     protected $taxCalculator;
+    protected $scopeConfig;
 
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
-        \Magento\Tax\Model\Calculation $taxCalculator
+        \Magento\Tax\Model\Calculation $taxCalculator,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
     ) {
         $this->taxConfig = $taxConfig;
         $this->taxCalculator = $taxCalculator;
+        $this->scopeConfig = $scopeConfig;
     }
 
     public function getCart(\Magento\Quote\Model\Quote $quote) : Cart
@@ -75,8 +78,13 @@ class QuoteConverter
     {
         $discountAmount = $quoteItem->getDiscountAmount();
         $taxPercent = $quoteItem->getTaxPercent();
+        $priceIncludesTax = $this->scopeConfig->getValue(
+            \Magento\Tax\Model\Config::CONFIG_XML_PATH_PRICE_INCLUDES_TAX,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+
         $discountTax = 0;
-        if ($taxPercent) {
+        if ($taxPercent && !$priceIncludesTax) {
             $discountTax = ($discountAmount * $taxPercent / 100);
         }
 
