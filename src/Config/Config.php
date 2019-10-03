@@ -346,7 +346,15 @@ class Config implements
     {
         $data = $this->getConfigValue('style_data_lang');
 
-        return ($data) ? $data : null;
+        return ($data) ? $data : $this->getDefaultLanguage();
+    }
+
+    public function getDefaultLanguage()
+    {
+        $language = $this->countryData->getDefaultLanguagePerCounty();
+        $countryCode = $this->getCountryCode();
+
+        return $language[$countryCode];
     }
 
     public function getStyleDataPadding()
