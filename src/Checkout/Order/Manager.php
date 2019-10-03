@@ -382,12 +382,10 @@ class Manager
         \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
     ) {
         $info = [
-            'method_title'            => \Webbhuset\CollectorBankCheckout\Gateway\Config::PAYMENT_METHOD_NAME,
             'payment_name'            => $purchaseData->getPaymentName(),
             'amount_to_pay'           => $purchaseData->getAmountToPay(),
             'invoice_delivery_method' => $purchaseData->getInvoiceDeliveryMethod(),
-            'purchase_identifier'     => $purchaseData->getPurchaseIdentifier(),
-            'result'                  => $purchaseData->getResult()->getResult(),
+            'purchase_identifier'     => $purchaseData->getPurchaseIdentifier()
         ];
         $payment->setAdditionalInformation($info);
 
