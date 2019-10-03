@@ -11,6 +11,7 @@ class Index extends \Magento\Framework\App\Action\Action
     protected $quoteRepository;
     protected $quoteManager;
     protected $logger;
+    protected $quoteComparer;
 
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
@@ -19,7 +20,8 @@ class Index extends \Magento\Framework\App\Action\Action
         \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory $quoteManager,
         \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory $customerManager,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger,
+        \Webbhuset\CollectorBankCheckout\QuoteComparerFactory $quoteComparer
     ) {
         $this->orderManager    = $orderManager;
         $this->jsonResult      = $jsonResult;
@@ -27,6 +29,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->quoteRepository = $quoteRepository;
         $this->quoteManager    = $quoteManager;
         $this->logger          = $logger;
+        $this->quoteComparer   = $quoteComparer;
 
         parent::__construct($context);
     }
@@ -36,14 +39,16 @@ class Index extends \Magento\Framework\App\Action\Action
         $reference = $this->getRequest()->getParam('reference');
         $jsonResult = $this->jsonResult->create();
         try {
+            $quoteManager = $this->quoteManager->create();
+            $quote = $quoteManager->getQuoteByPublicToken($reference);
+
+            $this->quoteComparer->create()->isQuoteInSync($quote);
+
             $orderManager = $this->orderManager->create();
             $customerManager = $this->customerManager->create();
-            $quoteManager = $this->quoteManager->create();
 
             $orderManager->removeNewOrdersByPublicToken($reference);
-            $quote = $quoteManager->getQuoteByPublicToken($reference);
             $customerManager->handleCustomerOnQuote($quote);
-
             $orderId = $orderManager->createOrder($quote);
 
             $response = [
@@ -68,6 +73,15 @@ class Index extends \Magento\Framework\App\Action\Action
             $jsonResult->setHttpResponseCode(404);
             $this->logger->addCritical(
                 "Validation callback NoSuchEntityException publicToken: $reference. {$e->getMessage()}"
+            );
+        } catch (\Webbhuset\CollectorBankCheckout\Exception\QuoteNotInSyncException $e) {
+            $response = [
+                'title' => __('Cart not in sync'),
+                'message' => __('Please add products to cart and try again')
+            ];
+            $jsonResult->setHttpResponseCode(404);
+            $this->logger->addCritical(
+                "Cart not in sync on callback QuoteNotInSyncException publicToken: $reference. {$e->getMessage()}"
             );
         } catch (\Exception $e) {
             $response = [
