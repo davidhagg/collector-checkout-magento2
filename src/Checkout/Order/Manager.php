@@ -65,8 +65,7 @@ class Manager
      */
     public function createOrder(\Magento\Quote\Model\Quote $quote): string
     {
-        $order = $this->quoteManagement->submit($quote);
-        $orderId = $order->getIncrementId();
+        $orderId = $this->quoteManagement->placeOrder($quote->getId());
 
         $this->logger->addInfo(
             "Submitted order increment id: {$orderId}. qouteId: {$quote->getId()} "
