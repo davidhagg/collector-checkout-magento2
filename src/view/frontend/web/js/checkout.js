@@ -17,15 +17,10 @@ define([
         defaults: {
             template: 'Webbhuset_CollectorBankCheckout/checkout',
         },
-        updateUrl: '',
         timeout: null,
-        getUpdateUrl: function(eventName, publicId) {
-            return this.updateUrl + '?event=' + eventName + '&quoteid=' + publicId
-        },
         cartData: {},
         initialize: function (config) {
             var self = this;
-            self.updateUrl = window.checkoutConfig.updateUrl;
 
             this.cartData = customerData.get('cart');
 
@@ -146,6 +141,10 @@ define([
         getReinitUrl() {
 
             return window.checkoutConfig.payment.collector_checkout.reinit_url;
+        },
+
+        getUpdateUrl: function(eventName, publicId) {
+            return window.checkoutConfig.payment.collector_checkout.update_url + '?event=' + eventName + '&quoteid=' + publicId
         },
 
         fetchShippingRates() {

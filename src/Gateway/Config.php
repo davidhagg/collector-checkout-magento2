@@ -42,6 +42,7 @@ class Config implements ConfigProviderInterface
                     'image_minus_qty' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/minus-solid.svg'),
                     'newsletter_url' => $this->getNewsletterUrl(),
                     'reinit_url' => $this->getReinitUrl(),
+                    'update_url' => $this->getUpdateUrl(),
                 ],
             ],
         ];
@@ -55,6 +56,11 @@ class Config implements ConfigProviderInterface
     public function getReinitUrl()
     {
         return $this->urlBuilder->getUrl('collectorcheckout/reinit');
+    }
+
+    public function getUpdateUrl()
+    {
+        return $this->urlBuilder->getUrl('collectorcheckout/update');
     }
 
     public function getViewFileUrl($fileId, array $params = [])

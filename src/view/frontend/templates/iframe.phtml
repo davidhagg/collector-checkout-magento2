@@ -2,16 +2,9 @@
     $iframe = $block->getIframe();
 ?>
 <?php if ($iframe): ?>
-<script>
-    if (window.checkoutConfig) {
-        window.checkoutConfig.updateUrl = "<?= $block->getUpdateUrl() ?>";
-    }
-</script>
     <?= $iframe ?>
 <?php else: ?>
 <div>
     <?=__('The url is no longer valid')?>
 </div>
 <?php endif; ?>
-
-

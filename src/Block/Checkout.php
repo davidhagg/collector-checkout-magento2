@@ -34,11 +34,6 @@ class Checkout extends \Magento\Framework\View\Element\Template
         return $this;
     }
 
-    public function getUpdateUrl()
-    {
-        return $this->getUrl('collectorcheckout/update');
-    }
-
     public function getCheckoutConfig()
     {
         return $this->configProvider->getConfig();
