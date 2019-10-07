@@ -11,7 +11,22 @@ define([
     'Magento_Customer/js/customer-data',
     'Magento_Checkout/js/checkout-data',
     'Magento_Ui/js/modal/confirm',
-], function (Element, $, storage, collectorIframe, quote, rateRegistry, defaultProcessor, totalsDefaultProvider, cartCache, customerData, checkoutData, confirm) {
+    'Magento_Ui/js/modal/alert',
+], function (
+        Element,
+        $,
+        storage,
+        collectorIframe,
+        quote,
+        rateRegistry,
+        defaultProcessor,
+        totalsDefaultProvider,
+        cartCache,
+        customerData,
+        checkoutData,
+        confirm,
+        alert
+    ) {
     'use strict';
     return Element.extend({
         defaults: {
@@ -327,6 +342,8 @@ define([
                         alert({
                             content: msg
                         });
+
+                        collectorIframe.resume();
                     }
                 }
             })
