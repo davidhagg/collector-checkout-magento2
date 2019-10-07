@@ -264,21 +264,21 @@ define([
             }
         },
 
-       _removeItemAfter: function (itemId) {
-           var productData = this._getProductById(Number(itemId));
+        _removeItemAfter: function (itemId) {
+            var productData = this._getProductById(Number(itemId));
 
-           if (!_.isUndefined(productData)) {
-               $(document).trigger('ajax:removeFromCart', {
-                   productIds: [productData['product_id']]
-               });
-           }
-       },
+            if (!_.isUndefined(productData)) {
+                $(document).trigger('ajax:removeFromCart', {
+                    productIds: [productData['product_id']]
+                });
+            }
+        },
 
-       _getProductById: function (productId) {
-           return _.find(customerData.get('cart')().items, function (item) {
-               return productId === Number(item['item_id']);
-           });
-       },
+        _getProductById: function (productId) {
+            return _.find(customerData.get('cart')().items, function (item) {
+                return productId === Number(item['item_id']);
+            });
+        },
 
         _ajax: function (url, data, itemId, callback) {
             $.extend(data, {
