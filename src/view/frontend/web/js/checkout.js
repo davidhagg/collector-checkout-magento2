@@ -89,6 +89,18 @@ define([
                             Occurs after a locked event when it is safe to allow user input again.
                             For instance after a purchase has been processed (regardless of whether the purchase was successful or not).
                         */
+                        var url = this.getReinitUrl();
+                        var data = { publicId: event.detail };
+                        $.ajax({
+                            url: url,
+                            data: data,
+                            type: 'post',
+                            dataType: 'json',
+                            context: this,
+                        })
+                        .fail(function(response) {
+                            console.error(response);
+                        });
                     break;
 
                 case 'collectorCheckoutReloadedByUser':
@@ -129,6 +141,11 @@ define([
         getMinusQtyImage() {
 
             return window.checkoutConfig.payment.collector_checkout.image_minus_qty;
+        },
+
+        getReinitUrl() {
+
+            return window.checkoutConfig.payment.collector_checkout.reinit_url;
         },
 
         fetchShippingRates() {
@@ -214,8 +231,6 @@ define([
                 if (callNow) func.apply(context, args);
             };
         },
-
-
 
         updateItemQty(itemId) {
             var self = this;
