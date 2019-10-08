@@ -2,6 +2,11 @@
 
 namespace Webbhuset\CollectorBankCheckout\Observer;
 
+/**
+ * Class SaveOrderBeforeSalesModelQuoteObserver
+ *
+ * @package Webbhuset\CollectorBankCheckout\Observer
+ */
 class SaveOrderBeforeSalesModelQuoteObserver implements \Magento\Framework\Event\ObserverInterface
 {
     /**

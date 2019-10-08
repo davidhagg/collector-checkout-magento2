@@ -2,11 +2,28 @@
 
 namespace Webbhuset\CollectorBankCheckout\Setup;
 
+/**
+ * Class InstallData
+ *
+ * @package Webbhuset\CollectorBankCheckout\Setup
+ */
 class InstallData implements \Magento\Framework\Setup\InstallDataInterface
 {
+    /**
+     * @var \Magento\Sales\Model\Order\StatusFactory
+     */
     protected $statusFactory;
+    /**
+     * @var \Magento\Sales\Model\ResourceModel\Order\StatusFactory
+     */
     protected $statusResourceFactory;
 
+    /**
+     * InstallData constructor.
+     *
+     * @param \Magento\Sales\Model\Order\StatusFactory               $statusFactory
+     * @param \Magento\Sales\Model\ResourceModel\Order\StatusFactory $statusResourceFactory
+     */
     public function __construct(
         \Magento\Sales\Model\Order\StatusFactory $statusFactory,
         \Magento\Sales\Model\ResourceModel\Order\StatusFactory $statusResourceFactory
@@ -15,6 +32,13 @@ class InstallData implements \Magento\Framework\Setup\InstallDataInterface
         $this->statusResourceFactory = $statusResourceFactory;
     }
 
+    /**
+     * Install data
+     *
+     * @param \Magento\Framework\Setup\ModuleDataSetupInterface $setup
+     * @param \Magento\Framework\Setup\ModuleContextInterface   $context
+     * @throws \Exception
+     */
     public function install(
         \Magento\Framework\Setup\ModuleDataSetupInterface $setup,
         \Magento\Framework\Setup\ModuleContextInterface $context

@@ -2,11 +2,29 @@
 
 namespace Webbhuset\CollectorBankCheckout\Controller\Notification;
 
+/**
+ * Class Index
+ *
+ * @package Webbhuset\CollectorBankCheckout\Controller\Notification
+ */
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory
+     */
     protected $orderManager;
+    /**
+     * @var \Magento\Framework\Controller\Result\JsonFactory
+     */
     protected $jsonResult;
 
+    /**
+     * Index constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context                          $context
+     * @param \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager
+     * @param \Magento\Framework\Controller\Result\JsonFactory               $jsonResult
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
@@ -18,6 +36,9 @@ class Index extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $jsonResult = $this->jsonResult->create();

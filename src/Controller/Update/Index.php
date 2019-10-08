@@ -2,16 +2,54 @@
 
 namespace Webbhuset\CollectorBankCheckout\Controller\Update;
 
+/**
+ * Class Index
+ *
+ * @package Webbhuset\CollectorBankCheckout\Controller\Update
+ */
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var \Magento\Framework\Controller\Result\JsonFactory
+     */
     protected $resultJsonFactory;
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
     protected $checkoutSession;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     */
     protected $collectorAdapter;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     */
     protected $config;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteConverter
+     */
     protected $quoteConverter;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteUpdater
+     */
     protected $quoteUpdater;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     */
     protected $logger;
 
+    /**
+     * Index constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context            $context
+     * @param \Magento\Checkout\Model\Session                  $checkoutSession
+     * @param \Webbhuset\CollectorBankCheckout\Adapter         $collectorAdapter
+     * @param \Webbhuset\CollectorBankCheckout\Config\Config   $config
+     * @param \Webbhuset\CollectorBankCheckout\QuoteConverter  $quoteConverter
+     * @param \Webbhuset\CollectorBankCheckout\QuoteUpdater    $quoteUpdater
+     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger   $logger
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -33,6 +71,11 @@ class Index extends \Magento\Framework\App\Action\Action
         return parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
         $result = $this->resultJsonFactory->create();

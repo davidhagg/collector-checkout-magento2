@@ -2,12 +2,33 @@
 
 namespace Webbhuset\CollectorBankCheckout\Checkout\Quote;
 
+/**
+ * Class Manager
+ *
+ * @package Webbhuset\CollectorBankCheckout\Checkout\Quote
+ */
 class Manager
 {
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
     protected $searchCriteriaBuilder;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
     protected $quoteRepository;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     */
     protected $logger;
 
+    /**
+     * Manager constructor.
+     *
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder   $searchCriteriaBuilder
+     * @param \Magento\Quote\Api\CartRepositoryInterface     $quoteRepository
+     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+     */
     public function __construct(
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
@@ -18,11 +39,26 @@ class Manager
         $this->logger = $logger;
     }
 
+    /**
+     * Get quote by public token
+     *
+     * @param $publicToken
+     * @return \Magento\Quote\Api\Data\CartInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getQuoteByPublicToken($publicToken): \Magento\Quote\Api\Data\CartInterface
     {
         return $this->getColumnFromQuote("collectorbank_public_id", $publicToken);
     }
 
+    /**
+     * Gets a the specified column from quote table
+     *
+     * @param $column
+     * @param $value
+     * @return \Magento\Quote\Api\Data\CartInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function getColumnFromQuote($column, $value): \Magento\Quote\Api\Data\CartInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
@@ -37,13 +73,5 @@ class Manager
         }
 
         return reset($quoteList);
-    }
-
-    public function activateQuote(\Magento\Quote\Api\Data\CartInterface $quote): \Magento\Quote\Api\Data\CartInterface
-    {
-        $quote->setIsActive(1)
-            ->setReservedOrderId(null);
-        $this->quoteRepository->save($quote);
-        return $quote;
     }
 }

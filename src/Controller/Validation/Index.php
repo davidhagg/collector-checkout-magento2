@@ -2,17 +2,58 @@
 
 namespace Webbhuset\CollectorBankCheckout\Controller\Validation;
 
+/**
+ * Class Index
+ *
+ * @package Webbhuset\CollectorBankCheckout\Controller\Validation
+ */
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory
+     */
     protected $orderManager;
+    /**
+     * @var \Magento\Framework\Controller\Result\JsonFactory
+     */
     protected $jsonResult;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory
+     */
     protected $customerManager;
+    /**
+     * @var
+     */
     protected $checkoutSession;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
     protected $quoteRepository;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory
+     */
     protected $quoteManager;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     */
     protected $logger;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteComparerFactory
+     */
     protected $quoteComparer;
 
+    /**
+     * Index constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context                             $context
+     * @param \Magento\Framework\Controller\Result\JsonFactory                  $jsonResult
+     * @param \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory    $orderManager
+     * @param \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory    $quoteManager
+     * @param \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory $customerManager
+     * @param \Magento\Quote\Api\CartRepositoryInterface                        $quoteRepository
+     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger                    $logger
+     * @param \Webbhuset\CollectorBankCheckout\QuoteComparerFactory             $quoteComparer
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResult,
@@ -34,6 +75,9 @@ class Index extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     */
     public function execute()
     {
         $reference = $this->getRequest()->getParam('reference');

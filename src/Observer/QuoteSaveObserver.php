@@ -2,12 +2,33 @@
 
 namespace Webbhuset\CollectorBankCheckout\Observer;
 
+/**
+ * Class QuoteSaveObserver
+ *
+ * @package Webbhuset\CollectorBankCheckout\Observer
+ */
 class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
 {
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     */
     protected $config;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     */
     protected $adapter;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteValidator
+     */
     protected $quoteValidator;
 
+    /**
+     * QuoteSaveObserver constructor.
+     *
+     * @param \Webbhuset\CollectorBankCheckout\Config\Config  $config
+     * @param \Webbhuset\CollectorBankCheckout\Adapter        $adapter
+     * @param \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator
+     */
     public function __construct(
         \Webbhuset\CollectorBankCheckout\Config\Config $config,
         \Webbhuset\CollectorBankCheckout\Adapter $adapter,
@@ -42,6 +63,12 @@ class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
         $this->adapter->updateFees($quote);
     }
 
+    /**
+     * Returns true if the checkout has been initialized on the quote
+     *
+     * @param $quote
+     * @return bool
+     */
     protected function isInitialized($quote)
     {
         return null !== $quote->getCollectorbankPrivateId();

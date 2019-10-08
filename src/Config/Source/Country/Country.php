@@ -2,14 +2,39 @@
 
 namespace Webbhuset\CollectorBankCheckout\Config\Source\Country;
 
+/**
+ * Class Country
+ *
+ * @package Webbhuset\CollectorBankCheckout\Config\Source\Country
+ */
 class Country implements \Magento\Framework\Data\OptionSourceInterface
 {
+    /**
+     * @var string Swedish country code
+     */
     const SWEDEN  = "SE";
+    /**
+     * @var string Norweigan country code
+     */
     const NORWAY  = "NO";
+    /**
+     * @var string Finish country code
+     */
     const FINLAND = "FI";
+    /**
+     * @var string Danish country code
+     */
     const DENMARK = "DK";
+    /**
+     * @var string German country code
+     */
     const GERMANY = "DE";
 
+    /**
+     * Returns an array with country name per country code
+     *
+     * @return array
+     */
     public function toOptionArray()
     {
         return [
@@ -21,6 +46,11 @@ class Country implements \Magento\Framework\Data\OptionSourceInterface
         ];
     }
 
+    /**
+     * Returns an array with currency per country code
+     *
+     * @return array
+     */
     public function getCurrencyPerCountry()
     {
         return [
@@ -32,6 +62,11 @@ class Country implements \Magento\Framework\Data\OptionSourceInterface
         ];
     }
 
+    /**
+     * Returns an array with default language per country code
+     *
+     * @return array
+     */
     public function getDefaultLanguagePerCounty()
     {
         return [

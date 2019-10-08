@@ -4,24 +4,88 @@ namespace Webbhuset\CollectorBankCheckout\Checkout\Order;
 
 use CollectorBank\CheckoutSDK\Checkout\Purchase\Result as PurchaseResult;
 
+/**
+ * Class Manager
+ *
+ * @package Webbhuset\CollectorBankCheckout\Checkout\Order
+ */
 class Manager
 {
+    /**
+     * @var \Magento\Quote\Api\CartManagementInterface
+     */
     protected $cartManagement;
+    /**
+     * @var \Magento\Sales\Model\OrderRepository
+     */
     protected $orderRepository;
-    protected $quoteRepository;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\AdapterFactory
+     */
     protected $collectorAdapter;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Data\OrderHandler
+     */
     protected $orderHandler;
+    /**
+     * @var \Magento\Framework\Api\SearchCriteriaBuilder
+     */
     protected $searchCriteriaBuilder;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Config\ConfigFactory
+     */
     protected $config;
+    /**
+     * @var \Magento\Sales\Api\OrderManagementInterface
+     */
     protected $orderManagement;
+    /**
+     * @var \Magento\Quote\Model\QuoteManagement
+     */
     protected $quoteManagement;
+    /**
+     * @var ManagerFactory
+     */
     protected $orderManager;
+    /**
+     * @var \Magento\Framework\Registry
+     */
     protected $registry;
+    /**
+     * @var \Magento\Framework\Stdlib\DateTime\DateTimeFactory
+     */
     protected $dateTime;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory
+     */
     protected $invoice;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     */
     protected $logger;
+    /**
+     * @var \Magento\Newsletter\Model\SubscriberFactory
+     */
     protected $subscriberFactory;
 
+    /**
+     * Manager constructor.
+     *
+     * @param \Magento\Quote\Api\CartManagementInterface                     $cartManagement
+     * @param \Magento\Sales\Model\OrderRepository                           $orderRepository
+     * @param \Webbhuset\CollectorBankCheckout\Data\OrderHandler             $orderHandler
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder                   $searchCriteriaBuilder
+     * @param \Webbhuset\CollectorBankCheckout\AdapterFactory                $collectorAdapter
+     * @param \Magento\Sales\Api\OrderManagementInterface                    $orderManagement
+     * @param \Webbhuset\CollectorBankCheckout\Config\ConfigFactory          $config
+     * @param \Magento\Quote\Model\QuoteManagement                           $quoteManagement
+     * @param ManagerFactory                                                 $orderManager
+     * @param \Magento\Framework\Registry                                    $registry
+     * @param \Magento\Framework\Stdlib\DateTime\DateTimeFactory             $dateTime
+     * @param \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice
+     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger                 $logger
+     * @param \Magento\Newsletter\Model\SubscriberFactory                    $subscriberFactory
+     */
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
         \Magento\Sales\Model\OrderRepository $orderRepository,
@@ -55,7 +119,7 @@ class Manager
     }
 
     /**
-     * Create order from quote id and return order id
+     * Create order from quote and return order id
      *
      * @param $quoteId
      * @return int orderId
@@ -74,6 +138,11 @@ class Manager
         return $orderId;
     }
 
+    /**
+     * Delete order
+     *
+     * @param $order
+     */
     public function deleteOrder($order)
     {
         $this->registry->register('isSecureArea', 'true');
@@ -85,6 +154,11 @@ class Manager
         $this->registry->unregister('isSecureArea', 'true');
     }
 
+    /**
+     * Removes the order with reference / public token if the order is in STATE_NEW
+     *
+     * @param $reference
+     */
     public function removeNewOrdersByPublicToken($reference)
     {
         try {
@@ -96,14 +170,14 @@ class Manager
         }
     }
 
+    /**
+     * Removes the order if it exists
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     */
     public function removeOrderIfExists(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         try {
-            $this->orderHandler->setPrivateId($order, "")
-                ->setPublicToken($order, "")
-                ->setStoreId($order, "");
-
-            $this->orderRepository->save($order);
             $this->orderManagement->cancel($order->getId());
 
             $this->deleteOrder($order);
@@ -112,7 +186,7 @@ class Manager
     }
 
     /**
-     * Create order from quote id and return order id
+     * Handles notification callbacks and take different actions based on payment result
      *
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @return array
@@ -168,6 +242,14 @@ class Manager
         return $result;
     }
 
+    /**
+     * Acknowledged orders by adding payment information and changes state to processing
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface  $order
+     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @return array
+     * @throws \Exception
+     */
     public function acknowledgeOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
@@ -210,6 +292,13 @@ class Manager
         ];
     }
 
+    /**
+     * Sets the order to On Hold
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface  $order
+     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @return array
+     */
     public function holdOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
@@ -241,6 +330,11 @@ class Manager
         ];
     }
 
+    /**
+     * Unholds the order if it is holded at put it backs in it previous state
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface $order
+     */
     public function unHoldOrder(
         \Magento\Sales\Api\Data\OrderInterface $order
     ) {
@@ -249,6 +343,13 @@ class Manager
         }
     }
 
+    /**
+     * Cancels the order
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface  $order
+     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @return array
+     */
     public function cancelOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
@@ -282,6 +383,13 @@ class Manager
         ];
     }
 
+    /**
+     * Invoices the order offline. This function is used when orders are autoactivated in Collector
+     *
+     * @param \Magento\Sales\Api\Data\OrderInterface  $order
+     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @return array
+     */
     public function activateOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
@@ -313,21 +421,23 @@ class Manager
         ];
     }
 
+    /**
+     * Gets an order based on public token
+     *
+     * @param $publicToken
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getOrderByPublicToken($publicToken): \Magento\Sales\Api\Data\OrderInterface
     {
         return $this->getColumnFromSalesOrder("collectorbank_public_id", $publicToken);
     }
 
-    public function getOrderByIncrementId($incrementOrderId): \Magento\Sales\Api\Data\OrderInterface
-    {
-        return $this->getColumnFromSalesOrder("increment_id", $incrementOrderId);
-    }
-
-    public function getOrderByQuoteId($quoteId): \Magento\Sales\Api\Data\OrderInterface
-    {
-        return $this->getColumnFromSalesOrder("quote_id", $quoteId);
-    }
-
+    /**
+     * Gets the pending orders that were create 48 hours ago or less
+     *
+     * @return array
+     */
     public function getPendingCollectorBankOrders(): array
     {
         $ageInHours = \Webbhuset\CollectorBankCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
@@ -355,6 +465,14 @@ class Manager
         return $pendingCollectorOrders;
     }
 
+    /**
+     * Gets a the specified column from sales order table
+     *
+     * @param $column
+     * @param $value
+     * @return \Magento\Sales\Api\Data\OrderInterface
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     protected function getColumnFromSalesOrder($column, $value): \Magento\Sales\Api\Data\OrderInterface
     {
         $searchCriteria = $this->searchCriteriaBuilder
@@ -368,7 +486,15 @@ class Manager
         return reset($orderList);
     }
 
-    protected function updateOrderStatus($order, $status, $state)
+    /**
+     * Updates order status and state
+     *
+     * @param $order
+     * @param $status
+     * @param $state
+     * @return $this
+     */
+    private function updateOrderStatus($order, $status, $state)
     {
         $order->setState($state)
             ->setStatus($status);
@@ -376,7 +502,13 @@ class Manager
         return $this;
     }
 
-    protected function addPaymentInformation(
+    /**
+     * Adds payment information
+     *
+     * @param \Magento\Sales\Api\Data\OrderPaymentInterface $payment
+     * @param \CollectorBank\CheckoutSDK\Checkout\Purchase  $purchaseData
+     */
+    private function addPaymentInformation(
         \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
         \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
     ) {

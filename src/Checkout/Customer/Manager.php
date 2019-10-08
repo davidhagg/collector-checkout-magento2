@@ -2,15 +2,48 @@
 
 namespace Webbhuset\CollectorBankCheckout\Checkout\Customer;
 
+/**
+ * Class Manager
+ *
+ * @package Webbhuset\CollectorBankCheckout\Checkout\Customer
+ */
 class Manager
 {
+    /**
+     * @var \Magento\Customer\Api\Data\CustomerInterfaceFactory
+     */
     protected $customerInterface;
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
     protected $storeManager;
+    /**
+     * @var \Magento\Customer\Api\AccountManagementInterface
+     */
     protected $accountManagement;
+    /**
+     * @var \Magento\Customer\Api\CustomerRepositoryInterface
+     */
     protected $customerRepository;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
     protected $quoteRepository;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Config\ConfigFactory
+     */
     protected $config;
 
+    /**
+     * Manager constructor.
+     *
+     * @param \Magento\Customer\Api\Data\CustomerInterfaceFactory   $customerInterface
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface     $customerRepository
+     * @param \Magento\Customer\Api\AccountManagementInterface      $accountManagement
+     * @param \Magento\Store\Model\StoreManagerInterface            $storeManager
+     * @param \Magento\Quote\Api\CartRepositoryInterface            $quoteRepository
+     * @param \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
+     */
     public function __construct(
         \Magento\Customer\Api\Data\CustomerInterfaceFactory $customerInterface,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
@@ -27,6 +60,16 @@ class Manager
         $this->config             = $config;
     }
 
+    /**
+     * Adds customer to quote:
+     *   if set in admin (create new customer on order)
+     *   or
+     *   if a customer already exists with that email adress
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface $quote
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function handleCustomerOnQuote(\Magento\Quote\Api\Data\CartInterface $quote)
     {
         $customer = $this->getOrCreateCustomerIfConfigured($quote);
@@ -35,6 +78,16 @@ class Manager
         }
     }
 
+    /**
+     * If the email address in the quote already exists as a customer then returns customer object
+     * If the admin option is set create new customer on order is set to yes then creates a customer object and returns it
+     * Otherwise returns false
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return bool|\Magento\Customer\Api\Data\CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getOrCreateCustomerIfConfigured(
         \Magento\Quote\Model\Quote $quote
     ) {
@@ -51,6 +104,13 @@ class Manager
         return $this->createCustomerFromQuote($quote);
     }
 
+    /**
+     * Creates a customer based on the data saved in the quote.
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \Magento\Customer\Api\Data\CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
     public function createCustomerFromQuote(
         \Magento\Quote\Model\Quote $quote
     ) {
@@ -66,6 +126,14 @@ class Manager
         return $this->accountManagement->createAccount($customer);
     }
 
+    /**
+     * Returns customer by email for the current website
+     *
+     * @param $email
+     * @return \Magento\Customer\Api\Data\CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function getCustomerByEmail($email): \Magento\Customer\Api\Data\CustomerInterface
     {
         $websiteId  = $this->storeManager->getWebsite()->getId();
@@ -77,6 +145,12 @@ class Manager
         return $this->customerInterface->create();
     }
 
+    /**
+     * Saves/sets the the customer on the quote
+     *
+     * @param \Magento\Quote\Api\Data\CartInterface        $quote
+     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
+     */
     public function saveCustomerOnQuote(
         \Magento\Quote\Api\Data\CartInterface $quote,
         \Magento\Customer\Api\Data\CustomerInterface $customer

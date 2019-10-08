@@ -2,10 +2,15 @@
 
 namespace Webbhuset\CollectorBankCheckout\Setup;
 
+/**
+ * Class InstallSchema
+ *
+ * @package Webbhuset\CollectorBankCheckout\Setup
+ */
 class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 {
     /**
-     *
+     * Install schema
      *
      * @param \Magento\Framework\Setup\SchemaSetupInterface   $setup
      * @param \Magento\Framework\Setup\ModuleContextInterface $context
@@ -22,6 +27,9 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         $setup->endSetup();
     }
 
+    /**
+     * @param \Magento\Framework\Setup\SchemaSetupInterface $setup
+     */
     protected function addCollectorBankQuoteColumns(\Magento\Framework\Setup\SchemaSetupInterface $setup)
     {
         $table = $setup->getTable('quote');

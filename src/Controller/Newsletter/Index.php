@@ -2,13 +2,39 @@
 
 namespace Webbhuset\CollectorBankCheckout\Controller\Newsletter;
 
+/**
+ * Class Index
+ *
+ * @package Webbhuset\CollectorBankCheckout\Controller\Newsletter
+ */
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     */
     protected $quoteHandler;
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
     protected $checkoutSession;
+    /**
+     * @var \Magento\Framework\Controller\Result\JsonFactory
+     */
     protected $resultJsonFactory;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
     protected $quoteRepository;
 
+    /**
+     * Index constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context              $context
+     * @param \Magento\Checkout\Model\Session                    $checkoutSession
+     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler
+     * @param \Magento\Framework\Controller\Result\JsonFactory   $resultJsonFactory
+     * @param \Magento\Quote\Api\CartRepositoryInterface         $quoteRepository
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -24,6 +50,11 @@ class Index extends \Magento\Framework\App\Action\Action
         parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
         $quote = $this->checkoutSession->getQuote();

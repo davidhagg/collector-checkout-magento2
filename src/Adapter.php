@@ -2,16 +2,53 @@
 
 namespace Webbhuset\CollectorBankCheckout;
 
+/**
+ * Class Adapter
+ *
+ * @package Webbhuset\CollectorBankCheckout
+ */
 class Adapter
 {
+    /**
+     * @var QuoteConverter
+     */
     protected $quoteConverter;
+    /**
+     * @var Config\Config
+     */
     protected $config;
+    /**
+     * @var Data\QuoteHandler
+     */
     protected $quoteDataHandler;
+    /**
+     * @var Data\OrderHandler
+     */
     protected $orderDataHandler;
+    /**
+     * @var QuoteUpdater
+     */
     protected $quoteUpdater;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
     protected $quoteRepository;
+    /**
+     * @var Logger\Logger
+     */
     protected $logger;
 
+    /**
+     * Adapter constructor.
+     *
+     * @param QuoteConverter                             $quoteConverter
+     * @param QuoteUpdater                               $quoteUpdater
+     * @param Data\QuoteHandler                          $quoteDataHandler
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param Data\OrderHandler                          $orderDataHandler
+     * @param Config\Config                              $config
+     * @param Logger\Logger                              $logger
+     */
     public function __construct(
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
         \Webbhuset\CollectorBankCheckout\QuoteUpdater $quoteUpdater,
@@ -30,6 +67,13 @@ class Adapter
         $this->logger           = $logger;
     }
 
+    /**
+     * Init or syncs the iframe and updates the necessary data on quote (e.g. public and private token)
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return string
+     * @throws \Exception
+     */
     public function initOrSync(\Magento\Quote\Model\Quote $quote) : string
     {
         $publicToken = $this->quoteDataHandler->getPublicToken($quote);
@@ -77,6 +121,14 @@ class Adapter
         return $quote;
     }
 
+    /**
+     * Initializes a new iframe
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \CollectorBank\CheckoutSDK\Session
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $quote = $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
@@ -115,6 +167,12 @@ class Adapter
         return $collectorSession;
     }
 
+    /**
+     * Acquires information from collector bank about the current session
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \CollectorBank\CheckoutSDK\CheckoutData
+     */
     public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
@@ -123,6 +181,12 @@ class Adapter
         return $data;
     }
 
+    /**
+     * Acquires information from collector bank about the current session from an order
+     *
+     * @param \Magento\Quote\Model\Quote $order
+     * @return \CollectorBank\CheckoutSDK\CheckoutData
+     */
     public function acquireCheckoutInformationFromOrder(\Magento\Quote\Model\Quote $order): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $privateId = $this->orderDataHandler->getPrivateId($order);
@@ -130,6 +194,13 @@ class Adapter
         return $this->acquireCheckoutInformation($privateId);
     }
 
+    /**
+     * Acquires information from collector bank about the current session from privateId
+     *
+     * @param     $privateId
+     * @param int $storeId
+     * @return \CollectorBank\CheckoutSDK\CheckoutData
+     */
     public function acquireCheckoutInformation($privateId, $storeId = 0): \CollectorBank\CheckoutSDK\CheckoutData
     {
         $config = $this->getConfig($storeId);
@@ -141,6 +212,14 @@ class Adapter
         return $collectorSession->getCheckoutData();
     }
 
+    /**
+     * Update fees in the collector bank session
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \CollectorBank\CheckoutSDK\Session
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function updateFees(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $config = $this->getConfig($this->config->getCustomerStoreId());
@@ -163,6 +242,14 @@ class Adapter
         return $collectorSession;
     }
 
+    /**
+     *
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @return \CollectorBank\CheckoutSDK\Session
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function updateCart(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
         $config = $this->getConfig($this->config->getCustomerStoreId());
@@ -184,6 +271,10 @@ class Adapter
         return $collectorSession;
     }
 
+    /**
+     * @param null $storeId
+     * @return \CollectorBank\CheckoutSDK\Config\ConfigInterface
+     */
     public function getConfig($storeId = null) : \CollectorBank\CheckoutSDK\Config\ConfigInterface
     {
         if ($storeId) {
@@ -193,6 +284,10 @@ class Adapter
         return $this->config;
     }
 
+    /**
+     * @param $config
+     * @return \CollectorBank\CheckoutSDK\Adapter\AdapterInterface
+     */
     public function getAdapter($config) : \CollectorBank\CheckoutSDK\Adapter\AdapterInterface
     {
         $config = $this->getConfig();

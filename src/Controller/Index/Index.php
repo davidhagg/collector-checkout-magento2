@@ -2,18 +2,64 @@
 
 namespace Webbhuset\CollectorBankCheckout\Controller\Index;
 
+/**
+ * Class Index
+ *
+ * @package Webbhuset\CollectorBankCheckout\Controller\Index
+ */
 class Index extends \Magento\Framework\App\Action\Action
 {
+    /**
+     * @var \Magento\Framework\View\Result\PageFactory
+     */
     protected $pageFactory;
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
     protected $checkoutSession;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     */
     protected $collectorAdapter;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     */
     protected $quoteDataHandler;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteConverter
+     */
     protected $quoteConverter;
+    /**
+     * @var \Magento\Quote\Api\CartRepositoryInterface
+     */
     protected $quoteRepository;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     */
     protected $config;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteValidator
+     */
     protected $quoteValidator;
+    /**
+     * @var \Webbhuset\CollectorBankCheckout\QuoteComparerFactory
+     */
     protected $quoteComparer;
 
+    /**
+     * Index constructor.
+     *
+     * @param \Magento\Framework\App\Action\Context                 $context
+     * @param \Magento\Checkout\Model\Session                       $checkoutSession
+     * @param \Webbhuset\CollectorBankCheckout\Adapter              $collectorAdapter
+     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler    $quoteDataHandler
+     * @param \Webbhuset\CollectorBankCheckout\QuoteConverter       $quoteConverter
+     * @param \Magento\Framework\View\Result\PageFactory            $pageFactory
+     * @param \Magento\Quote\Api\CartRepositoryInterface            $quoteRepository
+     * @param \Webbhuset\CollectorBankCheckout\Config\Config        $config
+     * @param \Webbhuset\CollectorBankCheckout\QuoteValidator       $quoteValidator
+     * @param \Webbhuset\CollectorBankCheckout\QuoteComparerFactory $quoteComparer
+     */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -39,6 +85,11 @@ class Index extends \Magento\Framework\App\Action\Action
         return parent::__construct($context);
     }
 
+    /**
+     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Page
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
     public function execute()
     {
         $page = $this->pageFactory->create();
