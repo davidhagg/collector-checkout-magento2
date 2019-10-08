@@ -55,7 +55,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         $this->addColumns($columns, $table, $setup);
     }
 
-    private function addCollectorBankSalesOrderColumns(\Magento\Framework\Setup\SchemaSetupInterface $setup)
+    protected function addCollectorBankSalesOrderColumns(\Magento\Framework\Setup\SchemaSetupInterface $setup)
     {
         $table = $setup->getTable('sales_order');
 
@@ -88,7 +88,7 @@ class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
         $this->addColumns($columns, $table, $setup);
     }
 
-    private function addColumns($columns, $table, \Magento\Framework\Setup\SchemaSetupInterface $setup)
+    protected function addColumns($columns, $table, \Magento\Framework\Setup\SchemaSetupInterface $setup)
     {
         $connection = $setup->getConnection();
 

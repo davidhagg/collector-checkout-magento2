@@ -96,7 +96,7 @@ class QuoteHandler
         return $this->getAdditionalData($quote, 'newsletter_subscribe');
     }
 
-    private function getAdditionalData(Quote $quote, string $name)
+    protected function getAdditionalData(Quote $quote, string $name)
     {
         $data = $this->getData($quote);
         if (!isset($data[$name])) {
@@ -106,7 +106,7 @@ class QuoteHandler
         return $data[$name];
     }
 
-    private function setAdditionalData(Quote $quote, string $name, string $value)
+    protected function setAdditionalData(Quote $quote, string $name, string $value)
     {
         $data = $this->getData($quote);
         $data[$name] = $value;

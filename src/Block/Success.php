@@ -92,7 +92,7 @@ class Success extends \Magento\Framework\View\Element\Template
         ];
     }
 
-    private function setEnhancedEcommerceDatalayer(\Magento\Sales\Api\Data\OrderInterface $order)
+    protected function setEnhancedEcommerceDatalayer(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         $products = [];
         foreach ($order->getAllVisibleItems() as $item) {

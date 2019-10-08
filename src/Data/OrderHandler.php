@@ -86,7 +86,7 @@ class OrderHandler
         return $this->getAdditionalData($order, 'store_id');
     }
 
-    private function getAdditionalData(Order $order, string $name)
+    protected function getAdditionalData(Order $order, string $name)
     {
         $data = $this->getData($order);
         if (!isset($data[$name])) {
@@ -104,7 +104,7 @@ class OrderHandler
         return (1 == (int)$newsletterSubscribe) ? true : false;
     }
 
-    private function setAdditionalData(Order $order, string $name, string $value)
+    protected function setAdditionalData(Order $order, string $name, string $value)
     {
         $data = $this->getData($order);
         $data[$name] = $value;

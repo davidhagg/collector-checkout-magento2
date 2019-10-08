@@ -47,7 +47,7 @@ class BusinessCustomer extends \Magento\Backend\Block\Template
         return $this->orderHandler->getOrgNumber($this->order);
     }
 
-    private function loadOrder()
+    protected function loadOrder()
     {
         $orderId = $this->request->getParam('order_id');
 

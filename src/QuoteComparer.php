@@ -78,7 +78,7 @@ class QuoteComparer
         return ($collectorCurrency == $storeCurrency);
     }
 
-    private function getQuoteItemsAsArray(
+    protected function getQuoteItemsAsArray(
         \Magento\Quote\Model\Quote $quote
     ) {
         $cartItems = $this->quoteConverter->getCart($quote)->toArray();
@@ -89,7 +89,7 @@ class QuoteComparer
         return $cartItems;
     }
 
-    private function getCollectorCartAsArray(
+    protected function getCollectorCartAsArray(
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ) {
         $checkoutItems = $checkoutData->getCart()->getItems();
@@ -100,7 +100,7 @@ class QuoteComparer
         return $checkoutItems;
     }
 
-    private function getCollectorFeesAsArray(
+    protected function getCollectorFeesAsArray(
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ) {
         $checkoutItems = $checkoutData->getFees()->toArray();
@@ -110,7 +110,7 @@ class QuoteComparer
         return $checkoutItems;
     }
 
-    private function calculateCollectorTotal(
+    protected function calculateCollectorTotal(
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ) {
         $cartTotal = $this->calculateCollectorCartTotal($checkoutData);
@@ -119,7 +119,7 @@ class QuoteComparer
         return $cartTotal + $feesTotal;
     }
 
-    private function calculateCollectorCartTotal(
+    protected function calculateCollectorCartTotal(
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ) {
         $cartItems = $this->getCollectorCartAsArray($checkoutData);
@@ -132,7 +132,7 @@ class QuoteComparer
         return $total;
     }
 
-    private function calculateCollectorFeesTotal(
+    protected function calculateCollectorFeesTotal(
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ) {
         $cartItems = $this->getCollectorFeesAsArray($checkoutData);
@@ -145,17 +145,17 @@ class QuoteComparer
         return $total;
     }
 
-    private function serializeElements(&$item, $key)
+    protected function serializeElements(&$item, $key)
     {
         $item = serialize($item);
     }
 
-    private function removeExtraColumns(&$item, $key)
+    protected function removeExtraColumns(&$item, $key)
     {
         unset($item['requiresElectronicId'], $item['sku'], $item['description']);
     }
 
-    private function toArrayOnElements(&$item, $key)
+    protected function toArrayOnElements(&$item, $key)
     {
         $item = $item->toArray();
     }

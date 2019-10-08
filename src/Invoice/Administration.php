@@ -99,7 +99,7 @@ class Administration
         $this->transaction->create()->addInvoiceTransaction($invoice);
     }
 
-    private function setStoreIdOnConfig(
+    protected function setStoreIdOnConfig(
         \Webbhuset\CollectorBankCheckout\Config\Config $config,
         string $orderId
     ) {
