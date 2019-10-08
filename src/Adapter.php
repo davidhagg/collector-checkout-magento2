@@ -60,7 +60,11 @@ class Adapter
         $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
         $shippingAddress = $quote->getShippingAddress();
 
-        if (!$shippingAddress->getShippingMethod()) {
+        $shippingAddress->setCollectShippingRates(true)
+            ->collectShippingRates();
+
+        $rate = $shippingAddress->getShippingRateByCode($shippingAddress->getShippingMethod());
+        if (!$rate || !$shippingAddress->getShippingMethod()) {
             $this->quoteUpdater->setDefaultShippingMethod($quote);
         }
 

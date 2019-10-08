@@ -22,7 +22,9 @@ class QuoteUpdater
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Customer\Model\Session $session,
         \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler,
-        \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManagement
+        \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManagement,
+        \Magento\Quote\Model\Quote\ShippingAssignment\ShippingAssignmentProcessor $shippingAssignmentProcessor,
+        \Magento\Quote\Api\Data\CartExtensionFactory $cartExtensionFactory
     ) {
         $this->taxConfig                   = $taxConfig;
         $this->config                      = $config;
@@ -31,6 +33,8 @@ class QuoteUpdater
         $this->session                     = $session;
         $this->customerRepositoryInterface = $customerRepositoryInterface;
         $this->quoteHandler                = $quoteHandler;
+        $this->shippingAssignmentProcessor = $shippingAssignmentProcessor;
+        $this->cartExtensionFactory        = $cartExtensionFactory;
     }
 
     public function setQuoteData(
@@ -111,6 +115,14 @@ class QuoteUpdater
         if ($defaultShippingMethod) {
             $quote->getShippingAddress()
                 ->setShippingMethod($defaultShippingMethod);
+
+            $cartExtension = $quote->getExtensionAttributes();
+            if ($cartExtension === null) {
+                $cartExtension = $this->cartExtensionFactory->create();
+            }
+            $shippingAssignment = $this->shippingAssignmentProcessor->create($quote);
+            $cartExtension->setShippingAssignments([$shippingAssignment]);
+            $quote->setExtensionAttributes($cartExtension);
         }
     }
 
