@@ -35,16 +35,6 @@ class Index extends \Magento\Framework\App\Action\Action
             ->setOrder('entity_id', 'DESC')
             ->getFirstItem();
 
-
-        if ($quote->getIsActive()) {
-
-            return $this->createResult(
-                'Quote is already active',
-                200,
-                false
-            );
-        }
-
         if (!$quote->getId()) {
 
             $this->logger->addCritical(
