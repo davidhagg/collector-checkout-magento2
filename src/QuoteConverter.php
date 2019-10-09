@@ -2,11 +2,11 @@
 
 namespace Webbhuset\CollectorBankCheckout;
 
-use CollectorBank\CheckoutSDK\Checkout\Cart;
-use CollectorBank\CheckoutSDK\Checkout\Cart\Item;
-use CollectorBank\CheckoutSDK\Checkout\Customer\InitializeCustomer;
-use CollectorBank\CheckoutSDK\Checkout\Fees;
-use CollectorBank\CheckoutSDK\Checkout\Fees\Fee;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Cart;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Cart\Item;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Customer\InitializeCustomer;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Fees;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Fees\Fee;
 
 class QuoteConverter
 {

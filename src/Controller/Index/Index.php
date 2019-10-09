@@ -121,7 +121,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $publicToken = $this->collectorAdapter->initOrSync($quote);
 
-        $iframeConfig = new \CollectorBank\CheckoutSDK\Config\IframeConfig(
+        $iframeConfig = new \Webbhuset\CollectorCheckoutSDK\Config\IframeConfig(
             $publicToken,
             $this->config->getStyleDataLang(),
             $this->config->getStyleDataPadding(),
@@ -129,7 +129,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $this->config->getStyleDataActionColor(),
             $this->config->getStyleDataActionTextColor()
         );
-        $iframe = \CollectorBank\CheckoutSDK\Iframe::getScript($iframeConfig);
+        $iframe = \Webbhuset\CollectorCheckoutSDK\Iframe::getScript($iframeConfig);
 
         $block = $page
             ->getLayout()

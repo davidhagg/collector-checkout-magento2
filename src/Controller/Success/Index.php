@@ -85,10 +85,10 @@ class Index extends \Magento\Framework\App\Action\Action
         $orderDataHandler = $this->orderDataHandler->create();
         $publicToken = $orderDataHandler->getPublicToken($order);
 
-        $iframeConfig = new \CollectorBank\CheckoutSDK\Config\IframeConfig(
+        $iframeConfig = new \Webbhuset\CollectorCheckoutSDK\Config\IframeConfig(
             $publicToken
         );
-        $iframe = \CollectorBank\CheckoutSDK\Iframe::getScript($iframeConfig);
+        $iframe = \Webbhuset\CollectorCheckoutSDK\Iframe::getScript($iframeConfig);
 
         $page->getLayout()
             ->getBlock('collectorbank_success_iframe')

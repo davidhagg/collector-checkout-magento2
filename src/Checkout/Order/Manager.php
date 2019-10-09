@@ -2,7 +2,7 @@
 
 namespace Webbhuset\CollectorBankCheckout\Checkout\Order;
 
-use CollectorBank\CheckoutSDK\Checkout\Purchase\Result as PurchaseResult;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Purchase\Result as PurchaseResult;
 
 /**
  * Class Manager
@@ -249,13 +249,13 @@ class Manager
      * Acknowledged orders by adding payment information and changes state to processing
      *
      * @param \Magento\Sales\Api\Data\OrderInterface  $order
-     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @param \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
      * @return array
      * @throws \Exception
      */
     public function acknowledgeOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
         $orderStatusAfter  = $this->configFactory->create(['order' => $order])->getOrderStatusAcknowledged();
@@ -299,12 +299,12 @@ class Manager
      * Sets the order to On Hold
      *
      * @param \Magento\Sales\Api\Data\OrderInterface  $order
-     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @param \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
      * @return array
      */
     public function holdOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
         $orderStatusAfter  = $this->configFactory->create(['order' => $order])->getOrderStatusHolded();
@@ -350,12 +350,12 @@ class Manager
      * Cancels the order
      *
      * @param \Magento\Sales\Api\Data\OrderInterface  $order
-     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @param \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
      * @return array
      */
     public function cancelOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
         $orderStatusAfter  = $this->configFactory->create(['order' => $order])->getOrderStatusHolded();
@@ -390,12 +390,12 @@ class Manager
      * Invoices the order offline. This function is used when orders are autoactivated in Collector
      *
      * @param \Magento\Sales\Api\Data\OrderInterface  $order
-     * @param \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+     * @param \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
      * @return array
      */
     public function activateOrder(
         \Magento\Sales\Api\Data\OrderInterface $order,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getEntityId());
 
@@ -509,11 +509,11 @@ class Manager
      * Adds payment information
      *
      * @param \Magento\Sales\Api\Data\OrderPaymentInterface $payment
-     * @param \CollectorBank\CheckoutSDK\Checkout\Purchase  $purchaseData
+     * @param \Webbhuset\CollectorCheckoutSDK\Checkout\Purchase  $purchaseData
      */
     private function addPaymentInformation(
         \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
-        \CollectorBank\CheckoutSDK\Checkout\Purchase $purchaseData
+        \Webbhuset\CollectorCheckoutSDK\Checkout\Purchase $purchaseData
     ) {
         $info = [
             'payment_name'            => $purchaseData->getPaymentName(),

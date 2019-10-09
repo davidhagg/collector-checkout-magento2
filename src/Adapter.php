@@ -119,11 +119,11 @@ class Adapter
      * Initializes a new iframe
      *
      * @param \Magento\Quote\Model\Quote $quote
-     * @return \CollectorBank\CheckoutSDK\Session
+     * @return \Webbhuset\CollectorCheckoutSDK\Session
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
+    public function initialize(\Magento\Quote\Model\Quote $quote) : \Webbhuset\CollectorCheckoutSDK\Session
     {
         $config = $this->configFactory->create(['quote' => $quote]);
         $quote = $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
@@ -136,7 +136,7 @@ class Adapter
         $countryCode = $config->getCountryCode();
         $adapter = $this->getAdapter($config);
 
-        $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
+        $collectorSession = new \Webbhuset\CollectorCheckoutSDK\Session($adapter);
 
         try {
             $collectorSession->initialize(
@@ -152,7 +152,7 @@ class Adapter
                 ->setCustomerType($quote, $config->getDefaultCustomerType());
 
             $this->quoteRepository->save($quote);
-        } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+        } catch (\Webbhuset\CollectorCheckoutSDK\Errors\ResponseError $e) {
             $this->logger->addCritical("Response error when initiating iframe " . $e->getMessage());
             die;
         }
@@ -164,9 +164,9 @@ class Adapter
      * Acquires information from collector bank about the current session
      *
      * @param \Magento\Quote\Model\Quote $quote
-     * @return \CollectorBank\CheckoutSDK\CheckoutData
+     * @return \Webbhuset\CollectorCheckoutSDK\CheckoutData
      */
-    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \Webbhuset\CollectorCheckoutSDK\CheckoutData
     {
         $config = $this->configFactory->create(['quote' => $quote]);
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
@@ -180,13 +180,13 @@ class Adapter
      *
      * @param \Webbhuset\CollectorBankCheckout\Config\QuoteConfig $privateId
      * @param int $privateId
-     * @return \CollectorBank\CheckoutSDK\CheckoutData
+     * @return \Webbhuset\CollectorCheckoutSDK\CheckoutData
      */
-    public function acquireCheckoutInformation($config, $privateId): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformation($config, $privateId): \Webbhuset\CollectorCheckoutSDK\CheckoutData
     {
         $adapter = $this->getAdapter($config);
 
-        $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
+        $collectorSession = new \Webbhuset\CollectorCheckoutSDK\Session($adapter);
         $collectorSession->load($privateId);
 
         return $collectorSession->getCheckoutData();
@@ -196,15 +196,15 @@ class Adapter
      * Update fees in the collector bank session
      *
      * @param \Magento\Quote\Model\Quote $quote
-     * @return \CollectorBank\CheckoutSDK\Session
+     * @return \Webbhuset\CollectorCheckoutSDK\Session
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function updateFees(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
+    public function updateFees(\Magento\Quote\Model\Quote $quote) : \Webbhuset\CollectorCheckoutSDK\Session
     {
         $config = $this->configFactory->create(['quote' => $quote]);
         $adapter = $this->getAdapter($config);
-        $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
+        $collectorSession = new \Webbhuset\CollectorCheckoutSDK\Session($adapter);
 
         $fees = $this->quoteConverter->getFees($quote);
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
@@ -214,7 +214,7 @@ class Adapter
                 $collectorSession->setPrivateId($privateId)
                     ->updateFees($fees);
             }
-        } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+        } catch (\Webbhuset\CollectorCheckoutSDK\Errors\ResponseError $e) {
             $this->logger->addCritical("Response error when updating fees. " . $e->getMessage());
             die;
         }
@@ -226,15 +226,15 @@ class Adapter
      *
      *
      * @param \Magento\Quote\Model\Quote $quote
-     * @return \CollectorBank\CheckoutSDK\Session
+     * @return \Webbhuset\CollectorCheckoutSDK\Session
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function updateCart(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
+    public function updateCart(\Magento\Quote\Model\Quote $quote) : \Webbhuset\CollectorCheckoutSDK\Session
     {
         $config = $this->configFactory->create(['quote' => $quote]);
         $adapter = $this->getAdapter($config);
-        $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
+        $collectorSession = new \Webbhuset\CollectorCheckoutSDK\Session($adapter);
         $cart = $this->quoteConverter->getCart($quote);
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
 
@@ -243,7 +243,7 @@ class Adapter
                 $collectorSession->setPrivateId($privateId)
                     ->updateCart($cart);
             }
-        } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
+        } catch (\Webbhuset\CollectorCheckoutSDK\Errors\ResponseError $e) {
             $this->logger->addCritical("Response error when updating cart. " . $e->getMessage());
             die;
         }
@@ -255,14 +255,14 @@ class Adapter
      * Get adapter
      *
      * @param \Webbhuset\CollectorBankCheckout\Config\QuoteConfig $config
-     * @return \CollectorBank\CheckoutSDK\Adapter\AdapterInterface
+     * @return \Webbhuset\CollectorCheckoutSDK\Adapter\AdapterInterface
      */
-    public function getAdapter($config) : \CollectorBank\CheckoutSDK\Adapter\AdapterInterface
+    public function getAdapter($config) : \Webbhuset\CollectorCheckoutSDK\Adapter\AdapterInterface
     {
         if ($config->getIsMockMode()) {
-            return new \CollectorBank\CheckoutSDK\Adapter\MockAdapter($config);
+            return new \Webbhuset\CollectorCheckoutSDK\Adapter\MockAdapter($config);
         }
 
-        return new \CollectorBank\CheckoutSDK\Adapter\CurlAdapter($config);
+        return new \Webbhuset\CollectorCheckoutSDK\Adapter\CurlAdapter($config);
     }
 }

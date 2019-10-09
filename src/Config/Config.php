@@ -10,7 +10,7 @@ use Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustom
  * @package Webbhuset\CollectorBankCheckout\Config
  */
 class Config implements
-    \CollectorBank\CheckoutSDK\Config\ConfigInterface,
+    \Webbhuset\CollectorCheckoutSDK\Config\ConfigInterface,
     \CollectorBank\PaymentSDK\Config\ConfigInterface
 {
     /**

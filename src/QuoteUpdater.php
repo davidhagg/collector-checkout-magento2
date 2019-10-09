@@ -2,7 +2,7 @@
 
 namespace Webbhuset\CollectorBankCheckout;
 
-use CollectorBank\CheckoutSDK\Checkout\Customer as SDK;
+use Webbhuset\CollectorCheckoutSDK\Checkout\Customer as SDK;
 use Magento\Quote\Model\Quote as Quote;
 
 class QuoteUpdater
@@ -39,7 +39,7 @@ class QuoteUpdater
 
     public function setQuoteData(
         Quote $quote,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) : Quote {
         $customer                   = $checkoutData->getCustomer();
         $collectorInvoiceAddress    = $customer->getInvoiceAddress();
@@ -151,7 +151,7 @@ class QuoteUpdater
 
     public function setCustomerData(
         Quote $quote,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) : Quote {
         $customer = $checkoutData->getCustomer();
         $customerAddress = $customer->getInvoiceAddress();

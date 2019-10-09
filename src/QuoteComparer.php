@@ -45,7 +45,7 @@ class QuoteComparer
 
     public function isGrandTotalSync(
         \Magento\Quote\Model\Quote $quote,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $grandTotalCeil = ceil($quote->getGrandTotal());
         $collectorTotalCeil = ceil($this->calculateCollectorTotal($checkoutData));
@@ -59,7 +59,7 @@ class QuoteComparer
 
     public function isCartItemsInSync(
         \Magento\Quote\Model\Quote $quote,
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $collectorCartItems = $this->getCollectorCartAsArray($checkoutData);
         $cartItems = $this->getQuoteItemsAsArray($quote);
@@ -90,7 +90,7 @@ class QuoteComparer
     }
 
     protected function getCollectorCartAsArray(
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $checkoutItems = $checkoutData->getCart()->getItems();
 
@@ -101,7 +101,7 @@ class QuoteComparer
     }
 
     protected function getCollectorFeesAsArray(
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $checkoutItems = $checkoutData->getFees()->toArray();
 
@@ -111,7 +111,7 @@ class QuoteComparer
     }
 
     protected function calculateCollectorTotal(
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $cartTotal = $this->calculateCollectorCartTotal($checkoutData);
         $feesTotal = $this->calculateCollectorFeesTotal($checkoutData);
@@ -120,7 +120,7 @@ class QuoteComparer
     }
 
     protected function calculateCollectorCartTotal(
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $cartItems = $this->getCollectorCartAsArray($checkoutData);
 
@@ -133,7 +133,7 @@ class QuoteComparer
     }
 
     protected function calculateCollectorFeesTotal(
-        \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
+        \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
         $cartItems = $this->getCollectorFeesAsArray($checkoutData);
 
