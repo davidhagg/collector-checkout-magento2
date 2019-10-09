@@ -122,7 +122,7 @@ class Manager
      * Create order from quote and return order id
      *
      * @param $quoteId
-     * @return int orderId
+     * @return string orderId
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -130,12 +130,14 @@ class Manager
     public function createOrder(\Magento\Quote\Model\Quote $quote): string
     {
         $orderId = $this->quoteManagement->placeOrder($quote->getId());
+        $order = $this->orderRepository->get($orderId);
+        $incrementId = $order->getIncrementId();
 
         $this->logger->addInfo(
-            "Submitted order increment id: {$orderId}. qouteId: {$quote->getId()} "
+            "Submitted order increment id: {$incrementId}. qouteId: {$quote->getId()} "
         );
 
-        return $orderId;
+        return $incrementId;
     }
 
     /**
