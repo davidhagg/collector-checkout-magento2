@@ -1,5 +1,5 @@
 {
-    "name": "webbhuset/collectorbank-checkout",
+    "name": "webbhuset/collector-checkout",
     "type": "magento2-module",
     "description": "Collector Bank Checkout Module",
     "require": {
