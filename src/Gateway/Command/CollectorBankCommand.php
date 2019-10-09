@@ -91,7 +91,7 @@ class CollectorBankCommand implements CommandInterface
                 $orderId
             );
         } catch (ResponseError $e) {
-            $incrementOrderId = (int)$payment->getOrder()->getIncrementOrderId();
+            $incrementOrderId = (string)$payment->getOrder()->getIncrementId();
             $this->logger->addCritical(
                 "Response error on capture. increment orderId: {$incrementOrderId} invoiceNo {$invoiceNo}" .
                 $e->getMessage()
