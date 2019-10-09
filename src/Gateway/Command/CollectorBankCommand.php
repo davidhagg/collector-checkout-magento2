@@ -2,7 +2,7 @@
 
 namespace Webbhuset\CollectorBankCheckout\Gateway\Command;
 
-use CollectorBank\PaymentSDK\Errors\ResponseError as ResponseError;
+use Webbhuset\CollectorPaymentSDK\Errors\ResponseError as ResponseError;
 use Magento\Payment\Gateway\CommandInterface as CommandInterface;
 use Magento\Payment\Gateway\Helper\SubjectReader;
 use Magento\Sales\Api\Data\TransactionInterface;

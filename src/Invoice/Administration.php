@@ -2,8 +2,8 @@
 
 namespace Webbhuset\CollectorBankCheckout\Invoice;
 
-use CollectorBank\PaymentSDK\Adapter\SoapAdapter;
-use CollectorBank\PaymentSDK\Invoice\Administration as InvoiceAdministration;
+use Webbhuset\CollectorPaymentSDK\Adapter\SoapAdapter;
+use Webbhuset\CollectorPaymentSDK\Invoice\Administration as InvoiceAdministration;
 
 /**
  * Class Administration

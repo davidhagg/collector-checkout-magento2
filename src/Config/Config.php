@@ -11,7 +11,7 @@ use Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustom
  */
 class Config implements
     \Webbhuset\CollectorCheckoutSDK\Config\ConfigInterface,
-    \CollectorBank\PaymentSDK\Config\ConfigInterface
+    \Webbhuset\CollectorPaymentSDK\Config\ConfigInterface
 {
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
