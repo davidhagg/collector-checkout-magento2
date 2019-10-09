@@ -32,9 +32,9 @@ class Manager
      */
     protected $searchCriteriaBuilder;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\ConfigFactory
+     * @var \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory
      */
-    protected $config;
+    protected $configFactory;
     /**
      * @var \Magento\Sales\Api\OrderManagementInterface
      */
@@ -93,7 +93,7 @@ class Manager
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
         \Magento\Sales\Api\OrderManagementInterface $orderManagement,
-        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
+        \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory $configFactory,
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
         \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Magento\Framework\Registry $registry,
@@ -106,7 +106,7 @@ class Manager
         $this->collectorAdapter      = $collectorAdapter;
         $this->orderRepository       = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->config                = $config;
+        $this->configFactory         = $configFactory;
         $this->orderManagement       = $orderManagement;
         $this->orderHandler          = $orderHandler;
         $this->quoteManagement       = $quoteManagement;
@@ -214,7 +214,8 @@ class Manager
         $checkoutAdapter = $this->collectorAdapter->create();
         $storeId = $this->orderHandler->getStoreId($order);
 
-        $checkoutData = $checkoutAdapter->acquireCheckoutInformation($collectorBankPrivateId, $storeId);
+        $config = $this->configFactory->create(['order' => $order]);
+        $checkoutData = $checkoutAdapter->acquireCheckoutInformation($config, $collectorBankPrivateId);
 
         $paymentResult = $checkoutData->getPurchase()->getResult()->getResult();
 
@@ -255,7 +256,7 @@ class Manager
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
-        $orderStatusAfter  = $this->config->create()->getOrderStatusAcknowledged();
+        $orderStatusAfter  = $this->configFactory->create(['order' => $order])->getOrderStatusAcknowledged();
 
         if ($orderStatusAfter == $orderStatusBefore) {
             return [
@@ -304,7 +305,7 @@ class Manager
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
-        $orderStatusAfter  = $this->config->create()->getOrderStatusHolded();
+        $orderStatusAfter  = $this->configFactory->create(['order' => $order])->getOrderStatusHolded();
 
         if ($orderStatusBefore == $orderStatusAfter) {
             return [
@@ -355,7 +356,7 @@ class Manager
         \CollectorBank\CheckoutSDK\CheckoutData $checkoutData
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getId());
-        $orderStatusAfter  = $this->config->create()->getOrderStatusHolded();
+        $orderStatusAfter  = $this->configFactory->create(['order' => $order])->getOrderStatusHolded();
 
         if ($orderStatusBefore == $orderStatusAfter) {
             return [
@@ -373,7 +374,7 @@ class Manager
 
         $this->updateOrderStatus(
             $order,
-            $this->config->create()->getOrderStatusDenied(),
+            $this->configFactory->create(['order' => $order])->getOrderStatusDenied(),
             \Magento\Sales\Model\Order::STATE_CANCELED
         );
 
@@ -442,7 +443,7 @@ class Manager
     {
         $ageInHours = \Webbhuset\CollectorBankCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
 
-        $pendingOrderStatus = $this->config->create()->getOrderStatusNew();
+        $pendingOrderStatus = $this->configFactory->create(['order' => $order])->getOrderStatusNew();
 
         $to   = $this->dateTime->create()->gmtDate(null, "-$ageInHours hours");
         $from = $this->dateTime->create()->gmtDate(null, "-48 hours");

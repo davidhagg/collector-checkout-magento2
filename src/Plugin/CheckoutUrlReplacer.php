@@ -12,16 +12,16 @@ use Webbhuset\CollectorBankCheckout\Gateway\Config;
 class CheckoutUrlReplacer
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\ConfigFactory
+     * @var \Webbhuset\CollectorBankCheckout\Config\Config
      */
     protected $config;
 
     /**
      * CheckoutUrlReplacer constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
+     * @param \Webbhuset\CollectorBankCheckout\Config\Config $config
      */
-    public function __construct(\Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config)
+    public function __construct(\Webbhuset\CollectorBankCheckout\Config\Config $config)
     {
         $this->config = $config;
     }
@@ -39,8 +39,7 @@ class CheckoutUrlReplacer
         $param1 = null,
         $params2 = null
     ) {
-        $config = $this->config->create();
-        if ($config->getIsActive()) {
+        if ($this->config->getIsActive()) {
             $param1 = ('checkout' == $param1) ? Config::CHECKOUT_URL_KEY : $param1;
         }
 

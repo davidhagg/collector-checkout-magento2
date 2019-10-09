@@ -60,18 +60,12 @@ class Config implements
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
-        \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
         \Webbhuset\CollectorBankCheckout\Config\Source\Country\Country $countryData
     ) {
         $this->scopeConfig      = $scopeConfig;
         $this->encryptor        = $encryptor;
-        $this->checkoutSession  = $checkoutSession;
         $this->storeManager     = $storeManager;
-        $this->quoteDataHandler = $quoteDataHandler;
-        $this->orderDataHandler = $orderDataHandler;
         $this->countryData      = $countryData;
     }
 
@@ -93,57 +87,6 @@ class Config implements
     public function getCreateCustomerAccount(): bool
     {
         return 1 == $this->getConfigValue('create_customer_account');
-    }
-
-    /**
-     * Returns an array of all config variables
-     *
-     * @return array
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    public function getConfig(): array
-    {
-        $data = [
-            'is_active'               => $this->getIsActive(),
-            'username'                => $this->getUsername(),
-            'sharedAccessKey'         => $this->getSharedAccessKey(),
-            'password'                => $this->getPassword(),
-            'countryCode'             => $this->getCountryCode(),
-            'storeId'                 => $this->getStoreId(),
-            'b2c'                     => $this->getB2C(),
-            'b2b'                     => $this->getB2B(),
-            'customerTypeAllowed'     => $this->getCustomerTypeAllowed(),
-            'defaultCustomerType'     => $this->getDefaultCustomerType(),
-            'isMockMode'              => $this->getIsMockMode(),
-            'isTestMode'              => $this->getIsTestMode(),
-            'merchantTermsUri'        => $this->getMerchantTermsUri(),
-            'redirectPageUri'         => $this->getRedirectPageUri(),
-            'notificationUri'         => $this->getNotificationUri(),
-            'validationUri'           => $this->getValidationUri(),
-            'orderStatusNew'          => $this->getOrderStatusNew(),
-            'orderStatusAcknowledged' => $this->getOrderStatusAcknowledged(),
-            'orderStatusHolded'       => $this->getOrderStatusHolded(),
-            'orderStatusDenied'       => $this->getOrderStatusDenied(),
-            'profileName'             => $this->getProfileName(),
-            'testModeUsername'        => $this->getTestModeUsername(),
-            'testModePassword'        => $this->getTestModePassword(),
-            'testModeB2C'             => $this->getTestModeB2C(),
-            'testModeB2B'             => $this->getTestModeB2B(),
-            'productionModeUsername'  => $this->getProductionModeUsername(),
-            'productionModePassword'  => $this->getProductionModePassword(),
-            'productionModeB2C'       => $this->getProductionModeB2C(),
-            'productionModeB2B'       => $this->getProductionModeB2B(),
-            'customBaseUrl'           => $this->getCustomBaseUrl(),
-            'createCustomerAccount'   => $this->getCreateCustomerAccount(),
-            'styleDataLang'           => $this->getStyleDataLang(),
-            'styleDataPadding'        => $this->getStyleDataPadding(),
-            'styleDataContainerId'    => $this->getStyleDataContainerId(),
-            'styleDataActionColor'    => $this->getStyleDataActionColor(),
-            'styleDataActionTextColor'=> $this->getStyleDataActionTextColor()
-        ];
-
-        return $data;
     }
 
     /**
@@ -187,16 +130,6 @@ class Config implements
     }
 
     /**
-     * Sets store id on the config object
-     *
-     * @param $storeId
-     */
-    public function setStoreId($storeId)
-    {
-        $this->storeId = $storeId;
-    }
-
-    /**
      * Gets current store id
      *
      * @return string
@@ -205,11 +138,13 @@ class Config implements
      */
     public function getStoreId() : string
     {
-        if ($this->storeId) {
-            return $this->storeId;
+        $customerType = $this->getDefaultCustomerType();
+
+        if (\Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
+            return $this->getB2CStoreId();
         }
 
-        return $this->getCustomerStoreId();
+        return $this->getB2BStoreId();
     }
 
     /**
@@ -217,7 +152,7 @@ class Config implements
      *
      * @return string
      */
-    public function getB2C() : string
+    public function getB2CStoreId() : string
     {
         return $this->getIsTestMode() ? $this->getTestModeB2C() : $this->getProductionModeB2C();
     }
@@ -227,7 +162,7 @@ class Config implements
      *
      * @return string
      */
-    public function getB2B() : string
+    public function getB2BStoreId() : string
     {
         return $this->getIsTestMode() ? $this->getTestModeB2B() : $this->getProductionModeB2B();
     }
@@ -526,59 +461,6 @@ class Config implements
     public function getCustomBaseUrl()
     {
         return $this->getConfigValue('custom_base_url');
-    }
-
-    /**
-     * Get the current customer type
-     *
-     * @return int
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getCustomerType()
-    {
-        $quote = $this->checkoutSession->getQuote();
-        $customerType = $this->quoteDataHandler->getCustomerType($quote);
-
-        if ($customerType) {
-            return $customerType;
-        }
-
-        return $this->getDefaultCustomerType();
-    }
-
-    /**
-     * Get the store id to be used for the current customer
-     *
-     * @return string
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function getCustomerStoreId()
-    {
-        $customerType = $this->getCustomerType();
-
-        if (\Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
-            return $this->getB2C();
-        } else {
-            return $this->getB2B();
-        }
-    }
-
-    /**
-     * Get collector bank store id for an order
-     *
-     * @param \Magento\Sales\Api\Data\OrderInterface $order
-     * @return string
-     */
-    public function getStoreIdForOrder(\Magento\Sales\Api\Data\OrderInterface $order)
-    {
-        $customerType = $this->orderDataHandler->getStoreId($order);
-        if (AllowedCustomerType::PRIVATE_CUSTOMERS == $customerType) {
-            return $this->getB2C();
-        }
-
-        return $this->getB2B();
     }
 
     /**

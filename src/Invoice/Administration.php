@@ -13,9 +13,9 @@ use CollectorBank\PaymentSDK\Invoice\Administration as InvoiceAdministration;
 class Administration
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\ConfigFactory
+     * @var \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory
      */
-    protected $config;
+    protected $configFactory;
     /**
      * @var \Magento\Sales\Model\Service\InvoiceService
      */
@@ -40,7 +40,7 @@ class Administration
     /**
      * Administration constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
+     * @param \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory $config
      * @param \Magento\Sales\Model\Service\InvoiceService           $invoiceService
      * @param Transaction\ManagerFactory                            $transaction
      * @param \Magento\Sales\Model\OrderRepository                  $orderRepository
@@ -48,14 +48,14 @@ class Administration
      * @param \Webbhuset\CollectorBankCheckout\Logger\Logger        $logger
      */
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
+        \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory $configFactory,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
         \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction,
         \Magento\Sales\Model\OrderRepository $orderRepository,
         \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler,
         \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
-        $this->config          = $config;
+        $this->configFactory   = $configFactory;
         $this->invoiceService  = $invoiceService;
         $this->transaction     = $transaction;
         $this->logger          = $logger;
@@ -74,8 +74,7 @@ class Administration
      */
     public function activateInvoice(string $invoiceNo, string $orderId):array
     {
-        $config = $this->config->create();
-        $config = $this->setStoreIdOnConfig($config, $orderId);
+        $config = $this->getConfig($orderId);
 
         $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
@@ -98,8 +97,7 @@ class Administration
      */
     public function cancelInvoice(string $invoiceNo, string $orderId):array
     {
-        $config = $this->config->create();
-        $config = $this->setStoreIdOnConfig($config, $orderId);
+        $config = $this->getConfig($orderId);
 
         $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
@@ -122,8 +120,7 @@ class Administration
      */
     public function creditInvoice(string $invoiceNo, string $orderId):array
     {
-        $config = $this->config->create();
-        $config = $this->setStoreIdOnConfig($config, $orderId);
+        $config = $this->getConfig($orderId);
 
         $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
@@ -147,8 +144,7 @@ class Administration
      */
     public function getInvoiceInformation(int $invoiceNo, int $orderId, string $clientIp):array
     {
-        $config = $this->config->create();
-        $config = $this->setStoreIdOnConfig($config, $orderId);
+        $config = $this->getConfig($orderId);
 
         $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
@@ -176,21 +172,20 @@ class Administration
     }
 
     /**
-     * Set order id on the config object
+     * Get order config
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config $config
      * @param string                                         $orderId
-     * @return \Webbhuset\CollectorBankCheckout\Config\Config
+     * @return \Webbhuset\CollectorBankCheckout\Config\OrderConfig
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function setStoreIdOnConfig(
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+    protected function getConfig(
         string $orderId
     ) {
         $order = $this->orderRepository->get($orderId);
         $storeId = $this->orderHandler->getStoreId($order);
-        $config->setStoreId($storeId);
+        $config = $this->configFactory->create(['order' => $order]);
+
         return $config;
     }
 }

@@ -18,7 +18,7 @@ class QuoteUpdater
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Tax\Model\Calculation $taxCalculator,
-        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config,
+        \Webbhuset\CollectorBankCheckout\Config\QuoteConfigFactory $config,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Customer\Model\Session $session,
         \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler,
@@ -46,6 +46,7 @@ class QuoteUpdater
         $billingAddress             = $quote->getBillingAddress();
         $collectorDeliveryAddress   = $customer->getDeliveryAddress();
         $shippingAddress            = $quote->getShippingAddress();
+        $config                     = $this->config->create(['quote' => $quote]);
 
         if ($customer instanceof SDK\PrivateCustomer) {
             $billingAddress = $this->setPrivateAddressData($billingAddress, $customer, $collectorInvoiceAddress)
@@ -64,7 +65,7 @@ class QuoteUpdater
                 ->setReference($quote, $customer->getInvoiceReference());
         }
 
-        $this->quoteHandler->setStoreId($quote, $this->config->create()->getCustomerStoreId());
+        $this->quoteHandler->setStoreId($quote, $config->getStoreId());
 
         $quote->setDefaultShippingAddress($shippingAddress);
         $quote->setDefaultBillingAddress($billingAddress);
@@ -97,7 +98,8 @@ class QuoteUpdater
             return $quote;
         }
         $shippingAddress = $quote->getShippingAddress();
-        $countryCode = $this->config->create()->getCountryCode();
+        $config = $this->config->create(['quote' => $quote]);
+        $countryCode = $config->getCountryCode();
 
         $shippingAddress->setCountryId($countryCode)
             ->setCollectShippingRates(true)

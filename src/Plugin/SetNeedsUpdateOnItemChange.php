@@ -17,26 +17,19 @@ class SetNeedsUpdateOnItemChange
      * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
      */
     protected $quoteDataHandler;
-    /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
-     */
-    protected $config;
 
     /**
      * SetNeedsUpdateOnItemChange constructor.
      *
      * @param \Magento\Quote\Api\CartRepositoryInterface         $quoteRepository
      * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config     $config
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config
+        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->quoteDataHandler = $quoteDataHandler;
-        $this->config = $config;
     }
 
     /**

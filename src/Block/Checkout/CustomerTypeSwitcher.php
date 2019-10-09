@@ -61,7 +61,7 @@ class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
      */
     public function getCustomerType()
     {
-        return $this->config->getCustomerType();
+        return $this->config->getDefaultCustomerType();
     }
 
     /**

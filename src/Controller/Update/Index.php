@@ -22,10 +22,6 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $collectorAdapter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
-     */
-    protected $config;
-    /**
      * @var \Webbhuset\CollectorBankCheckout\QuoteConverter
      */
     protected $quoteConverter;
@@ -44,7 +40,6 @@ class Index extends \Magento\Framework\App\Action\Action
      * @param \Magento\Framework\App\Action\Context            $context
      * @param \Magento\Checkout\Model\Session                  $checkoutSession
      * @param \Webbhuset\CollectorBankCheckout\Adapter         $collectorAdapter
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config   $config
      * @param \Webbhuset\CollectorBankCheckout\QuoteConverter  $quoteConverter
      * @param \Webbhuset\CollectorBankCheckout\QuoteUpdater    $quoteUpdater
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
@@ -54,7 +49,6 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Webbhuset\CollectorBankCheckout\Adapter $collectorAdapter,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
         \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
         \Webbhuset\CollectorBankCheckout\QuoteUpdater $quoteUpdater,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
@@ -63,7 +57,6 @@ class Index extends \Magento\Framework\App\Action\Action
         $this->resultJsonFactory = $resultJsonFactory;
         $this->checkoutSession   = $checkoutSession;
         $this->collectorAdapter  = $collectorAdapter;
-        $this->config            = $config;
         $this->quoteConverter    = $quoteConverter;
         $this->quoteUpdater      = $quoteUpdater;
         $this->logger            = $logger;

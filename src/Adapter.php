@@ -14,17 +14,13 @@ class Adapter
      */
     protected $quoteConverter;
     /**
-     * @var Config\Config
+     * @var Config\ConfigFactory
      */
-    protected $config;
+    protected $configFactory;
     /**
      * @var Data\QuoteHandler
      */
     protected $quoteDataHandler;
-    /**
-     * @var Data\OrderHandler
-     */
-    protected $orderDataHandler;
     /**
      * @var QuoteUpdater
      */
@@ -54,14 +50,12 @@ class Adapter
         \Webbhuset\CollectorBankCheckout\QuoteUpdater $quoteUpdater,
         \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Webbhuset\CollectorBankCheckout\Config\QuoteConfigFactory $configFactory,
         \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
     ) {
         $this->quoteConverter   = $quoteConverter;
-        $this->config           = $config;
+        $this->configFactory    = $configFactory;
         $this->quoteDataHandler = $quoteDataHandler;
-        $this->orderDataHandler = $orderDataHandler;
         $this->quoteUpdater     = $quoteUpdater;
         $this->quoteRepository  = $quoteRepository;
         $this->logger           = $logger;
@@ -131,14 +125,13 @@ class Adapter
      */
     public function initialize(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
+        $config = $this->configFactory->create(['quote' => $quote]);
         $quote = $this->quoteUpdater->setDefaultShippingIfEmpty($quote);
         $this->quoteRepository->save($quote);
 
         $cart = $this->quoteConverter->getCart($quote);
         $fees = $this->quoteConverter->getFees($quote);
         $initCustomer = $this->quoteConverter->getInitializeCustomer($quote);
-
-        $config = $this->getConfig($this->config->getStoreId());
 
         $countryCode = $config->getCountryCode();
         $adapter = $this->getAdapter($config);
@@ -156,7 +149,7 @@ class Adapter
 
             $this->quoteDataHandler->setPrivateId($quote, $collectorSession->getPrivateId())
                 ->setPublicToken($quote, $collectorSession->getPublicToken())
-                ->setCustomerType($quote, $this->config->getCustomerType());
+                ->setCustomerType($quote, $config->getDefaultCustomerType());
 
             $this->quoteRepository->save($quote);
         } catch (\CollectorBank\CheckoutSDK\Errors\ResponseError $e) {
@@ -175,35 +168,22 @@ class Adapter
      */
     public function acquireCheckoutInformationFromQuote(\Magento\Quote\Model\Quote $quote): \CollectorBank\CheckoutSDK\CheckoutData
     {
+        $config = $this->configFactory->create(['quote' => $quote]);
         $privateId = $this->quoteDataHandler->getPrivateId($quote);
-        $data = $this->acquireCheckoutInformation($privateId);
+        $data = $this->acquireCheckoutInformation($config, $privateId);
 
         return $data;
     }
 
     /**
-     * Acquires information from collector bank about the current session from an order
-     *
-     * @param \Magento\Quote\Model\Quote $order
-     * @return \CollectorBank\CheckoutSDK\CheckoutData
-     */
-    public function acquireCheckoutInformationFromOrder(\Magento\Quote\Model\Quote $order): \CollectorBank\CheckoutSDK\CheckoutData
-    {
-        $privateId = $this->orderDataHandler->getPrivateId($order);
-
-        return $this->acquireCheckoutInformation($privateId);
-    }
-
-    /**
      * Acquires information from collector bank about the current session from privateId
      *
-     * @param     $privateId
-     * @param int $storeId
+     * @param \Webbhuset\CollectorBankCheckout\Config\QuoteConfig $privateId
+     * @param int $privateId
      * @return \CollectorBank\CheckoutSDK\CheckoutData
      */
-    public function acquireCheckoutInformation($privateId, $storeId = 0): \CollectorBank\CheckoutSDK\CheckoutData
+    public function acquireCheckoutInformation($config, $privateId): \CollectorBank\CheckoutSDK\CheckoutData
     {
-        $config = $this->getConfig($storeId);
         $adapter = $this->getAdapter($config);
 
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
@@ -222,7 +202,7 @@ class Adapter
      */
     public function updateFees(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
-        $config = $this->getConfig($this->config->getCustomerStoreId());
+        $config = $this->configFactory->create(['quote' => $quote]);
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
 
@@ -252,7 +232,7 @@ class Adapter
      */
     public function updateCart(\Magento\Quote\Model\Quote $quote) : \CollectorBank\CheckoutSDK\Session
     {
-        $config = $this->getConfig($this->config->getCustomerStoreId());
+        $config = $this->configFactory->create(['quote' => $quote]);
         $adapter = $this->getAdapter($config);
         $collectorSession = new \CollectorBank\CheckoutSDK\Session($adapter);
         $cart = $this->quoteConverter->getCart($quote);
@@ -272,26 +252,13 @@ class Adapter
     }
 
     /**
-     * @param null $storeId
-     * @return \CollectorBank\CheckoutSDK\Config\ConfigInterface
-     */
-    public function getConfig($storeId = null) : \CollectorBank\CheckoutSDK\Config\ConfigInterface
-    {
-        if ($storeId) {
-            $this->config->setStoreId($storeId);
-        }
-
-        return $this->config;
-    }
-
-    /**
-     * @param $config
+     * Get adapter
+     *
+     * @param \Webbhuset\CollectorBankCheckout\Config\QuoteConfig $config
      * @return \CollectorBank\CheckoutSDK\Adapter\AdapterInterface
      */
     public function getAdapter($config) : \CollectorBank\CheckoutSDK\Adapter\AdapterInterface
     {
-        $config = $this->getConfig();
-
         if ($config->getIsMockMode()) {
             return new \CollectorBank\CheckoutSDK\Adapter\MockAdapter($config);
         }
