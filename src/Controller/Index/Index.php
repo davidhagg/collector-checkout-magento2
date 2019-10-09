@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Index;
+namespace Webbhuset\CollectorCheckout\Controller\Index;
 
 /**
  * Class Index
  *
- * @package Webbhuset\CollectorBankCheckout\Controller\Index
+ * @package Webbhuset\CollectorCheckout\Controller\Index
  */
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -18,15 +18,15 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $checkoutSession;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     * @var \Webbhuset\CollectorCheckout\Adapter
      */
     protected $collectorAdapter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     * @var \Webbhuset\CollectorCheckout\Data\QuoteHandler
      */
     protected $quoteDataHandler;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteConverter
+     * @var \Webbhuset\CollectorCheckout\QuoteConverter
      */
     protected $quoteConverter;
     /**
@@ -34,15 +34,15 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $quoteRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     * @var \Webbhuset\CollectorCheckout\Config\Config
      */
     protected $config;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteValidator
+     * @var \Webbhuset\CollectorCheckout\QuoteValidator
      */
     protected $quoteValidator;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteComparerFactory
+     * @var \Webbhuset\CollectorCheckout\QuoteComparerFactory
      */
     protected $quoteComparer;
 
@@ -51,26 +51,26 @@ class Index extends \Magento\Framework\App\Action\Action
      *
      * @param \Magento\Framework\App\Action\Context                 $context
      * @param \Magento\Checkout\Model\Session                       $checkoutSession
-     * @param \Webbhuset\CollectorBankCheckout\Adapter              $collectorAdapter
-     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler    $quoteDataHandler
-     * @param \Webbhuset\CollectorBankCheckout\QuoteConverter       $quoteConverter
+     * @param \Webbhuset\CollectorCheckout\Adapter              $collectorAdapter
+     * @param \Webbhuset\CollectorCheckout\Data\QuoteHandler    $quoteDataHandler
+     * @param \Webbhuset\CollectorCheckout\QuoteConverter       $quoteConverter
      * @param \Magento\Framework\View\Result\PageFactory            $pageFactory
      * @param \Magento\Quote\Api\CartRepositoryInterface            $quoteRepository
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config        $config
-     * @param \Webbhuset\CollectorBankCheckout\QuoteValidator       $quoteValidator
-     * @param \Webbhuset\CollectorBankCheckout\QuoteComparerFactory $quoteComparer
+     * @param \Webbhuset\CollectorCheckout\Config\Config        $config
+     * @param \Webbhuset\CollectorCheckout\QuoteValidator       $quoteValidator
+     * @param \Webbhuset\CollectorCheckout\QuoteComparerFactory $quoteComparer
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Webbhuset\CollectorBankCheckout\Adapter $collectorAdapter,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
-        \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorCheckout\Adapter $collectorAdapter,
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Webbhuset\CollectorCheckout\QuoteConverter $quoteConverter,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
-        \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator,
-        \Webbhuset\CollectorBankCheckout\QuoteComparerFactory $quoteComparer
+        \Webbhuset\CollectorCheckout\Config\Config $config,
+        \Webbhuset\CollectorCheckout\QuoteValidator $quoteValidator,
+        \Webbhuset\CollectorCheckout\QuoteComparerFactory $quoteComparer
     ) {
         $this->pageFactory      = $pageFactory;
         $this->checkoutSession  = $checkoutSession;
@@ -110,7 +110,7 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $customerType = $this->getRequest()->getParam('customerType');
 
-        if (\Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type::BOTH_CUSTOMERS == $this->config->getCustomerTypeAllowed()
+        if (\Webbhuset\CollectorCheckout\Config\Source\Customer\Type::BOTH_CUSTOMERS == $this->config->getCustomerTypeAllowed()
             && $customerType
         ) {
             $this->quoteDataHandler->setCustomerType($quote, $customerType);

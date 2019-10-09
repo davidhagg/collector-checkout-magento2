@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Gateway\Command;
+namespace Webbhuset\CollectorCheckout\Gateway\Command;
 
 use Webbhuset\CollectorPaymentSDK\Errors\ResponseError as ResponseError;
 use Magento\Payment\Gateway\CommandInterface as CommandInterface;
@@ -10,7 +10,7 @@ use Magento\Sales\Api\Data\TransactionInterface;
 /**
  * Class CollectorBankCommand
  *
- * @package Webbhuset\CollectorBankCheckout\Gateway\Command
+ * @package Webbhuset\CollectorCheckout\Gateway\Command
  */
 class CollectorBankCommand implements CommandInterface
 {
@@ -19,19 +19,19 @@ class CollectorBankCommand implements CommandInterface
      */
     protected $method;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\PaymentHandlerFactory
+     * @var \Webbhuset\CollectorCheckout\Data\PaymentHandlerFactory
      */
     protected $paymentHandler;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Invoice\Administration
+     * @var \Webbhuset\CollectorCheckout\Invoice\Administration
      */
     protected $invoice;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Invoice\Transaction\ManagerFactory
      */
     protected $transaction;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
 
@@ -39,17 +39,17 @@ class CollectorBankCommand implements CommandInterface
      * CollectorBankCommand constructor.
      *
      * @param                                                                     $client
-     * @param \Webbhuset\CollectorBankCheckout\Data\PaymentHandlerFactory         $paymentHandler
-     * @param \Webbhuset\CollectorBankCheckout\Invoice\Administration             $invoice
-     * @param \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger                      $logger
+     * @param \Webbhuset\CollectorCheckout\Data\PaymentHandlerFactory         $paymentHandler
+     * @param \Webbhuset\CollectorCheckout\Invoice\Administration             $invoice
+     * @param \Webbhuset\CollectorCheckout\Invoice\Transaction\ManagerFactory $transaction
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger                      $logger
      */
     public function __construct(
         $client,
-        \Webbhuset\CollectorBankCheckout\Data\PaymentHandlerFactory $paymentHandler,
-        \Webbhuset\CollectorBankCheckout\Invoice\Administration $invoice,
-        \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Data\PaymentHandlerFactory $paymentHandler,
+        \Webbhuset\CollectorCheckout\Invoice\Administration $invoice,
+        \Webbhuset\CollectorCheckout\Invoice\Transaction\ManagerFactory $transaction,
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger
     ) {
         $this->method         = $client['method'];
         $this->paymentHandler = $paymentHandler;

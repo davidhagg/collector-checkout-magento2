@@ -2,29 +2,29 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
-    <type name="Webbhuset\CollectorBankCheckout\Logger\System\Handler">
+    <type name="Webbhuset\CollectorCheckout\Logger\System\Handler">
         <arguments>
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
         </arguments>
     </type>
-    <type name="Webbhuset\CollectorBankCheckout\Logger\Logger">
+    <type name="Webbhuset\CollectorCheckout\Logger\Logger">
         <arguments>
             <argument name="name" xsi:type="string">
                 collectorLogger
             </argument>
             <argument name="handlers"  xsi:type="array">
-                <item name="system" xsi:type="object">Webbhuset\CollectorBankCheckout\Logger\System\Handler</item>
+                <item name="system" xsi:type="object">Webbhuset\CollectorCheckout\Logger\System\Handler</item>
             </argument>
         </arguments>
     </type>
 
-    <virtualType name="CollectorBankCheckoutFacade" type="Webbhuset\CollectorBankCheckout\Checkout\Adapter">
+    <virtualType name="CollectorCheckoutFacade" type="Webbhuset\CollectorCheckout\Checkout\Adapter">
         <arguments>
-            <argument name="code" xsi:type="const">Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE</argument>
-            <argument name="formBlockType" xsi:type="string">Webbhuset\CollectorBankCheckout\Block\Admin\Form</argument>
-            <argument name="infoBlockType" xsi:type="string">Webbhuset\CollectorBankCheckout\Block\Admin\OrderInfo</argument>
+            <argument name="code" xsi:type="const">Webbhuset\CollectorCheckout\Gateway\Config::CHECKOUT_CODE</argument>
+            <argument name="formBlockType" xsi:type="string">Webbhuset\CollectorCheckout\Block\Admin\Form</argument>
+            <argument name="infoBlockType" xsi:type="string">Webbhuset\CollectorCheckout\Block\Admin\OrderInfo</argument>
             <argument name="valueHandlerPool" xsi:type="object">CollectorBankInvoiceValueHandlerPool</argument>
-            <argument name="commandPool" xsi:type="object">CollectorBankCheckoutCommandPool</argument>
+            <argument name="commandPool" xsi:type="object">CollectorCheckoutCommandPool</argument>
         </arguments>
     </virtualType>
 
@@ -44,23 +44,23 @@
 
     <virtualType name="CollectorBankInvoicePaymentConfig" type="Magento\Payment\Gateway\Config\Config">
         <arguments>
-            <argument name="methodCode" xsi:type="const">Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE</argument>
+            <argument name="methodCode" xsi:type="const">Webbhuset\CollectorCheckout\Gateway\Config::CHECKOUT_CODE</argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="CollectorBankCheckoutCommandPool" type="\Magento\Payment\Gateway\Command\CommandPool">
+    <virtualType name="CollectorCheckoutCommandPool" type="\Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="capture" xsi:type="string">CollectorBankCheckoutCaptureCommand</item>
-                <item name="void" xsi:type="string">CollectorBankCheckoutCancelCommand</item>
-                <item name="cancel" xsi:type="string">CollectorBankCheckoutCancelCommand</item>
-                <item name="refund" xsi:type="string">CollectorBankCheckoutRefundCommand</item>
-                <item name="authorize" xsi:type="string">CollectorBankCheckoutAuthorizeCommand</item>
+                <item name="capture" xsi:type="string">CollectorCheckoutCaptureCommand</item>
+                <item name="void" xsi:type="string">CollectorCheckoutCancelCommand</item>
+                <item name="cancel" xsi:type="string">CollectorCheckoutCancelCommand</item>
+                <item name="refund" xsi:type="string">CollectorCheckoutRefundCommand</item>
+                <item name="authorize" xsi:type="string">CollectorCheckoutAuthorizeCommand</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="CollectorBankCheckoutCaptureCommand" type="Webbhuset\CollectorBankCheckout\Gateway\Command\CollectorBankCommand">
+    <virtualType name="CollectorCheckoutCaptureCommand" type="Webbhuset\CollectorCheckout\Gateway\Command\CollectorBankCommand">
         <arguments>
             <argument name="client" xsi:type="array">
                 <item name="method" xsi:type="string">capture</item>
@@ -68,7 +68,7 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="CollectorBankCheckoutAuthorizeCommand" type="Webbhuset\CollectorBankCheckout\Gateway\Command\CollectorBankCommand">
+    <virtualType name="CollectorCheckoutAuthorizeCommand" type="Webbhuset\CollectorCheckout\Gateway\Command\CollectorBankCommand">
         <arguments>
             <argument name="client" xsi:type="array">
                 <item name="method" xsi:type="string">authorize</item>
@@ -76,7 +76,7 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="CollectorBankCheckoutCancelCommand" type="Webbhuset\CollectorBankCheckout\Gateway\Command\CollectorBankCommand">
+    <virtualType name="CollectorCheckoutCancelCommand" type="Webbhuset\CollectorCheckout\Gateway\Command\CollectorBankCommand">
         <arguments>
             <argument name="client" xsi:type="array">
                 <item name="method" xsi:type="string">cancel</item>
@@ -84,7 +84,7 @@
         </arguments>
     </virtualType>
 
-    <virtualType name="CollectorBankCheckoutRefundCommand" type="Webbhuset\CollectorBankCheckout\Gateway\Command\CollectorBankCommand">
+    <virtualType name="CollectorCheckoutRefundCommand" type="Webbhuset\CollectorCheckout\Gateway\Command\CollectorBankCommand">
         <arguments>
             <argument name="client" xsi:type="array">
                 <item name="method" xsi:type="string">refund</item>

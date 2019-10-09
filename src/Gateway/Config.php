@@ -1,13 +1,13 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Gateway;
+namespace Webbhuset\CollectorCheckout\Gateway;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
 
 /**
  * Class Config
  *
- * @package Webbhuset\CollectorBankCheckout\Gateway
+ * @package Webbhuset\CollectorCheckout\Gateway
  */
 class Config implements ConfigProviderInterface
 {
@@ -29,7 +29,7 @@ class Config implements ConfigProviderInterface
     const REMOVE_PENDING_ORDERS_HOURS = 5;
 
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     * @var \Webbhuset\CollectorCheckout\Config\Config
      */
     protected $config;
     /**
@@ -48,13 +48,13 @@ class Config implements ConfigProviderInterface
     /**
      * Config constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config $config
+     * @param \Webbhuset\CollectorCheckout\Config\Config $config
      * @param \Magento\Framework\View\Asset\Repository       $assetRepo
      * @param \Magento\Framework\UrlInterface                $urlBuilder
      * @param \Magento\Framework\App\RequestInterface        $request
      */
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Webbhuset\CollectorCheckout\Config\Config $config,
         \Magento\Framework\View\Asset\Repository $assetRepo,
         \Magento\Framework\UrlInterface $urlBuilder,
         \Magento\Framework\App\RequestInterface $request
@@ -79,9 +79,9 @@ class Config implements ConfigProviderInterface
         return [
             'payment' => [
                 'collector_checkout' => [
-                    'image_remove_item' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/times-solid.svg'),
-                    'image_plus_qty' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/plus-solid.svg'),
-                    'image_minus_qty' => $this->getViewFileUrl('Webbhuset_CollectorBankCheckout::images/minus-solid.svg'),
+                    'image_remove_item' => $this->getViewFileUrl('Webbhuset_CollectorCheckout::images/times-solid.svg'),
+                    'image_plus_qty' => $this->getViewFileUrl('Webbhuset_CollectorCheckout::images/plus-solid.svg'),
+                    'image_minus_qty' => $this->getViewFileUrl('Webbhuset_CollectorCheckout::images/minus-solid.svg'),
                     'newsletter_url' => $this->getNewsletterUrl(),
                     'reinit_url' => $this->getReinitUrl(),
                     'update_url' => $this->getUpdateUrl(),

@@ -1,19 +1,19 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Block\Checkout;
+namespace Webbhuset\CollectorCheckout\Block\Checkout;
 
-use Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType as CustomerType;
-use Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustomerType;
+use Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType as CustomerType;
+use Webbhuset\CollectorCheckout\Config\Source\Customer\Type as AllowedCustomerType;
 
 /**
  * Class CustomerTypeSwitcher
  *
- * @package Webbhuset\CollectorBankCheckout\Block\Checkout
+ * @package Webbhuset\CollectorCheckout\Block\Checkout
  */
 class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     * @var \Webbhuset\CollectorCheckout\Config\Config
      */
     protected $config;
 
@@ -21,12 +21,12 @@ class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
      * CustomerTypeSwitcher constructor.
      *
      * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config   $config
+     * @param \Webbhuset\CollectorCheckout\Config\Config   $config
      * @param array                                            $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Webbhuset\CollectorCheckout\Config\Config $config,
         array $data = []
     ) {
         parent::__construct($context, $data);

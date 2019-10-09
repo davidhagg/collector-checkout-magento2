@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Checkout;
+namespace Webbhuset\CollectorCheckout\Checkout;
 
 /**
  * Class Adapter
  *
- * @package Webbhuset\CollectorBankCheckout\Checkout
+ * @package Webbhuset\CollectorCheckout\Checkout
  */
 class Adapter extends \Magento\Payment\Model\Method\Adapter
 {

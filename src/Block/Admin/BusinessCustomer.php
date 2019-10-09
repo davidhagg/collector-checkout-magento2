@@ -1,18 +1,18 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Block\Admin;
+namespace Webbhuset\CollectorCheckout\Block\Admin;
 
-use Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType as CustomerType;
+use Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType as CustomerType;
 
 /**
  * Class BusinessCustomer
  *
- * @package Webbhuset\CollectorBankCheckout\Block\Admin
+ * @package Webbhuset\CollectorCheckout\Block\Admin
  */
 class BusinessCustomer extends \Magento\Backend\Block\Template
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\OrderHandler
+     * @var \Webbhuset\CollectorCheckout\Data\OrderHandler
      */
     protected $orderHandler;
     /**
@@ -33,14 +33,14 @@ class BusinessCustomer extends \Magento\Backend\Block\Template
      *
      * @param \Magento\Backend\Block\Template\Context            $context
      * @param array                                              $data
-     * @param \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler
+     * @param \Webbhuset\CollectorCheckout\Data\OrderHandler $orderHandler
      * @param \Magento\Framework\App\Request\Http                $request
      * @param \Magento\Sales\Model\OrderRepository               $orderRepository
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         array $data = [],
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler,
+        \Webbhuset\CollectorCheckout\Data\OrderHandler $orderHandler,
         \Magento\Framework\App\Request\Http $request,
         \Magento\Sales\Model\OrderRepository $orderRepository
     ) {

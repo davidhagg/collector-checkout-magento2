@@ -1,26 +1,26 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Cron;
+namespace Webbhuset\CollectorCheckout\Cron;
 
 /**
  * Class RemovePendingOrders
  *
- * @package Webbhuset\CollectorBankCheckout\Cron
+ * @package Webbhuset\CollectorCheckout\Cron
  */
 class RemovePendingOrders
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory
      */
     protected $orderManager;
 
     /**
      * RemovePendingOrders constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager
+     * @param \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager
      */
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager
+        \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager
     ) {
         $this->orderManager = $orderManager;
     }

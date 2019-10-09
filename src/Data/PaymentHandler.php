@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Data;
+namespace Webbhuset\CollectorCheckout\Data;
 
 /**
  * Class PaymentHandler
  *
- * @package Webbhuset\CollectorBankCheckout\Data
+ * @package Webbhuset\CollectorCheckout\Data
  */
 class PaymentHandler
 {

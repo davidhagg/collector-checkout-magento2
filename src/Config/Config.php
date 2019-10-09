@@ -1,13 +1,13 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Config;
+namespace Webbhuset\CollectorCheckout\Config;
 
-use Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type as AllowedCustomerType;
+use Webbhuset\CollectorCheckout\Config\Source\Customer\Type as AllowedCustomerType;
 
 /**
  * Class Config
  *
- * @package Webbhuset\CollectorBankCheckout\Config
+ * @package Webbhuset\CollectorCheckout\Config
  */
 class Config implements
     \Webbhuset\CollectorCheckoutSDK\Config\ConfigInterface,
@@ -30,11 +30,11 @@ class Config implements
      */
     protected $checkoutSession;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     * @var \Webbhuset\CollectorCheckout\Data\QuoteHandler
      */
     protected $quoteDataHandler;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\OrderHandler
+     * @var \Webbhuset\CollectorCheckout\Data\OrderHandler
      */
     protected $orderDataHandler;
     /**
@@ -53,15 +53,15 @@ class Config implements
      * @param \Magento\Framework\Encryption\EncryptorInterface   $encryptor
      * @param \Magento\Checkout\Model\Session                    $checkoutSession
      * @param \Magento\Store\Model\StoreManagerInterface         $storeManager
-     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
-     * @param \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler
+     * @param \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler
+     * @param \Webbhuset\CollectorCheckout\Data\OrderHandler $orderDataHandler
      * @param Source\Country\Country                             $countryData
      */
     public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Webbhuset\CollectorBankCheckout\Config\Source\Country\Country $countryData
+        \Webbhuset\CollectorCheckout\Config\Source\Country\Country $countryData
     ) {
         $this->scopeConfig      = $scopeConfig;
         $this->encryptor        = $encryptor;
@@ -140,7 +140,7 @@ class Config implements
     {
         $customerType = $this->getDefaultCustomerType();
 
-        if (\Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
+        if (\Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
             return $this->getB2CStoreId();
         }
 
@@ -225,7 +225,7 @@ class Config implements
      */
     public function getRedirectPageUri(): string
     {
-        $checkoutUrl = \Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_URL_KEY;
+        $checkoutUrl = \Webbhuset\CollectorCheckout\Gateway\Config::CHECKOUT_URL_KEY;
         $urlKey = $checkoutUrl . "/success/index/reference/{checkout.publictoken}";
 
         $url = $this->storeManager->getStore()->getUrl($urlKey);
@@ -471,7 +471,7 @@ class Config implements
      */
     public function getCheckoutUrl()
     {
-        $urlKey = \Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_URL_KEY;
+        $urlKey = \Webbhuset\CollectorCheckout\Gateway\Config::CHECKOUT_URL_KEY;
         $url = $this->storeManager->getStore()->getUrl($urlKey);
 
         return $url;

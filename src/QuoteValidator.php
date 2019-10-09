@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout;
+namespace Webbhuset\CollectorCheckout;
 
 class QuoteValidator
 {

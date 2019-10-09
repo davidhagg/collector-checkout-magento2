@@ -2,15 +2,15 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Framework\UrlInterface">
-        <plugin name="checkout_url_replacer" type="Webbhuset\CollectorBankCheckout\Plugin\CheckoutUrlReplacer" sortOrder="1" disabled="false"/>
+        <plugin name="checkout_url_replacer" type="Webbhuset\CollectorCheckout\Plugin\CheckoutUrlReplacer" sortOrder="1" disabled="false"/>
     </type>
     <type name="Magento\Checkout\Model\Cart">
-        <plugin name="collector_update_quote_item_change" type="Webbhuset\CollectorBankCheckout\Plugin\SetNeedsUpdateOnItemChange" sortOrder="1" disabled="false"/>
+        <plugin name="collector_update_quote_item_change" type="Webbhuset\CollectorCheckout\Plugin\SetNeedsUpdateOnItemChange" sortOrder="1" disabled="false"/>
     </type>
     <type name="Magento\Checkout\Model\CompositeConfigProvider">
         <arguments>
             <argument name="configProviders" xsi:type="array">
-                <item name="collector_checkout_provider" xsi:type="object">Webbhuset\CollectorBankCheckout\Gateway\Config</item>
+                <item name="collector_checkout_provider" xsi:type="object">Webbhuset\CollectorCheckout\Gateway\Config</item>
             </argument>
         </arguments>
     </type>

@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Update;
+namespace Webbhuset\CollectorCheckout\Controller\Update;
 
 /**
  * Class Index
  *
- * @package Webbhuset\CollectorBankCheckout\Controller\Update
+ * @package Webbhuset\CollectorCheckout\Controller\Update
  */
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -18,19 +18,19 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $checkoutSession;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     * @var \Webbhuset\CollectorCheckout\Adapter
      */
     protected $collectorAdapter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteConverter
+     * @var \Webbhuset\CollectorCheckout\QuoteConverter
      */
     protected $quoteConverter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteUpdater
+     * @var \Webbhuset\CollectorCheckout\QuoteUpdater
      */
     protected $quoteUpdater;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
 
@@ -39,20 +39,20 @@ class Index extends \Magento\Framework\App\Action\Action
      *
      * @param \Magento\Framework\App\Action\Context            $context
      * @param \Magento\Checkout\Model\Session                  $checkoutSession
-     * @param \Webbhuset\CollectorBankCheckout\Adapter         $collectorAdapter
-     * @param \Webbhuset\CollectorBankCheckout\QuoteConverter  $quoteConverter
-     * @param \Webbhuset\CollectorBankCheckout\QuoteUpdater    $quoteUpdater
+     * @param \Webbhuset\CollectorCheckout\Adapter         $collectorAdapter
+     * @param \Webbhuset\CollectorCheckout\QuoteConverter  $quoteConverter
+     * @param \Webbhuset\CollectorCheckout\QuoteUpdater    $quoteUpdater
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger   $logger
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger   $logger
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Webbhuset\CollectorBankCheckout\Adapter $collectorAdapter,
-        \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
-        \Webbhuset\CollectorBankCheckout\QuoteUpdater $quoteUpdater,
+        \Webbhuset\CollectorCheckout\Adapter $collectorAdapter,
+        \Webbhuset\CollectorCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorCheckout\QuoteUpdater $quoteUpdater,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger
     ) {
         $this->resultJsonFactory = $resultJsonFactory;
         $this->checkoutSession   = $checkoutSession;

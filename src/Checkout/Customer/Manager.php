@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Checkout\Customer;
+namespace Webbhuset\CollectorCheckout\Checkout\Customer;
 
 /**
  * Class Manager
  *
- * @package Webbhuset\CollectorBankCheckout\Checkout\Customer
+ * @package Webbhuset\CollectorCheckout\Checkout\Customer
  */
 class Manager
 {
@@ -30,7 +30,7 @@ class Manager
      */
     protected $quoteRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\ConfigFactory
+     * @var \Webbhuset\CollectorCheckout\Config\ConfigFactory
      */
     protected $config;
 
@@ -42,7 +42,7 @@ class Manager
      * @param \Magento\Customer\Api\AccountManagementInterface      $accountManagement
      * @param \Magento\Store\Model\StoreManagerInterface            $storeManager
      * @param \Magento\Quote\Api\CartRepositoryInterface            $quoteRepository
-     * @param \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
+     * @param \Webbhuset\CollectorCheckout\Config\ConfigFactory $config
      */
     public function __construct(
         \Magento\Customer\Api\Data\CustomerInterfaceFactory $customerInterface,
@@ -50,7 +50,7 @@ class Manager
         \Magento\Customer\Api\AccountManagementInterface $accountManagement,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Config\ConfigFactory $config
+        \Webbhuset\CollectorCheckout\Config\ConfigFactory $config
     ) {
         $this->customerInterface  = $customerInterface;
         $this->accountManagement  = $accountManagement;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Plugin;
+namespace Webbhuset\CollectorCheckout\Plugin;
 
 /**
  * Class SetNeedsUpdateOnItemChange
  *
- * @package Webbhuset\CollectorBankCheckout\Plugin
+ * @package Webbhuset\CollectorCheckout\Plugin
  */
 class SetNeedsUpdateOnItemChange
 {
@@ -14,7 +14,7 @@ class SetNeedsUpdateOnItemChange
      */
     protected $quoteRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     * @var \Webbhuset\CollectorCheckout\Data\QuoteHandler
      */
     protected $quoteDataHandler;
 
@@ -22,11 +22,11 @@ class SetNeedsUpdateOnItemChange
      * SetNeedsUpdateOnItemChange constructor.
      *
      * @param \Magento\Quote\Api\CartRepositoryInterface         $quoteRepository
-     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
+     * @param \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->quoteDataHandler = $quoteDataHandler;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Exception;
+namespace Webbhuset\CollectorCheckout\Exception;
 
 /**
  * Class QuoteNotInSyncException
  *
- * @package Webbhuset\CollectorBankCheckout\Exception
+ * @package Webbhuset\CollectorCheckout\Exception
  */
 class QuoteNotInSyncException extends
     \Magento\Framework\Exception\LocalizedException

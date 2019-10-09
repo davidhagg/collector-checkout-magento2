@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Setup;
+namespace Webbhuset\CollectorCheckout\Setup;
 
 /**
  * Class InstallSchema
  *
- * @package Webbhuset\CollectorBankCheckout\Setup
+ * @package Webbhuset\CollectorCheckout\Setup
  */
 class InstallSchema implements \Magento\Framework\Setup\InstallSchemaInterface
 {

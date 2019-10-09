@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Logger\System;
+namespace Webbhuset\CollectorCheckout\Logger\System;
 
 class Handler extends \Magento\Framework\Logger\Handler\System
 {

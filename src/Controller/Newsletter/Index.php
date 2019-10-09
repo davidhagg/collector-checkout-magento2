@@ -1,16 +1,16 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Newsletter;
+namespace Webbhuset\CollectorCheckout\Controller\Newsletter;
 
 /**
  * Class Index
  *
- * @package Webbhuset\CollectorBankCheckout\Controller\Newsletter
+ * @package Webbhuset\CollectorCheckout\Controller\Newsletter
  */
 class Index extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     * @var \Webbhuset\CollectorCheckout\Data\QuoteHandler
      */
     protected $quoteHandler;
     /**
@@ -31,14 +31,14 @@ class Index extends \Magento\Framework\App\Action\Action
      *
      * @param \Magento\Framework\App\Action\Context              $context
      * @param \Magento\Checkout\Model\Session                    $checkoutSession
-     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler
+     * @param \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteHandler
      * @param \Magento\Framework\Controller\Result\JsonFactory   $resultJsonFactory
      * @param \Magento\Quote\Api\CartRepositoryInterface         $quoteRepository
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler,
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteHandler,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
     ) {

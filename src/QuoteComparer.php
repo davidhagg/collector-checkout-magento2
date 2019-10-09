@@ -1,9 +1,9 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout;
+namespace Webbhuset\CollectorCheckout;
 
 use Magento\Framework\Phrase;
-use Webbhuset\CollectorBankCheckout\Exception\QuoteNotInSyncException;
+use Webbhuset\CollectorCheckout\Exception\QuoteNotInSyncException;
 
 class QuoteComparer
 {
@@ -13,9 +13,9 @@ class QuoteComparer
     protected $storeManager;
 
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\AdapterFactory $adapter,
-        \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
+        \Webbhuset\CollectorCheckout\AdapterFactory $adapter,
+        \Webbhuset\CollectorCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorCheckout\Config\Config $config,
         \Magento\Store\Model\StoreManagerInterface $storeManager
     ) {
         $this->adapter        = $adapter;

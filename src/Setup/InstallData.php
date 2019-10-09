@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Setup;
+namespace Webbhuset\CollectorCheckout\Setup;
 
 /**
  * Class InstallData
  *
- * @package Webbhuset\CollectorBankCheckout\Setup
+ * @package Webbhuset\CollectorCheckout\Setup
  */
 class InstallData implements \Magento\Framework\Setup\InstallDataInterface
 {

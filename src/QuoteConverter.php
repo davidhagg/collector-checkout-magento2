@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout;
+namespace Webbhuset\CollectorCheckout;
 
 use Webbhuset\CollectorCheckoutSDK\Checkout\Cart;
 use Webbhuset\CollectorCheckoutSDK\Checkout\Cart\Item;

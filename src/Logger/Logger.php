@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Logger;
+namespace Webbhuset\CollectorCheckout\Logger;
 
 class Logger extends \Magento\Framework\Logger\Monolog
 {

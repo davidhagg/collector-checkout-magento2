@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Success;
+namespace Webbhuset\CollectorCheckout\Controller\Success;
 
 /**
  * Class Index
  *
- * @package Webbhuset\CollectorBankCheckout\Controller\Success
+ * @package Webbhuset\CollectorCheckout\Controller\Success
  */
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -18,19 +18,19 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $checkoutSession;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     * @var \Webbhuset\CollectorCheckout\Adapter
      */
     protected $collectorAdapter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory
      */
     protected $orderManager;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\OrderHandlerFactory
+     * @var \Webbhuset\CollectorCheckout\Data\OrderHandlerFactory
      */
     protected $orderDataHandler;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
 
@@ -38,19 +38,19 @@ class Index extends \Magento\Framework\App\Action\Action
      * Index constructor.
      *
      * @param \Magento\Framework\App\Action\Context                          $context
-     * @param \Webbhuset\CollectorBankCheckout\Adapter                       $collectorAdapter
-     * @param \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager
-     * @param \Webbhuset\CollectorBankCheckout\Data\OrderHandlerFactory      $orderDataHandler
+     * @param \Webbhuset\CollectorCheckout\Adapter                       $collectorAdapter
+     * @param \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager
+     * @param \Webbhuset\CollectorCheckout\Data\OrderHandlerFactory      $orderDataHandler
      * @param \Magento\Framework\View\Result\PageFactory                     $pageFactory
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger                 $logger
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger                 $logger
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \Webbhuset\CollectorBankCheckout\Adapter $collectorAdapter,
-        \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandlerFactory $orderDataHandler,
+        \Webbhuset\CollectorCheckout\Adapter $collectorAdapter,
+        \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager,
+        \Webbhuset\CollectorCheckout\Data\OrderHandlerFactory $orderDataHandler,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger
     ) {
         $this->pageFactory      = $pageFactory;
         $this->collectorAdapter = $collectorAdapter;

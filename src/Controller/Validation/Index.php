@@ -1,16 +1,16 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Validation;
+namespace Webbhuset\CollectorCheckout\Controller\Validation;
 
 /**
  * Class Index
  *
- * @package Webbhuset\CollectorBankCheckout\Controller\Validation
+ * @package Webbhuset\CollectorCheckout\Controller\Validation
  */
 class Index extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory
      */
     protected $orderManager;
     /**
@@ -18,7 +18,7 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $jsonResult;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Checkout\Customer\ManagerFactory
      */
     protected $customerManager;
     /**
@@ -30,15 +30,15 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $quoteRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Checkout\Quote\ManagerFactory
      */
     protected $quoteManager;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteComparerFactory
+     * @var \Webbhuset\CollectorCheckout\QuoteComparerFactory
      */
     protected $quoteComparer;
 
@@ -47,22 +47,22 @@ class Index extends \Magento\Framework\App\Action\Action
      *
      * @param \Magento\Framework\App\Action\Context                             $context
      * @param \Magento\Framework\Controller\Result\JsonFactory                  $jsonResult
-     * @param \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory    $orderManager
-     * @param \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory    $quoteManager
-     * @param \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory $customerManager
+     * @param \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory    $orderManager
+     * @param \Webbhuset\CollectorCheckout\Checkout\Quote\ManagerFactory    $quoteManager
+     * @param \Webbhuset\CollectorCheckout\Checkout\Customer\ManagerFactory $customerManager
      * @param \Magento\Quote\Api\CartRepositoryInterface                        $quoteRepository
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger                    $logger
-     * @param \Webbhuset\CollectorBankCheckout\QuoteComparerFactory             $quoteComparer
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger                    $logger
+     * @param \Webbhuset\CollectorCheckout\QuoteComparerFactory             $quoteComparer
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResult,
-        \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
-        \Webbhuset\CollectorBankCheckout\Checkout\Quote\ManagerFactory $quoteManager,
-        \Webbhuset\CollectorBankCheckout\Checkout\Customer\ManagerFactory $customerManager,
+        \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager,
+        \Webbhuset\CollectorCheckout\Checkout\Quote\ManagerFactory $quoteManager,
+        \Webbhuset\CollectorCheckout\Checkout\Customer\ManagerFactory $customerManager,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger,
-        \Webbhuset\CollectorBankCheckout\QuoteComparerFactory $quoteComparer
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger,
+        \Webbhuset\CollectorCheckout\QuoteComparerFactory $quoteComparer
     ) {
         $this->orderManager    = $orderManager;
         $this->jsonResult      = $jsonResult;
@@ -118,7 +118,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $this->logger->addCritical(
                 "Validation callback NoSuchEntityException publicToken: $reference. {$e->getMessage()}"
             );
-        } catch (\Webbhuset\CollectorBankCheckout\Exception\QuoteNotInSyncException $e) {
+        } catch (\Webbhuset\CollectorCheckout\Exception\QuoteNotInSyncException $e) {
             $response = [
                 'title' => __('Cart not in sync'),
                 'message' => __('Please refresh the page and try again.')

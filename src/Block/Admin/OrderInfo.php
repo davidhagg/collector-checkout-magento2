@@ -1,18 +1,18 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Block\Admin;
+namespace Webbhuset\CollectorCheckout\Block\Admin;
 
 /**
  * Class OrderInfo
  *
- * @package Webbhuset\CollectorBankCheckout\Block\Admin
+ * @package Webbhuset\CollectorCheckout\Block\Admin
  */
 class OrderInfo extends \Magento\Payment\Block\Info
 {
     /**
      * @var string
      */
-    protected $_template = 'Webbhuset_CollectorBankCheckout::info/checkout.phtml';
+    protected $_template = 'Webbhuset_CollectorCheckout::info/checkout.phtml';
 
     /**
      * Returns the payment information saved in the payment object for the order

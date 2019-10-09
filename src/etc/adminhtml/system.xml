@@ -129,7 +129,7 @@
                         <field id='active'>1</field>
                     </depends>
                     <validate>required-entry</validate>
-                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Country\Country</source_model>
+                    <source_model>Webbhuset\CollectorCheckout\Config\Source\Country\Country</source_model>
                 </field>
 
 
@@ -234,7 +234,7 @@
                     <depends>
                         <field id='active'>1</field>
                     </depends>
-                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Customer\Type</source_model>
+                    <source_model>Webbhuset\CollectorCheckout\Config\Source\Customer\Type</source_model>
                 </field>
 
                 <field
@@ -250,7 +250,7 @@
                     <depends>
                         <field id='active'>1</field>
                     </depends>
-                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Customer\DefaultType</source_model>
+                    <source_model>Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType</source_model>
                 </field>
 
                 <field
@@ -298,7 +298,7 @@
                 >
                     <label>Order status - On hold</label>
                     <validate>required-entry</validate>
-                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Order\Holded</source_model>
+                    <source_model>Webbhuset\CollectorCheckout\Config\Source\Order\Holded</source_model>
                     <depends>
                         <field id='active'>1</field>
                     </depends>
@@ -315,7 +315,7 @@
                 >
                     <label>Order status - Denied order</label>
                     <validate>required-entry</validate>
-                    <source_model>Webbhuset\CollectorBankCheckout\Config\Source\Order\Cancelled</source_model>
+                    <source_model>Webbhuset\CollectorCheckout\Config\Source\Order\Cancelled</source_model>
                     <depends>
                         <field id='active'>1</field>
                     </depends>

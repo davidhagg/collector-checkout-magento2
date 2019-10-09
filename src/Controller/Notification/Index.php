@@ -1,16 +1,16 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Notification;
+namespace Webbhuset\CollectorCheckout\Controller\Notification;
 
 /**
  * Class Index
  *
- * @package Webbhuset\CollectorBankCheckout\Controller\Notification
+ * @package Webbhuset\CollectorCheckout\Controller\Notification
  */
 class Index extends \Magento\Framework\App\Action\Action
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory
+     * @var \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory
      */
     protected $orderManager;
     /**
@@ -22,12 +22,12 @@ class Index extends \Magento\Framework\App\Action\Action
      * Index constructor.
      *
      * @param \Magento\Framework\App\Action\Context                          $context
-     * @param \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager
+     * @param \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager
      * @param \Magento\Framework\Controller\Result\JsonFactory               $jsonResult
      */
     public function __construct(
         \Magento\Framework\App\Action\Context $context,
-        \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
+        \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResult
     ) {
         $this->orderManager = $orderManager;

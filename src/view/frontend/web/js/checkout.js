@@ -2,7 +2,7 @@ define([
     'uiComponent',
     'jquery',
     'mage/storage',
-    'Webbhuset_CollectorBankCheckout/js/iframe',
+    'Webbhuset_CollectorCheckout/js/iframe',
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/model/shipping-rate-registry',
     'Magento_Checkout/js/model/shipping-rate-processor/new-address',
@@ -30,7 +30,7 @@ define([
     'use strict';
     return Element.extend({
         defaults: {
-            template: 'Webbhuset_CollectorBankCheckout/checkout',
+            template: 'Webbhuset_CollectorCheckout/checkout',
         },
         timeout: null,
         cartData: {},

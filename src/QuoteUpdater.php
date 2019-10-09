@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout;
+namespace Webbhuset\CollectorCheckout;
 
 use Webbhuset\CollectorCheckoutSDK\Checkout\Customer as SDK;
 use Magento\Quote\Model\Quote as Quote;
@@ -18,10 +18,10 @@ class QuoteUpdater
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Tax\Model\Calculation $taxCalculator,
-        \Webbhuset\CollectorBankCheckout\Config\QuoteConfigFactory $config,
+        \Webbhuset\CollectorCheckout\Config\QuoteConfigFactory $config,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepositoryInterface,
         \Magento\Customer\Model\Session $session,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteHandler,
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteHandler,
         \Magento\Quote\Api\ShippingMethodManagementInterface $shippingMethodManagement,
         \Magento\Quote\Model\Quote\ShippingAssignment\ShippingAssignmentProcessor $shippingAssignmentProcessor,
         \Magento\Quote\Api\Data\CartExtensionFactory $cartExtensionFactory
@@ -171,7 +171,7 @@ class QuoteUpdater
         Quote $quote
     ) : Quote {
         $payment = $quote->getPayment();
-        $payment->setMethod(\Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE);
+        $payment->setMethod(\Webbhuset\CollectorCheckout\Gateway\Config::CHECKOUT_CODE);
 
         return $quote;
     }

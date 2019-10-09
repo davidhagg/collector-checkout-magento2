@@ -1,16 +1,16 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Block\Admin;
+namespace Webbhuset\CollectorCheckout\Block\Admin;
 
 /**
  * Class Form
  *
- * @package Webbhuset\CollectorBankCheckout\Block\Admin
+ * @package Webbhuset\CollectorCheckout\Block\Admin
  */
 class Form extends \Magento\Payment\Block\Form
 {
     /**
      * @var string
      */
-    protected $_template = 'Webbhuset_CollectorBankCheckout::form/checkout.phtml';
+    protected $_template = 'Webbhuset_CollectorCheckout::form/checkout.phtml';
 }

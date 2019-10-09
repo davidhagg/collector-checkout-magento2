@@ -1,10 +1,10 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Config;
+namespace Webbhuset\CollectorCheckout\Config;
 
 use Magento\Quote\Api\Data\CartInterface as Quote;
 
-class QuoteConfig extends \Webbhuset\CollectorBankCheckout\Config\Config
+class QuoteConfig extends \Webbhuset\CollectorCheckout\Config\Config
 {
     protected $quoteDataHandler;
     protected $quote;
@@ -13,8 +13,8 @@ class QuoteConfig extends \Webbhuset\CollectorBankCheckout\Config\Config
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Webbhuset\CollectorBankCheckout\Config\Source\Country\Country $countryData,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Webbhuset\CollectorCheckout\Config\Source\Country\Country $countryData,
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler,
         Quote $quote
     ) {
         $this->quoteDataHandler = $quoteDataHandler;

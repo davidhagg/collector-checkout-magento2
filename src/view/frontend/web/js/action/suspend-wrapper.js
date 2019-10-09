@@ -3,7 +3,7 @@ define([
     'jquery',
     'ko',
     'mage/utils/wrapper',
-    'Webbhuset_CollectorBankCheckout/js/iframe',
+    'Webbhuset_CollectorCheckout/js/iframe',
 ], function (_, $, ko, wrapper, collectorIframe) {
     'use strict';
 

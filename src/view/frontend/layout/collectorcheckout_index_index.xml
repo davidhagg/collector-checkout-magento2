@@ -5,15 +5,15 @@
         <referenceBlock name="checkout.cart.crosssell" remove="true"/>
 
         <referenceContainer name="checkout.cart.items">
-            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout\CustomerTypeSwitcher" name="collectorbank_checkout_customer_type" template="Webbhuset_CollectorBankCheckout::checkout/customerTypeSwitcher.phtml" cacheable="false" before="-" />
-            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_index_index" template="Magento_Checkout::onepage.phtml" cacheable="false" after="collectorbank_checkout_customer_type">
+            <block class="Webbhuset\CollectorCheckout\Block\Checkout\CustomerTypeSwitcher" name="collectorbank_checkout_customer_type" template="Webbhuset_CollectorCheckout::checkout/customerTypeSwitcher.phtml" cacheable="false" before="-" />
+            <block class="Webbhuset\CollectorCheckout\Block\Checkout" name="collectorbank_index_index" template="Magento_Checkout::onepage.phtml" cacheable="false" after="collectorbank_checkout_customer_type">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="checkout" xsi:type="array">
                                 <item name="component" xsi:type="string">collectorCheckout</item>
                                 <item name="config" xsi:type="array">
-                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/items</item>
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorCheckout/cart/items</item>
                                 </item>
                                 <item name="children" xsi:type="array">
                                     <item name="item.image" xsi:type="array">
@@ -29,7 +29,7 @@
                     </argument>
                 </arguments>
             </block>
-            <block class="Webbhuset\CollectorBankCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorBankCheckout::iframe.phtml" cacheable="false" />
+            <block class="Webbhuset\CollectorCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorCheckout::iframe.phtml" cacheable="false" />
         </referenceContainer>
         <referenceBlock name="checkout.cart.form" remove="true"/>
         <referenceBlock class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon" remove="true"/>
@@ -38,13 +38,13 @@
         <referenceContainer name="cart.summary" remove="true" />
 
         <referenceContainer name="checkout.cart.container">
-            <block class="Magento\Framework\View\Element\Template" name="collector-discount" before="collector-newsletter" template="Webbhuset_CollectorBankCheckout::cart/discount.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="collector-discount" before="collector-newsletter" template="Webbhuset_CollectorCheckout::cart/discount.phtml">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="discount" xsi:type="array">
                                 <item name="component" xsi:type="string">Magento_SalesRule/js/view/payment/discount</item>
-                                <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/payment/discount</item>
+                                <item name="template" xsi:type="string">Webbhuset_CollectorCheckout/payment/discount</item>
                                 <item name="sortOrder" xsi:type="string">1</item>
                                 <item name="children" xsi:type="array">
                                     <item name="errors" xsi:type="array">
@@ -64,14 +64,14 @@
                     </argument>
                 </arguments>
             </block>
-            <block class="Magento\Framework\View\Element\Template" name="collector-newsletter" template="Webbhuset_CollectorBankCheckout::checkout/newsletter.phtml" after="collector-discount">
+            <block class="Magento\Framework\View\Element\Template" name="collector-newsletter" template="Webbhuset_CollectorCheckout::checkout/newsletter.phtml" after="collector-discount">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="newsletter" xsi:type="array">
                                 <item name="component" xsi:type="string">collectorNewsletter</item>
                                 <item name="config" xsi:type="array">
-                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/newsletter</item>
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorCheckout/cart/newsletter</item>
                                 </item>
                             </item>
                         </item>
@@ -79,7 +79,7 @@
                 </arguments>
             </block>
         </referenceContainer>
-        <referenceBlock name="checkout.cart.shipping" template="Webbhuset_CollectorBankCheckout::cart/shipping.phtml">
+        <referenceBlock name="checkout.cart.shipping" template="Webbhuset_CollectorCheckout::cart/shipping.phtml">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">
                     <item name="components" xsi:type="array">
@@ -87,11 +87,11 @@
                             <item name="children" xsi:type="array">
 
                                 <item name="block-rates" xsi:type="array">
-                                    <item name="component" xsi:type="string">Webbhuset_CollectorBankCheckout/js/view/cart/shipping-rates</item>
+                                    <item name="component" xsi:type="string">Webbhuset_CollectorCheckout/js/view/cart/shipping-rates</item>
                                     <item name="sortOrder" xsi:type="string">2</item>
                                 </item>
                                 <item name="block-shipping" xsi:type="array">
-                                    <item name="template" xsi:type="string">Webbhuset_CollectorBankCheckout/cart/shipping-estimation</item>
+                                    <item name="template" xsi:type="string">Webbhuset_CollectorCheckout/cart/shipping-estimation</item>
                                     <item name="sortOrder" xsi:type="string">2</item>
                                 </item>
                             </item>

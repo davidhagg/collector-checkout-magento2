@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Invoice\Transaction;
+namespace Webbhuset\CollectorCheckout\Invoice\Transaction;
 
 class Manager
 {

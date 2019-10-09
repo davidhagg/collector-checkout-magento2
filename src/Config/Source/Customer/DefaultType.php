@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Config\Source\Customer;
+namespace Webbhuset\CollectorCheckout\Config\Source\Customer;
 
 /**
  * Class DefaultType
  *
- * @package Webbhuset\CollectorBankCheckout\Config\Source\Customer
+ * @package Webbhuset\CollectorCheckout\Config\Source\Customer
  */
 class DefaultType implements \Magento\Framework\Data\OptionSourceInterface
 {

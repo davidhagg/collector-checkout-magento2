@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Config\Source\Country;
+namespace Webbhuset\CollectorCheckout\Config\Source\Country;
 
 /**
  * Class Country
  *
- * @package Webbhuset\CollectorBankCheckout\Config\Source\Country
+ * @package Webbhuset\CollectorCheckout\Config\Source\Country
  */
 class Country implements \Magento\Framework\Data\OptionSourceInterface
 {

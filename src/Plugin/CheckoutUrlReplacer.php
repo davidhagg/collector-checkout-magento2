@@ -1,27 +1,27 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Plugin;
+namespace Webbhuset\CollectorCheckout\Plugin;
 
-use Webbhuset\CollectorBankCheckout\Gateway\Config;
+use Webbhuset\CollectorCheckout\Gateway\Config;
 
 /**
  * Class CheckoutUrlReplacer
  *
- * @package Webbhuset\CollectorBankCheckout\Plugin
+ * @package Webbhuset\CollectorCheckout\Plugin
  */
 class CheckoutUrlReplacer
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     * @var \Webbhuset\CollectorCheckout\Config\Config
      */
     protected $config;
 
     /**
      * CheckoutUrlReplacer constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config $config
+     * @param \Webbhuset\CollectorCheckout\Config\Config $config
      */
-    public function __construct(\Webbhuset\CollectorBankCheckout\Config\Config $config)
+    public function __construct(\Webbhuset\CollectorCheckout\Config\Config $config)
     {
         $this->config = $config;
     }

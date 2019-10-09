@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Plugin;
+namespace Webbhuset\CollectorCheckout\Plugin;
 
 /**
  * Class UpdateOrderAfterShippingChange
  *
- * @package Webbhuset\CollectorBankCheckout\Plugin
+ * @package Webbhuset\CollectorCheckout\Plugin
  */
 class UpdateOrderAfterShippingChange
 {
@@ -14,11 +14,11 @@ class UpdateOrderAfterShippingChange
      */
     protected $quoteRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\QuoteHandler
+     * @var \Webbhuset\CollectorCheckout\Data\QuoteHandler
      */
     protected $quoteDataHandler;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     * @var \Webbhuset\CollectorCheckout\Config\Config
      */
     protected $config;
 
@@ -26,13 +26,13 @@ class UpdateOrderAfterShippingChange
      * UpdateOrderAfterShippingChange constructor.
      *
      * @param \Magento\Quote\Api\CartRepositoryInterface         $quoteRepository
-     * @param \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config     $config
+     * @param \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler
+     * @param \Webbhuset\CollectorCheckout\Config\Config     $config
      */
     public function __construct(
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
-        \Webbhuset\CollectorBankCheckout\Config\Config $config
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Webbhuset\CollectorCheckout\Config\Config $config
     ) {
         $this->quoteRepository = $quoteRepository;
         $this->quoteDataHandler = $quoteDataHandler;

@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout;
+namespace Webbhuset\CollectorCheckout;
 
 /**
  * Class Adapter
  *
- * @package Webbhuset\CollectorBankCheckout
+ * @package Webbhuset\CollectorCheckout
  */
 class Adapter
 {
@@ -46,12 +46,12 @@ class Adapter
      * @param Logger\Logger                              $logger
      */
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\QuoteConverter $quoteConverter,
-        \Webbhuset\CollectorBankCheckout\QuoteUpdater $quoteUpdater,
-        \Webbhuset\CollectorBankCheckout\Data\QuoteHandler $quoteDataHandler,
+        \Webbhuset\CollectorCheckout\QuoteConverter $quoteConverter,
+        \Webbhuset\CollectorCheckout\QuoteUpdater $quoteUpdater,
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Config\QuoteConfigFactory $configFactory,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Config\QuoteConfigFactory $configFactory,
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger
     ) {
         $this->quoteConverter   = $quoteConverter;
         $this->configFactory    = $configFactory;
@@ -178,7 +178,7 @@ class Adapter
     /**
      * Acquires information from collector bank about the current session from privateId
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\QuoteConfig $privateId
+     * @param \Webbhuset\CollectorCheckout\Config\QuoteConfig $privateId
      * @param int $privateId
      * @return \Webbhuset\CollectorCheckoutSDK\CheckoutData
      */
@@ -254,7 +254,7 @@ class Adapter
     /**
      * Get adapter
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\QuoteConfig $config
+     * @param \Webbhuset\CollectorCheckout\Config\QuoteConfig $config
      * @return \Webbhuset\CollectorCheckoutSDK\Adapter\AdapterInterface
      */
     public function getAdapter($config) : \Webbhuset\CollectorCheckoutSDK\Adapter\AdapterInterface

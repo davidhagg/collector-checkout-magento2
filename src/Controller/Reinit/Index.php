@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Controller\Reinit;
+namespace Webbhuset\CollectorCheckout\Controller\Reinit;
 
 class Index extends \Magento\Framework\App\Action\Action
 {
@@ -14,7 +14,7 @@ class Index extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\Action\Context $context,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger,
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
         \Magento\Quote\Model\ResourceModel\Quote\Collection $quoteCollection
     ) {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Checkout\Quote;
+namespace Webbhuset\CollectorCheckout\Checkout\Quote;
 
 /**
  * Class Manager
  *
- * @package Webbhuset\CollectorBankCheckout\Checkout\Quote
+ * @package Webbhuset\CollectorCheckout\Checkout\Quote
  */
 class Manager
 {
@@ -18,7 +18,7 @@ class Manager
      */
     protected $quoteRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
 
@@ -27,12 +27,12 @@ class Manager
      *
      * @param \Magento\Framework\Api\SearchCriteriaBuilder   $searchCriteriaBuilder
      * @param \Magento\Quote\Api\CartRepositoryInterface     $quoteRepository
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger $logger
      */
     public function __construct(
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Quote\Api\CartRepositoryInterface $quoteRepository,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger
     ) {
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->quoteRepository = $quoteRepository;

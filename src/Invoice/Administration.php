@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Invoice;
+namespace Webbhuset\CollectorCheckout\Invoice;
 
 use Webbhuset\CollectorPaymentSDK\Adapter\SoapAdapter;
 use Webbhuset\CollectorPaymentSDK\Invoice\Administration as InvoiceAdministration;
@@ -8,12 +8,12 @@ use Webbhuset\CollectorPaymentSDK\Invoice\Administration as InvoiceAdministratio
 /**
  * Class Administration
  *
- * @package Webbhuset\CollectorBankCheckout\Invoice
+ * @package Webbhuset\CollectorCheckout\Invoice
  */
 class Administration
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory
+     * @var \Webbhuset\CollectorCheckout\Config\OrderConfigFactory
      */
     protected $configFactory;
     /**
@@ -25,7 +25,7 @@ class Administration
      */
     protected $transaction;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
     /**
@@ -33,27 +33,27 @@ class Administration
      */
     protected $orderRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\OrderHandler
+     * @var \Webbhuset\CollectorCheckout\Data\OrderHandler
      */
     protected $orderHandler;
 
     /**
      * Administration constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory $config
+     * @param \Webbhuset\CollectorCheckout\Config\OrderConfigFactory $config
      * @param \Magento\Sales\Model\Service\InvoiceService           $invoiceService
      * @param Transaction\ManagerFactory                            $transaction
      * @param \Magento\Sales\Model\OrderRepository                  $orderRepository
-     * @param \Webbhuset\CollectorBankCheckout\Data\OrderHandler    $orderHandler
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger        $logger
+     * @param \Webbhuset\CollectorCheckout\Data\OrderHandler    $orderHandler
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger        $logger
      */
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory $configFactory,
+        \Webbhuset\CollectorCheckout\Config\OrderConfigFactory $configFactory,
         \Magento\Sales\Model\Service\InvoiceService $invoiceService,
-        \Webbhuset\CollectorBankCheckout\Invoice\Transaction\ManagerFactory $transaction,
+        \Webbhuset\CollectorCheckout\Invoice\Transaction\ManagerFactory $transaction,
         \Magento\Sales\Model\OrderRepository $orderRepository,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Data\OrderHandler $orderHandler,
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger
     ) {
         $this->configFactory   = $configFactory;
         $this->invoiceService  = $invoiceService;
@@ -175,7 +175,7 @@ class Administration
      * Get order config
      *
      * @param string                                         $orderId
-     * @return \Webbhuset\CollectorBankCheckout\Config\OrderConfig
+     * @return \Webbhuset\CollectorCheckout\Config\OrderConfig
      * @throws \Magento\Framework\Exception\InputException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */

@@ -1,13 +1,13 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Data;
+namespace Webbhuset\CollectorCheckout\Data;
 
 use Magento\Sales\Api\Data\OrderInterface as Order;
 
 /**
  * Class OrderHandler
  *
- * @package Webbhuset\CollectorBankCheckout\Data
+ * @package Webbhuset\CollectorCheckout\Data
  */
 class OrderHandler
 {

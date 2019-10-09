@@ -1,13 +1,13 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Checkout\Order;
+namespace Webbhuset\CollectorCheckout\Checkout\Order;
 
 use Webbhuset\CollectorCheckoutSDK\Checkout\Purchase\Result as PurchaseResult;
 
 /**
  * Class Manager
  *
- * @package Webbhuset\CollectorBankCheckout\Checkout\Order
+ * @package Webbhuset\CollectorCheckout\Checkout\Order
  */
 class Manager
 {
@@ -20,11 +20,11 @@ class Manager
      */
     protected $orderRepository;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\AdapterFactory
+     * @var \Webbhuset\CollectorCheckout\AdapterFactory
      */
     protected $collectorAdapter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Data\OrderHandler
+     * @var \Webbhuset\CollectorCheckout\Data\OrderHandler
      */
     protected $orderHandler;
     /**
@@ -32,7 +32,7 @@ class Manager
      */
     protected $searchCriteriaBuilder;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory
+     * @var \Webbhuset\CollectorCheckout\Config\OrderConfigFactory
      */
     protected $configFactory;
     /**
@@ -56,11 +56,11 @@ class Manager
      */
     protected $dateTime;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory
+     * @var \Webbhuset\CollectorCheckout\Invoice\AdministrationFactory
      */
     protected $invoice;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Logger\Logger
+     * @var \Webbhuset\CollectorCheckout\Logger\Logger
      */
     protected $logger;
     /**
@@ -73,33 +73,33 @@ class Manager
      *
      * @param \Magento\Quote\Api\CartManagementInterface                     $cartManagement
      * @param \Magento\Sales\Model\OrderRepository                           $orderRepository
-     * @param \Webbhuset\CollectorBankCheckout\Data\OrderHandler             $orderHandler
+     * @param \Webbhuset\CollectorCheckout\Data\OrderHandler             $orderHandler
      * @param \Magento\Framework\Api\SearchCriteriaBuilder                   $searchCriteriaBuilder
-     * @param \Webbhuset\CollectorBankCheckout\AdapterFactory                $collectorAdapter
+     * @param \Webbhuset\CollectorCheckout\AdapterFactory                $collectorAdapter
      * @param \Magento\Sales\Api\OrderManagementInterface                    $orderManagement
-     * @param \Webbhuset\CollectorBankCheckout\Config\ConfigFactory          $config
+     * @param \Webbhuset\CollectorCheckout\Config\ConfigFactory          $config
      * @param \Magento\Quote\Model\QuoteManagement                           $quoteManagement
      * @param ManagerFactory                                                 $orderManager
      * @param \Magento\Framework\Registry                                    $registry
      * @param \Magento\Framework\Stdlib\DateTime\DateTimeFactory             $dateTime
-     * @param \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice
-     * @param \Webbhuset\CollectorBankCheckout\Logger\Logger                 $logger
+     * @param \Webbhuset\CollectorCheckout\Invoice\AdministrationFactory $invoice
+     * @param \Webbhuset\CollectorCheckout\Logger\Logger                 $logger
      * @param \Magento\Newsletter\Model\SubscriberFactory                    $subscriberFactory
      */
     public function __construct(
         \Magento\Quote\Api\CartManagementInterface $cartManagement,
         \Magento\Sales\Model\OrderRepository $orderRepository,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderHandler,
+        \Webbhuset\CollectorCheckout\Data\OrderHandler $orderHandler,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
-        \Webbhuset\CollectorBankCheckout\AdapterFactory $collectorAdapter,
+        \Webbhuset\CollectorCheckout\AdapterFactory $collectorAdapter,
         \Magento\Sales\Api\OrderManagementInterface $orderManagement,
-        \Webbhuset\CollectorBankCheckout\Config\OrderConfigFactory $configFactory,
+        \Webbhuset\CollectorCheckout\Config\OrderConfigFactory $configFactory,
         \Magento\Quote\Model\QuoteManagement $quoteManagement,
-        \Webbhuset\CollectorBankCheckout\Checkout\Order\ManagerFactory $orderManager,
+        \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Magento\Framework\Registry $registry,
         \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime,
-        \Webbhuset\CollectorBankCheckout\Invoice\AdministrationFactory $invoice,
-        \Webbhuset\CollectorBankCheckout\Logger\Logger $logger,
+        \Webbhuset\CollectorCheckout\Invoice\AdministrationFactory $invoice,
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger,
         \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory
     ) {
         $this->cartManagement        = $cartManagement;
@@ -443,7 +443,7 @@ class Manager
      */
     public function getPendingCollectorBankOrders(): array
     {
-        $ageInHours = \Webbhuset\CollectorBankCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
+        $ageInHours = \Webbhuset\CollectorCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
 
         $pendingOrderStatus = $this->configFactory->create(['order' => $order])->getOrderStatusNew();
 
@@ -460,7 +460,7 @@ class Manager
         $pendingCollectorOrders = [];
 
         foreach ($pendingOrders as $order) {
-            if ($order->getPayment()->getMethod() == \Webbhuset\CollectorBankCheckout\Gateway\Config::CHECKOUT_CODE) {
+            if ($order->getPayment()->getMethod() == \Webbhuset\CollectorCheckout\Gateway\Config::CHECKOUT_CODE) {
                 $pendingCollectorOrders[] = $order;
             }
         }

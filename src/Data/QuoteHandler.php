@@ -1,13 +1,13 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Data;
+namespace Webbhuset\CollectorCheckout\Data;
 
 use Magento\Quote\Api\Data\CartInterface as Quote;
 
 /**
  * Class QuoteHandler
  *
- * @package Webbhuset\CollectorBankCheckout\Data
+ * @package Webbhuset\CollectorCheckout\Data
  */
 class QuoteHandler
 {

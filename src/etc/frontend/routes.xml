@@ -5,10 +5,10 @@
 >
     <router id="standard">
         <route id="collectorcheckout" frontName="collectorcheckout">
-            <module name="Webbhuset_CollectorBankCheckout" />
+            <module name="Webbhuset_CollectorCheckout" />
         </route>
         <route id="collectorbank" frontName="collectorbank">
-            <module name="Webbhuset_CollectorBankCheckout"/>
+            <module name="Webbhuset_CollectorCheckout"/>
         </route>
     </router>
 </config>

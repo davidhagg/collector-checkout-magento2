@@ -1,11 +1,11 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Block;
+namespace Webbhuset\CollectorCheckout\Block;
 
 /**
  * Class Checkout
  *
- * @package Webbhuset\CollectorBankCheckout\Block
+ * @package Webbhuset\CollectorCheckout\Block
  */
 class Checkout extends \Magento\Framework\View\Element\Template
 {

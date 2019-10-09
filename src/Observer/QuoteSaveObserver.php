@@ -1,38 +1,38 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Observer;
+namespace Webbhuset\CollectorCheckout\Observer;
 
 /**
  * Class QuoteSaveObserver
  *
- * @package Webbhuset\CollectorBankCheckout\Observer
+ * @package Webbhuset\CollectorCheckout\Observer
  */
 class QuoteSaveObserver implements \Magento\Framework\Event\ObserverInterface
 {
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Config\Config
+     * @var \Webbhuset\CollectorCheckout\Config\Config
      */
     protected $config;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\Adapter
+     * @var \Webbhuset\CollectorCheckout\Adapter
      */
     protected $adapter;
     /**
-     * @var \Webbhuset\CollectorBankCheckout\QuoteValidator
+     * @var \Webbhuset\CollectorCheckout\QuoteValidator
      */
     protected $quoteValidator;
 
     /**
      * QuoteSaveObserver constructor.
      *
-     * @param \Webbhuset\CollectorBankCheckout\Config\Config  $config
-     * @param \Webbhuset\CollectorBankCheckout\Adapter        $adapter
-     * @param \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator
+     * @param \Webbhuset\CollectorCheckout\Config\Config  $config
+     * @param \Webbhuset\CollectorCheckout\Adapter        $adapter
+     * @param \Webbhuset\CollectorCheckout\QuoteValidator $quoteValidator
      */
     public function __construct(
-        \Webbhuset\CollectorBankCheckout\Config\Config $config,
-        \Webbhuset\CollectorBankCheckout\Adapter $adapter,
-        \Webbhuset\CollectorBankCheckout\QuoteValidator $quoteValidator
+        \Webbhuset\CollectorCheckout\Config\Config $config,
+        \Webbhuset\CollectorCheckout\Adapter $adapter,
+        \Webbhuset\CollectorCheckout\QuoteValidator $quoteValidator
     ) {
         $this->config = $config;
         $this->adapter = $adapter;

@@ -7,7 +7,7 @@
         <payment>
             <collectorbank_checkout>
                 <active>0</active>
-                <model>CollectorBankCheckoutFacade</model>
+                <model>CollectorCheckoutFacade</model>
                 <order_status>pending</order_status>
                 <title>Collector Bank Checkout</title>
                 <allowspecific>0</allowspecific>

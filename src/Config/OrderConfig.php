@@ -1,9 +1,9 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Config;
+namespace Webbhuset\CollectorCheckout\Config;
 
 
-class OrderConfig extends \Webbhuset\CollectorBankCheckout\Config\Config
+class OrderConfig extends \Webbhuset\CollectorCheckout\Config\Config
 {
     protected $orderDataHandler;
     protected $order;
@@ -12,8 +12,8 @@ class OrderConfig extends \Webbhuset\CollectorBankCheckout\Config\Config
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         \Magento\Framework\Encryption\EncryptorInterface $encryptor,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Webbhuset\CollectorBankCheckout\Config\Source\Country\Country $countryData,
-        \Webbhuset\CollectorBankCheckout\Data\OrderHandler $orderDataHandler,
+        \Webbhuset\CollectorCheckout\Config\Source\Country\Country $countryData,
+        \Webbhuset\CollectorCheckout\Data\OrderHandler $orderDataHandler,
         \Magento\Sales\Api\Data\OrderInterface $order
     ) {
         $this->orderDataHandler = $orderDataHandler;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Webbhuset\CollectorBankCheckout\Config\Source\Order;
+namespace Webbhuset\CollectorCheckout\Config\Source\Order;
 
 /**
  * Order Statuses source model

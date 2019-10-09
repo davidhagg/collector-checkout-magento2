@@ -25,7 +25,7 @@
     "autoload": {
         "files": [ "src/registration.php" ],
         "psr-4": {
-            "Webbhuset\\CollectorBankCheckout\\": "src/"
+            "Webbhuset\\CollectorCheckout\\": "src/"
         }
     }
 }
