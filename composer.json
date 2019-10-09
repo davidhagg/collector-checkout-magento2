@@ -3,8 +3,8 @@
     "type": "magento2-module",
     "description": "Collector Bank Checkout Module",
     "require": {
-		"collector/php-sdk-checkout": "dev-master",
-		"collector/php-sdk-payment": "dev-master"
+		"webbhuset/collector-payment-sdk": "dev-master",
+		"webbhuset/collector-checkout-sdk": "dev-master"
     },
     "repositories": [
         {
