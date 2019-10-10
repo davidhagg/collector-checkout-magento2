@@ -79,11 +79,13 @@ class Administration
         $adapter = new SoapAdapter($config);
         $invoiceAdmin = new InvoiceAdministration($adapter);
 
+        $result = $invoiceAdmin->activateInvoice($invoiceNo, $orderId);
+
         $this->logger->addInfo(
             "Invoice activated online orderId: {$orderId} invoiceNo: {$invoiceNo} "
         );
 
-        return $invoiceAdmin->activateInvoice($invoiceNo, $orderId);
+        return $result;
     }
 
     /**
@@ -183,8 +185,8 @@ class Administration
         string $orderId
     ) {
         $order = $this->orderRepository->get($orderId);
-        $storeId = $this->orderHandler->getStoreId($order);
-        $config = $this->configFactory->create(['order' => $order]);
+        $magentoStoreId = $order->getStoreId();
+        $config = $this->configFactory->create(['order' => $order, 'magentoStoreId' => $magentoStoreId]);
 
         return $config;
     }

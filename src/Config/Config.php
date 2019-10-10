@@ -45,6 +45,10 @@ class Config implements
      * @var Source\Country\Country
      */
     protected $countryData;
+    /**
+     * @var int
+     */
+    protected $magentoStoreId = null;
 
     /**
      * Config constructor.
@@ -411,11 +415,14 @@ class Config implements
         return $this->getConfigValue('test_mode_b2b') ? $this->getConfigValue('test_mode_b2b') : "";
     }
 
-    protected function getConfigValue($name, $storeId = null)
+    protected function getConfigValue($name)
     {
+        $storeId = $this->magentoStoreId;
+
         $value = $this->scopeConfig->getValue(
             'payment/collectorbank_checkout/configuration/' . $name,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
+            $storeId
         );
 
         return $value;

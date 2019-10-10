@@ -14,10 +14,12 @@ class OrderConfig extends \Webbhuset\CollectorCheckout\Config\Config
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Webbhuset\CollectorCheckout\Config\Source\Country\Country $countryData,
         \Webbhuset\CollectorCheckout\Data\OrderHandler $orderDataHandler,
-        \Magento\Sales\Api\Data\OrderInterface $order
+        \Magento\Sales\Api\Data\OrderInterface $order,
+        $magentoStoreId = null
     ) {
         $this->orderDataHandler = $orderDataHandler;
         $this->order = $order;
+        $this->magentoStoreId = $magentoStoreId;
 
         parent::__construct($scopeConfig, $encryptor, $storeManager, $countryData);
     }
