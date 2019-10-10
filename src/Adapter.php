@@ -147,9 +147,11 @@ class Adapter
                 $initCustomer
             );
 
+            $customerType = $this->quoteDataHandler->getCustomerType($quote) ?? $config->getDefaultCustomerType();
+
             $this->quoteDataHandler->setPrivateId($quote, $collectorSession->getPrivateId())
                 ->setPublicToken($quote, $collectorSession->getPublicToken())
-                ->setCustomerType($quote, $config->getDefaultCustomerType());
+                ->setCustomerType($quote, $customerType);
 
             $this->quoteRepository->save($quote);
         } catch (\Webbhuset\CollectorCheckoutSDK\Errors\ResponseError $e) {
@@ -158,6 +160,25 @@ class Adapter
         }
 
         return $collectorSession;
+    }
+
+    public function initWithCustomerType(\Magento\Quote\Model\Quote $quote, int $customerType)
+    {
+        $config = $this->configFactory->create(['quote' => $quote]);
+
+        $this->quoteDataHandler->setCustomerType($quote, $customerType);
+        if (\Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
+            $storeId = $config->getB2CStoreId();
+        } else {
+            $storeId =  $config->getB2BStoreId();
+        }
+
+        $this->quoteDataHandler->setStoreId($quote, $storeId);
+
+        $collectorSession = $this->initialize($quote);
+        $publicToken = $collectorSession->getPublicToken();
+
+        return $publicToken;
     }
 
     /**

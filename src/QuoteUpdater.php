@@ -65,8 +65,6 @@ class QuoteUpdater
                 ->setReference($quote, $customer->getInvoiceReference());
         }
 
-        $this->quoteHandler->setStoreId($quote, $config->getStoreId());
-
         $quote->setDefaultShippingAddress($shippingAddress);
         $quote->setDefaultBillingAddress($billingAddress);
 

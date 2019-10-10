@@ -18,19 +18,35 @@ class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
     protected $config;
 
     /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    protected $checkoutSession;
+
+    /**
+     * @var \Webbhuset\CollectorCheckout\Data\QuoteHandler
+     */
+    protected $quoteDataHandler;
+
+    /**
      * CustomerTypeSwitcher constructor.
      *
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Webbhuset\CollectorCheckout\Config\Config   $config
-     * @param array                                            $data
+     * @param \Magento\Framework\View\Element\Template\Context  $context
+     * @param \Webbhuset\CollectorCheckout\Config\Config        $config
+     * @param \Magento\Checkout\Model\Session                   $checkoutSession
+     * @param \Webbhuset\CollectorCheckout\Data\QuoteHandler    $quoteDataHandler
+     * @param array                                             $data
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         \Webbhuset\CollectorCheckout\Config\Config $config,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        \Webbhuset\CollectorCheckout\Data\QuoteHandler $quoteDataHandler,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->config = $config;
+        $this->checkoutSession = $checkoutSession;
+        $this->quoteDataHandler = $quoteDataHandler;
     }
 
     /**
@@ -61,7 +77,11 @@ class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
      */
     public function getCustomerType()
     {
-        return $this->config->getDefaultCustomerType();
+        $quote = $this->checkoutSession->getQuote();
+
+        $quoteCustomerType = $this->quoteDataHandler->getCustomerType($quote);
+
+        return $quoteCustomerType ?: $this->config->getDefaultCustomerType();
     }
 
     /**

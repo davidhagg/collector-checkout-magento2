@@ -109,17 +109,13 @@ class Index extends \Magento\Framework\App\Action\Action
         }
 
         $customerType = $this->getRequest()->getParam('customerType');
+        $customerType = $customerType ? (int) $customerType : null;
 
-        if (\Webbhuset\CollectorCheckout\Config\Source\Customer\Type::BOTH_CUSTOMERS == $this->config->getCustomerTypeAllowed()
-            && $customerType
-        ) {
-            $this->quoteDataHandler->setCustomerType($quote, $customerType);
-            $this->quoteDataHandler->setPublicToken($quote, null);
-            $this->quoteDataHandler->setPrivateId($quote, null);
-            $this->quoteRepository->save($quote);
+        if ($this->needsForceReinit($quote, $customerType)) {
+            $publicToken = $this->collectorAdapter->initWithCustomerType($quote, $customerType);
+        } else {
+            $publicToken = $this->collectorAdapter->initOrSync($quote);
         }
-
-        $publicToken = $this->collectorAdapter->initOrSync($quote);
 
         $iframeConfig = new \Webbhuset\CollectorCheckoutSDK\Config\IframeConfig(
             $publicToken,
@@ -137,5 +133,41 @@ class Index extends \Magento\Framework\App\Action\Action
             ->setIframe($iframe);
 
         return $page;
+    }
+
+    /**
+     * Check if we need to reinit iframe
+     *
+     * @param \Magento\Quote\Model\Quote $quote
+     * @param integer $customerType
+     * @return bool
+     */
+    public function needsForceReinit(\Magento\Quote\Model\Quote $quote, int $customerType = null)
+    {
+        $canChangeCustomerType = \Webbhuset\CollectorCheckout\Config\Source\Customer\Type::BOTH_CUSTOMERS == $this->config->getCustomerTypeAllowed();
+
+        if (!$canChangeCustomerType) {
+
+            return false;
+        }
+
+        $availableCustomerTypes = [
+            \Webbhuset\CollectorCheckout\Config\Source\Customer\Type::PRIVATE_CUSTOMERS,
+            \Webbhuset\CollectorCheckout\Config\Source\Customer\Type::BUSINESS_CUSTOMERS,
+        ];
+
+        if (!$customerType || !in_array($customerType, $availableCustomerTypes)) {
+
+            return false;
+        }
+
+        $currentCustomerType = (int) $this->quoteDataHandler->getCustomerType($quote);
+
+        if ($currentCustomerType === $customerType) {
+
+            return false;
+        }
+
+        return true;
     }
 }
