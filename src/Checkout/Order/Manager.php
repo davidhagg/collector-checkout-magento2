@@ -497,7 +497,7 @@ class Manager
      * @param $state
      * @return $this
      */
-    private function updateOrderStatus($order, $status, $state)
+    protected function updateOrderStatus($order, $status, $state)
     {
         $order->setState($state)
             ->setStatus($status);
@@ -511,7 +511,7 @@ class Manager
      * @param \Magento\Sales\Api\Data\OrderPaymentInterface $payment
      * @param \Webbhuset\CollectorCheckoutSDK\Checkout\Purchase  $purchaseData
      */
-    private function addPaymentInformation(
+    protected function addPaymentInformation(
         \Magento\Sales\Api\Data\OrderPaymentInterface $payment,
         \Webbhuset\CollectorCheckoutSDK\Checkout\Purchase $purchaseData
     ) {

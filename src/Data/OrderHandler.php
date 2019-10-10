@@ -86,7 +86,7 @@ class OrderHandler
         return $this;
     }
 
-    private function getData(Order $order)
+    protected function getData(Order $order)
     {
         $data = json_decode($order->getCollectorbankData());
 
@@ -94,7 +94,7 @@ class OrderHandler
     }
 
 
-    private function setData(Order $order, $data)
+    protected function setData(Order $order, $data)
     {
         $order->setCollectorbankData(json_encode($data));
 
@@ -177,7 +177,7 @@ class OrderHandler
      * @param string $name
      * @return mixed|null
      */
-    private function getAdditionalData(Order $order, string $name)
+    protected function getAdditionalData(Order $order, string $name)
     {
         $data = $this->getData($order);
         if (!isset($data[$name])) {
@@ -207,7 +207,7 @@ class OrderHandler
      * @param string $value
      * @return OrderHandler
      */
-    private function setAdditionalData(Order $order, string $name, string $value)
+    protected function setAdditionalData(Order $order, string $name, string $value)
     {
         $data = $this->getData($order);
         $data[$name] = $value;

@@ -179,7 +179,7 @@ class Success extends \Magento\Framework\View\Element\Template
      * @param \Magento\Sales\Api\Data\OrderInterface $order
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function setEnhancedEcommerceDatalayer(\Magento\Sales\Api\Data\OrderInterface $order)
+    protected function setEnhancedEcommerceDatalayer(\Magento\Sales\Api\Data\OrderInterface $order)
     {
         $products = [];
         foreach ($order->getAllVisibleItems() as $item) {
