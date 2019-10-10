@@ -148,10 +148,12 @@ class Adapter
             );
 
             $customerType = $this->quoteDataHandler->getCustomerType($quote) ?? $config->getDefaultCustomerType();
+            $storeId = $config->getStoreId();
 
             $this->quoteDataHandler->setPrivateId($quote, $collectorSession->getPrivateId())
                 ->setPublicToken($quote, $collectorSession->getPublicToken())
-                ->setCustomerType($quote, $customerType);
+                ->setCustomerType($quote, $customerType)
+                ->setStoreId($quote, $storeId);
 
             $this->quoteRepository->save($quote);
         } catch (\Webbhuset\CollectorCheckoutSDK\Errors\ResponseError $e) {
