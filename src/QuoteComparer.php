@@ -103,6 +103,9 @@ class QuoteComparer
     protected function getCollectorFeesAsArray(
         \Webbhuset\CollectorCheckoutSDK\CheckoutData $checkoutData
     ) {
+        if (!$checkoutData->getFees()) {
+            return [];
+        }
         $checkoutItems = $checkoutData->getFees()->toArray();
 
         array_walk($checkoutItems, [$this, 'removeExtraColumns']);
