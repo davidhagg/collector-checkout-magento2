@@ -55,7 +55,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $jsonResult->setHttpResponseCode(400);
             $jsonResult->setData(['message' => __('Entity not found')]);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $jsonResult->setHttpResponseCode(400);
             $jsonResult->setData(['message' => __($e->getMessage())]);
 

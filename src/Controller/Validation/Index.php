@@ -127,7 +127,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $this->logger->addCritical(
                 "Cart not in sync on callback QuoteNotInSyncException publicToken: $reference. {$e->getMessage()}"
             );
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             $response = [
                 'title' => __('Exception'),
                 'message' => __($e->getMessage())
