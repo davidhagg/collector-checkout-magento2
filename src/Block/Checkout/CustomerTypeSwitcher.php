@@ -100,6 +100,8 @@ class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
         $allowed[AllowedCustomerType::BUSINESS_CUSTOMERS]['checkoutUrl'] = $this->getBusinessCheckoutUrl();
         $allowed[AllowedCustomerType::BUSINESS_CUSTOMERS]['title'] = __('Business');
 
+        $allowed[$this->getCustomerType()]['isActive'] = 1;
+
         switch ($allowedCustomerTypes) {
             case AllowedCustomerType::BUSINESS_CUSTOMERS:
                 unset($allowed[AllowedCustomerType::PRIVATE_CUSTOMERS]);
@@ -108,8 +110,6 @@ class CustomerTypeSwitcher extends \Magento\Framework\View\Element\Template
                 unset($allowed[AllowedCustomerType::BUSINESS_CUSTOMERS]);
                 break;
         }
-
-        $allowed[$this->getCustomerType()]['isActive'] = 1;
 
         return $allowed;
     }
