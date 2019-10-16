@@ -399,7 +399,7 @@ class Manager
     ):array {
         $orderStatusBefore = $this->orderManagement->getStatus($order->getEntityId());
 
-        $this->unHoldOrder($order);
+        $this->acknowledgeOrder($order, $checkoutData);
 
         if (!$order->canInvoice()) {
             $this->logger->addInfo(
