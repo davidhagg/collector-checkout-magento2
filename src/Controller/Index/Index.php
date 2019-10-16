@@ -101,9 +101,6 @@ class Index extends \Magento\Framework\App\Action\Action
 
         $quoteCheckoutErrors = $this->quoteValidator->getErrors($quote);
         if (!empty($quoteCheckoutErrors)) {
-            foreach ($quoteCheckoutErrors as $error) {
-                $this->messageManager->addErrorMessage(__('Cannot use Collector Checkout: ') . $error);
-            }
 
             return $this->resultRedirectFactory->create()->setPath('checkout/index');
         }
