@@ -37,6 +37,12 @@ define([
         initialize: function (config) {
             var self = this;
 
+            // Clear localstorage cache
+            var localStorage = $.initNamespaceStorage('mage-cache-storage').localStorage;
+            localStorage.remove('cart-data');
+            localStorage.remove('checkout-data');
+            localStorage.remove('cart');
+
             this.cartData = customerData.get('cart');
 
             // Reload page if we cannot use collector checkout
