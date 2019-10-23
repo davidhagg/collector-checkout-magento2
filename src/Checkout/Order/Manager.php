@@ -69,6 +69,11 @@ class Manager
     protected $subscriberFactory;
 
     /**
+     * @var \Webbhuset\CollectorCheckout\Config\Config|\Webbhuset\CollectorCheckout\Config\ConfigFactory
+     */
+    protected $config;
+
+    /**
      * Manager constructor.
      *
      * @param \Magento\Quote\Api\CartManagementInterface                     $cartManagement
@@ -100,7 +105,8 @@ class Manager
         \Magento\Framework\Stdlib\DateTime\DateTimeFactory $dateTime,
         \Webbhuset\CollectorCheckout\Invoice\AdministrationFactory $invoice,
         \Webbhuset\CollectorCheckout\Logger\Logger $logger,
-        \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory
+        \Magento\Newsletter\Model\SubscriberFactory $subscriberFactory,
+        \Webbhuset\CollectorCheckout\Config\Config $config
     ) {
         $this->cartManagement        = $cartManagement;
         $this->collectorAdapter      = $collectorAdapter;
@@ -116,6 +122,7 @@ class Manager
         $this->invoice               = $invoice;
         $this->logger                = $logger;
         $this->subscriberFactory     = $subscriberFactory;
+        $this->config                = $config;
     }
 
     /**
@@ -445,7 +452,7 @@ class Manager
     {
         $ageInHours = \Webbhuset\CollectorCheckout\Gateway\Config::REMOVE_PENDING_ORDERS_HOURS;
 
-        $pendingOrderStatus = $this->configFactory->create(['order' => $order])->getOrderStatusNew();
+        $pendingOrderStatus = $this->config->getOrderStatusNew();
 
         $to   = $this->dateTime->create()->gmtDate(null, "-$ageInHours hours");
         $from = $this->dateTime->create()->gmtDate(null, "-48 hours");
