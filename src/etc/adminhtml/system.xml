@@ -92,7 +92,7 @@
                         showInWebsite='1'
                         showInStore='1'
                 >
-                    <label>B2C store id</label>
+                    <label>B2C StoreId</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
                         <field id='active'>1</field>
@@ -108,7 +108,7 @@
                         showInWebsite='1'
                         showInStore='1'
                 >
-                    <label>B2B store id</label>
+                    <label>B2B StoreId</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
                         <field id='active'>1</field>
@@ -142,7 +142,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Test Mode</label>
+                    <label>Test mode</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id='active'>1</field>
@@ -158,7 +158,7 @@
                         showInWebsite='1'
                         showInStore='1'
                 >
-                    <label>Test mode username</label>
+                    <label>Test mode - Username</label>
                     <validate>required-entry</validate>
                     <comment><![CDATA[]]></comment>
                     <depends>
@@ -176,7 +176,7 @@
                         showInWebsite='1'
                         showInStore='1'
                 >
-                    <label>Test mode password</label>
+                    <label>Test mode - Password</label>
                     <validate>required-entry</validate>
                     <comment><![CDATA[]]></comment>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
@@ -195,7 +195,7 @@
                         showInWebsite='1'
                         showInStore='1'
                 >
-                    <label>Test mode B2C store id</label>
+                    <label>Test mode - B2C StoreId</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
                         <field id='active'>1</field>
@@ -212,7 +212,7 @@
                         showInWebsite='1'
                         showInStore='1'
                 >
-                    <label>Test mode B2B store id</label>
+                    <label>Test mode - B2B StoreId</label>
                     <comment><![CDATA[]]></comment>
                     <depends>
                         <field id='active'>1</field>
@@ -230,7 +230,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Allowed customers</label>
+                    <label>Allowed Customers</label>
                     <depends>
                         <field id='active'>1</field>
                     </depends>
@@ -246,7 +246,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Default customer type</label>
+                    <label>Default Customer Type</label>
                     <depends>
                         <field id='active'>1</field>
                     </depends>
@@ -296,7 +296,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Order status - On hold</label>
+                    <label>Order status - On Hold</label>
                     <validate>required-entry</validate>
                     <source_model>Webbhuset\CollectorCheckout\Config\Source\Order\Holded</source_model>
                     <depends>
@@ -330,7 +330,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Terms and conditions url</label>
+                    <label>Terms and Conditions URL</label>
                     <validate>required-entry</validate>
                     <depends>
                         <field id='active'>1</field>
@@ -346,7 +346,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Custom base url - used during development</label>
+                    <label>Custom base URL - Used during development</label>
                     <depends>
                         <field id='active'>1</field>
                     </depends>
@@ -362,7 +362,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Create customer accounts</label>
+                    <label>Create Customer Accounts</label>
                     <comment>
                         Yes = Customer accounts are created automatically for new email addresses. Orders are placed on the customer account. New customers get new customer email sent.
 
