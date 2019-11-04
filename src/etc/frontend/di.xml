@@ -14,4 +14,7 @@
             </argument>
         </arguments>
     </type>
+    <type name="Magento\Quote\Observer\SubmitObserver">
+        <plugin name="collector_send_no_email" type="Webbhuset\CollectorCheckout\Plugin\SubmitObserverBeforeExecute" />
+    </type>
 </config>
