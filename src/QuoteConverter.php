@@ -28,6 +28,7 @@ class QuoteConverter
     {
         $quoteItems = $quote->getAllVisibleItems();
         $items = [];
+
         foreach ($quoteItems as $quoteItem) {
             if ($quoteItem->getProductType() === 'bundle') {
                 foreach ($quoteItem->getChildren() as $child) {
@@ -46,9 +47,31 @@ class QuoteConverter
             }
         }
 
+        $items = $this->addRoundingError($quote, $items);
+
         $cart = new Cart($items);
 
         return $cart;
+    }
+
+    protected function addRoundingError(\Magento\Quote\Model\Quote $quote, $items)
+    {
+        $collectorCheckoutSum = $this->sumItems($items) + $this->sumFees($this->getFees($quote));
+        $quoteSum = $quote->getGrandTotal();
+
+        $roundingError = round($quoteSum - $collectorCheckoutSum,2);
+        if ($roundingError != 0 && abs($roundingError) < 0.1) {
+            $items[] = new Item(
+                "Rounding error",
+                "Rounding error",
+                $roundingError,
+                1,
+                0,
+                false,
+                "Rounding error"
+            );
+        }
+        return $items;
     }
 
     public function getCartItem(\Magento\Quote\Model\Quote\Item $quoteItem) : Item
@@ -226,5 +249,26 @@ class QuoteConverter
         }
 
         return false;
+    }
+
+    private function sumFees($fees)
+    {
+        $sum = 0;
+        $fees = ($fees->toArray());
+        foreach ($fees as $fee) {
+            $sum += $fee['unitPrice'];
+        }
+
+        return $sum;
+    }
+
+    private function sumItems($items)
+    {
+        $sum = 0;
+        foreach ($items as $item) {
+            $sum += $item->getUnitPrice() * $item->getQuantity();
+        }
+
+        return $sum;
     }
 }
