@@ -84,7 +84,7 @@ class QuoteConverter
             $items[] = $childrenItem;
             $childrenTotal += $childrenItem->getUnitPrice();
             if ((float)$child->getDiscountAmount()) {
-                $items[] = $this->getDiscountItem($child, __('- Discount: '));
+                $items[] = $this->getDiscountItem($child,'- ' . __('Discount: '));
             }
         }
         $bundleParent = [];
