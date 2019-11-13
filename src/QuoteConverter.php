@@ -29,29 +29,75 @@ class QuoteConverter
         $quoteItems = $quote->getAllVisibleItems();
         $items = [];
 
+
         foreach ($quoteItems as $quoteItem) {
-            if ($quoteItem->getProductType() === 'bundle') {
-                foreach ($quoteItem->getChildren() as $child) {
-                    $items[] = $this->getCartItem($child);
 
-                    if ((float)$child->getDiscountAmount()) {
-                        $items[] = $this->getDiscountItem($child);
-                    }
-                }
+            if (\Magento\Bundle\Model\Product\Type::TYPE_CODE === $quoteItem->getProductType()) {
+                $items = $this->appendToItems($items, $this->extractBundleQuoteItem($quoteItem));
             } else {
-                $items[] = $this->getCartItem($quoteItem);
-
-                if ((float)$quoteItem->getDiscountAmount()) {
-                    $items[] = $this->getDiscountItem($quoteItem);
-                }
+                $items = $this->appendToItems($items, $this->extractQuoteItem($quoteItem));
             }
         }
 
-        $items = $this->addRoundingError($quote, $items);
+        $roundingError = $this->addRoundingError($quote, $items);
+        if ($roundingError) {
+            $items = $this->appendToItems($items, [$roundingError]);
+        }
 
         $cart = new Cart($items);
 
         return $cart;
+    }
+
+    protected function appendToItems($items, $additionalItems)
+    {
+        if (empty($additionalItems)) {
+
+            return $items;
+        }
+
+        foreach ($additionalItems as $item) {
+            $items[] = $item;
+        }
+
+        return $items;
+    }
+
+    protected function extractQuoteItem($quoteItem)
+    {
+        $items[] = $this->getCartItem($quoteItem);
+
+        if ((float)$quoteItem->getDiscountAmount()) {
+            $items[] = $this->getDiscountItem($quoteItem);
+        }
+
+        return $items;
+    }
+
+    protected function extractBundleQuoteItem($quoteItem)
+    {
+        $items = [];
+
+        $childrenTotal = 0;
+        foreach ($quoteItem->getChildren() as $child) {
+            $childrenItem = $this->getCartItem($child, "- ");
+            $items[] = $childrenItem;
+            $childrenTotal += $childrenItem->getUnitPrice();
+            if ((float)$child->getDiscountAmount()) {
+                $items[] = $this->getDiscountItem($child, __('- Discount: '));
+            }
+        }
+        $bundleParent = [];
+        $bundleParent[] = ($childrenTotal > 0) ?
+            $this->getCartItem($quoteItem, "",true):
+            $this->getCartItem($quoteItem);
+
+        $items = $this->appendToItems($bundleParent, $items);
+        if ((float)$quoteItem->getDiscountAmount()) {
+            $items[] = $this->getDiscountItem($quoteItem, __('Discount: '));
+        }
+
+        return $items;
     }
 
     protected function addRoundingError(\Magento\Quote\Model\Quote $quote, $items)
@@ -60,25 +106,29 @@ class QuoteConverter
         $quoteSum = $quote->getGrandTotal();
 
         $roundingError = round($quoteSum - $collectorCheckoutSum,2);
-        if ($roundingError != 0 && abs($roundingError) < 0.1) {
-            $items[] = new Item(
-                "Rounding error",
-                "Rounding error",
-                $roundingError,
-                1,
-                0,
-                false,
-                "Rounding error"
-            );
+        if (!($roundingError != 0 && abs($roundingError) < 0.1)) {
+
+            return false;
         }
-        return $items;
+
+        return new Item(
+            "Rounding error",
+            "Rounding error",
+            $roundingError,
+            1,
+            0,
+            false,
+            "Rounding error"
+        );
+
     }
 
-    public function getCartItem(\Magento\Quote\Model\Quote\Item $quoteItem) : Item
+    public function getCartItem(\Magento\Quote\Model\Quote\Item $quoteItem, $prefix = "",  $priceIsZero = false) : Item
     {
-        $id                     = (string) $quoteItem->getSku();
+
+        $id                     = (string) $prefix . $quoteItem->getSku();
         $description            = (string) $quoteItem->getName();
-        $unitPrice              = (float) $quoteItem->getPriceInclTax();
+        $unitPrice              = ($priceIsZero) ? 0.00: (float) $quoteItem->getPriceInclTax();
         $quantity               = (int) $quoteItem->getQty();
         $vat                    = (float) $quoteItem->getTaxPercent();
         $requiresElectronicId   = (bool) $this->requiresElectronicId($quoteItem);
@@ -97,7 +147,7 @@ class QuoteConverter
         return $item;
     }
 
-    public function getDiscountItem(\Magento\Quote\Model\Quote\Item $quoteItem)
+    public function getDiscountItem(\Magento\Quote\Model\Quote\Item $quoteItem, $prefix = "")
     {
         $discountAmount = $quoteItem->getDiscountAmount();
         $taxPercent = $quoteItem->getTaxPercent();
@@ -111,7 +161,7 @@ class QuoteConverter
             $discountTax = ($discountAmount * $taxPercent / 100);
         }
 
-        $id                     = (string) $quoteItem->getSku();
+        $id                     = (string) $prefix . $quoteItem->getSku();
         $description            = (string) __('collector_discount');
         $unitPrice              = (float) ($discountAmount + $discountTax) * -1;
         $quantity               = (int) 1;

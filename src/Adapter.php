@@ -92,14 +92,16 @@ class Adapter
      */
     public function synchronize(\Magento\Quote\Model\Quote $quote)
     {
-        $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
-        $oldFees = $checkoutData->getFees();
-        $oldCart = $checkoutData->getCart();
-        $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
         $shippingAddress = $quote->getShippingAddress();
 
         $shippingAddress->setCollectShippingRates(true)
             ->collectShippingRates();
+
+        $checkoutData = $this->acquireCheckoutInformationFromQuote($quote);
+        $oldFees = $checkoutData->getFees();
+        $oldCart = $checkoutData->getCart();
+        $quote = $this->quoteUpdater->setQuoteData($quote, $checkoutData);
+
 
         $rate = $shippingAddress->getShippingRateByCode($shippingAddress->getShippingMethod());
         if (!$rate || !$shippingAddress->getShippingMethod()) {
