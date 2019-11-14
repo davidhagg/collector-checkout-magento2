@@ -72,7 +72,19 @@ class Adapter
     {
         $publicToken = $this->quoteDataHandler->getPublicToken($quote);
         if ($publicToken) {
-            $this->synchronize($quote);
+            try {
+                $this->synchronize($quote);
+            } catch (\Webbhuset\CollectorCheckoutSDK\Errors\ResponseError $responseError) {
+                if (900 == $responseError->getCode()
+                    || 404 == $responseError->getCode() ){
+
+                    $collectorSession = $this->initialize($quote);
+                    $publicToken = $collectorSession->getPublicToken();
+                } else {
+                    $this->logger->addCritical("Response error when initiating iframe " . $e->getMessage());
+                    die;
+                }
+            }
         } else {
             $collectorSession = $this->initialize($quote);
             $publicToken = $collectorSession->getPublicToken();
