@@ -13,15 +13,18 @@ class QuoteConverter
     protected $taxConfig;
     protected $taxCalculator;
     protected $scopeConfig;
+    protected $configurationHelper;
 
     public function __construct(
         \Magento\Tax\Model\Config $taxConfig,
         \Magento\Tax\Model\Calculation $taxCalculator,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Catalog\Helper\Product\Configuration $configurationHelper
     ) {
-        $this->taxConfig = $taxConfig;
-        $this->taxCalculator = $taxCalculator;
-        $this->scopeConfig = $scopeConfig;
+        $this->taxConfig            = $taxConfig;
+        $this->taxCalculator        = $taxCalculator;
+        $this->scopeConfig          = $scopeConfig;
+        $this->configurationHelper  = $configurationHelper;
     }
 
     public function getCart(\Magento\Quote\Model\Quote $quote) : Cart
@@ -29,38 +32,23 @@ class QuoteConverter
         $quoteItems = $quote->getAllVisibleItems();
         $items = [];
 
-
         foreach ($quoteItems as $quoteItem) {
 
             if (\Magento\Bundle\Model\Product\Type::TYPE_CODE === $quoteItem->getProductType()) {
-                $items = $this->appendToItems($items, $this->extractBundleQuoteItem($quoteItem));
+                $items = array_merge($items, $this->extractBundleQuoteItem($quoteItem));
             } else {
-                $items = $this->appendToItems($items, $this->extractQuoteItem($quoteItem));
+                $items = array_merge($items, $this->extractQuoteItem($quoteItem));
             }
         }
 
         $roundingError = $this->addRoundingError($quote, $items);
         if ($roundingError) {
-            $items = $this->appendToItems($items, [$roundingError]);
+            $items = array_merge($items, [$roundingError]);
         }
 
         $cart = new Cart($items);
 
         return $cart;
-    }
-
-    protected function appendToItems($items, $additionalItems)
-    {
-        if (empty($additionalItems)) {
-
-            return $items;
-        }
-
-        foreach ($additionalItems as $item) {
-            $items[] = $item;
-        }
-
-        return $items;
     }
 
     protected function extractQuoteItem($quoteItem)
@@ -112,27 +100,28 @@ class QuoteConverter
         }
 
         return new Item(
-            "Rounding error",
-            "Rounding error",
+            "Rounding",
+            "Rounding",
             $roundingError,
             1,
             0,
             false,
-            "Rounding error"
+            "Rounding"
         );
 
     }
 
     public function getCartItem(\Magento\Quote\Model\Quote\Item $quoteItem, $prefix = "",  $priceIsZero = false) : Item
     {
+        $optionText = $this->getSelectedOptionText($quoteItem);
 
         $id                     = (string) $prefix . $quoteItem->getSku();
-        $description            = (string) $quoteItem->getName();
+        $description            = (string) $quoteItem->getName() . $optionText;
         $unitPrice              = ($priceIsZero) ? 0.00: (float) $quoteItem->getPriceInclTax();
         $quantity               = (int) $quoteItem->getQty();
         $vat                    = (float) $quoteItem->getTaxPercent();
         $requiresElectronicId   = (bool) $this->requiresElectronicId($quoteItem);
-        $sku                    = (string) $quoteItem->getSku();
+        $sku                    = (string) $quoteItem->getSku() . $optionText;
 
         $item = new Item(
             $id,
@@ -320,5 +309,27 @@ class QuoteConverter
         }
 
         return $sum;
+    }
+
+    private function getSelectedOptionText(\Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item)
+    {
+        $optionTexts = $this->getSelectedOptionsOfQuoteItem($item);
+
+        $result = [];
+        foreach ($optionTexts as $option) {
+            $result[] = $option['value'];
+        }
+
+        if (empty($result)) {
+
+            return "";
+        }
+
+        return ":" . implode("-",$result);
+    }
+
+    private function getSelectedOptionsOfQuoteItem(\Magento\Catalog\Model\Product\Configuration\Item\ItemInterface $item)
+    {
+        return $this->configurationHelper->getCustomOptions($item);
     }
 }
