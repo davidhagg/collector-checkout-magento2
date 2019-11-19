@@ -291,6 +291,20 @@
             hr {
                 width: 100%;
             }
+            margin-top: 0;
+        }
+        .column.main{
+            display: flex;
+            flex-direction: column;
+            iframe{
+                order:10;
+            }
+            .cart-container{
+                order:5
+            }
+        }
+        .fieldset:last-child {
+            margin-bottom:0px;
         }
     }
 }
@@ -300,6 +314,9 @@
             div{
                 display:none;
             }
+        }
+        .page-main{
+            margin-right:5px;
         }
     }
 }
