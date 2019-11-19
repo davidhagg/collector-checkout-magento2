@@ -29,16 +29,7 @@
                     </argument>
                 </arguments>
             </block>
-            <block class="Webbhuset\CollectorCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorCheckout::iframe.phtml" cacheable="false" />
-        </referenceContainer>
-        <referenceBlock name="checkout.cart.form" remove="true"/>
-        <referenceBlock class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon" remove="true"/>
-        <move element="checkout.cart.shipping" destination="checkout.cart.items" before="collectorbank_checkout_iframe"/>
-        <move element="checkout.cart.totals.container" destination="checkout.cart.container" before="collector-discount"/>
-        <referenceContainer name="cart.summary" remove="true" />
-
-        <referenceContainer name="checkout.cart.container">
-            <block class="Magento\Framework\View\Element\Template" name="collector-discount" before="collector-newsletter" template="Webbhuset_CollectorCheckout::cart/discount.phtml">
+            <block class="Magento\Framework\View\Element\Template" name="collector-discount" after="checkout.cart.shipping" template="Webbhuset_CollectorCheckout::cart/discount.phtml">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
@@ -64,7 +55,7 @@
                     </argument>
                 </arguments>
             </block>
-            <block class="Magento\Framework\View\Element\Template" name="collector-newsletter" template="Webbhuset_CollectorCheckout::checkout/newsletter.phtml" after="collector-discount">
+            <block class="Magento\Framework\View\Element\Template" name="collector-newsletter" template="Webbhuset_CollectorCheckout::checkout/newsletter.phtml" before="collector-discount">
                 <arguments>
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
@@ -78,6 +69,16 @@
                     </argument>
                 </arguments>
             </block>
+            <block class="Webbhuset\CollectorCheckout\Block\Checkout" name="collectorbank_checkout_iframe" template="Webbhuset_CollectorCheckout::iframe.phtml" cacheable="false" />
+        </referenceContainer>
+        <referenceBlock name="checkout.cart.form" remove="true"/>
+        <referenceBlock class="Magento\Checkout\Block\Cart\Coupon" name="checkout.cart.coupon" remove="true"/>
+        <move element="checkout.cart.shipping" destination="checkout.cart.items" before="collector-newsletter"/>
+        <move element="checkout.cart.totals.container" destination="checkout.cart.container" before="collector-discount"/>
+        <referenceContainer name="cart.summary" remove="true" />
+
+        <referenceContainer name="checkout.cart.container">
+
         </referenceContainer>
         <referenceBlock name="checkout.cart.shipping" template="Webbhuset_CollectorCheckout::cart/shipping.phtml">
             <arguments>

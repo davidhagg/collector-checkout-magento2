@@ -3,19 +3,6 @@
 
         <div class="product-item-details">
             <div class="column-left">
-                <div class="column-remove">
-                    <button
-                        href="#"
-                        data-bind="
-                            attr: {'data-cart-item': item_id, title: $t('Remove item')},
-                            click: $parent.removeItem(item_id)"
-                            class="action delete"
-                        aria-label="Remove item"
-                    >
-                        <img data-bind="attr: {src: $parent.getRemoveItemImage()}" />
-                    </button>
-                </div>
-
                 <div class="column-image">
                     <a data-bind="attr: {href: product_url, title: product_name}" class="product-item-photo">
                         <!-- ko foreach: $parent.getRegion('itemImage') -->
@@ -65,14 +52,14 @@
 
                 <div class="column-qty qty">
                     <button
-                        class="collector action qty-button"
-                        data-bind="
+                            class="collector action qty-button"
+                            data-bind="
                             click: $parent.minusQty(item_id),
                             attr: {'data-cart-item': item_id, title: $t('Minus item quantity')}
                         "
-                        aria-label="Minus item quantity"
+                            aria-label="Minus item quantity"
                     >
-                        <img data-bind="attr: {src: $parent.getMinusQtyImage()}" />
+                        -
                     </button>
 
                     <input data-bind="attr: {
@@ -89,17 +76,23 @@
                     >
 
                     <button
-                        class="collector action qty-button"
-                        data-bind="
+                            class="collector action qty-button"
+                            data-bind="
                             click: $parent.plusQty(item_id),
                             attr: {'data-cart-item': item_id, title: $t('Plus item quantity')}
                         "
-                        aria-label="Plus item quantity"
+                            aria-label="Plus item quantity"
                     >
-                        <img data-bind="attr: {src: $parent.getPlusQtyImage()}" />
+                        +
                     </button>
                 </div>
-
+                <div class="column-remove">
+                    <span class="cart-items-remove-item" data-bind="
+                            text: $t('Remove'),
+                            attr: {'data-cart-item': item_id, title: $t('Remove item')},
+                            click: $parent.removeItem(item_id)">
+                    </span>
+                </div>
                 <div class="column-price product-item-pricing">
                     <div
                         class=""
