@@ -103,9 +103,12 @@
                 <div class="column-price product-item-pricing">
                     <div
                         class=""
-                        data-bind="template: { name: 'Magento_Checkout/minicart/item/price', data: item.product_price, as: 'price'}"
+                        data-bind="template: { name: 'Magento_Checkout/minicart/item/price', data: item.product_price_subtotal, as: 'price'}"
                     ></div>
                 </div>
+                <span class="" data-bind="text: console.log(item)">
+
+                </span>
             </div>
         </div>
     </div>

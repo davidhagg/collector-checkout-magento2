@@ -17,4 +17,7 @@
     <type name="Magento\Quote\Observer\SubmitObserver">
         <plugin name="collector_send_no_email" type="Webbhuset\CollectorCheckout\Plugin\SubmitObserverBeforeExecute" />
     </type>
+    <type name="Magento\Checkout\CustomerData\Cart">
+        <plugin name="add_subtotal_to_item" type="Webbhuset\CollectorCheckout\Plugin\AddSubtotalToItem" sortOrder="1"/>
+    </type>
 </config>
