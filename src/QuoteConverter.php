@@ -100,13 +100,13 @@ class QuoteConverter
         }
 
         return new Item(
-            "Rounding",
-            "Rounding",
+            __("Currency rounding"),
+            __("Currency rounding"),
             $roundingError,
             1,
             0,
             false,
-            "Rounding"
+            __("Currency rounding")
         );
 
     }
