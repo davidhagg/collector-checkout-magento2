@@ -38,4 +38,19 @@ class QuoteConfig extends \Webbhuset\CollectorCheckout\Config\Config
 
         return parent::getStoreId();
     }
+
+    public function getProfileName() : string
+    {
+        $customerType = $this->quoteDataHandler->getCustomerType($this->getQuote());
+        if (!$customerType) {
+            $customerType = $this->getDefaultCustomerType();
+        }
+
+        if (\Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
+
+            return parent::getB2CProfileName();
+        }
+
+        return parent::getB2BProfileName();
+    }
 }

@@ -311,6 +311,31 @@ class Config implements
         return $this->getConfigValue('order_denied_status');
     }
 
+
+    /**
+     * Gets B2C store id
+     *
+     * @return string
+     */
+    public function getB2CProfileName() : string
+    {
+        $profileName = $this->getConfigValue('profile_name');
+
+        return $profileName ? $profileName : "";
+    }
+
+    /**
+     * Get B2B store id
+     *
+     * @return string
+     */
+    public function getB2BProfileName() : string
+    {
+        $profileName = $this->getConfigValue('profile_name_b2b');
+
+        return $profileName ? $profileName : "";
+    }
+
     /**
      * Get profile name
      *
@@ -318,9 +343,15 @@ class Config implements
      */
     public function getProfileName(): string
     {
-        $profileName = $this->getConfigValue('profile_name');
-        return $profileName ? $profileName : "";
+        $customerType = $this->getDefaultCustomerType();
+
+        if (\Webbhuset\CollectorCheckout\Config\Source\Customer\DefaultType::PRIVATE_CUSTOMERS == $customerType) {
+            return $this->getB2CStoreId();
+        }
+
+        return $this->getB2BStoreId();
     }
+
 
     /**
      * Get production mode username

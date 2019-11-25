@@ -383,7 +383,7 @@
                         showInWebsite="1"
                         showInStore="1"
                 >
-                    <label>Profile name</label>
+                    <label>Profile Name B2C</label>
                     <comment>
                        If you have been provided with a profile name from Collector Bank, enter it here, otherwise leave this field empty.
                     </comment>
@@ -392,6 +392,23 @@
                     </depends>
                 </field>
 
+                <field
+                        id="profile_name_b2b"
+                        translate="label"
+                        type="text"
+                        sortOrder="107"
+                        showInDefault="1"
+                        showInWebsite="1"
+                        showInStore="1"
+                >
+                    <label>Profile Name B2B</label>
+                    <comment>
+                        If you have been provided with a profile name from Collector Bank, enter it here, otherwise leave this field empty.
+                    </comment>
+                    <depends>
+                        <field id='active'>1</field>
+                    </depends>
+                </field>
 
                 <field
                         id="style_data_lang"
