@@ -523,6 +523,7 @@ class Manager
         \Webbhuset\CollectorCheckoutSDK\Checkout\Purchase $purchaseData
     ) {
         $info = [
+            'method_title'            => \Webbhuset\CollectorCheckout\Gateway\Config::PAYMENT_METHOD_NAME,
             'payment_name'            => $purchaseData->getPaymentName(),
             'amount_to_pay'           => $purchaseData->getAmountToPay(),
             'invoice_delivery_method' => $purchaseData->getInvoiceDeliveryMethod(),
