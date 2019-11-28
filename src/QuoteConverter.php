@@ -80,7 +80,7 @@ class QuoteConverter
             $this->getCartItem($quoteItem, "",true):
             $this->getCartItem($quoteItem);
 
-        $items = $this->appendToItems($bundleParent, $items);
+        $items = array_merge($bundleParent, $items);
         if ((float)$quoteItem->getDiscountAmount()) {
             $items[] = $this->getDiscountItem($quoteItem, __('Discount: '));
         }
