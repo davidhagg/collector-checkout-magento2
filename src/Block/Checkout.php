@@ -41,8 +41,14 @@ class Checkout extends \Magento\Framework\View\Element\Template
         parent::__construct($context, $data);
         $this->jsLayout = isset($data['jsLayout']) && is_array($data['jsLayout']) ? $data['jsLayout'] : [];
         $this->configProvider = $configProvider;
-        $this->serializer = $serializerInterface ?: \Magento\Framework\App\ObjectManager::getInstance()
-            ->get(\Magento\Framework\Serialize\Serializer\JsonHexTag::class);
+
+        if (class_exists('Magento\Framework\Serialize\Serializer\JsonHexTag')) {
+            $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magento\Framework\Serialize\Serializer\JsonHexTag::class);
+        } else {
+            $this->serializer = \Magento\Framework\App\ObjectManager::getInstance()
+                ->get(\Magento\Framework\Serialize\Serializer\Json::class);
+        }
     }
 
     /**
