@@ -81,7 +81,7 @@ class Adapter
                     $collectorSession = $this->initialize($quote);
                     $publicToken = $collectorSession->getPublicToken();
                 } else {
-                    $this->logger->addCritical("Response error when initiating iframe " . $e->getMessage());
+                    $this->logger->addCritical("Response error when initiating iframe " . $responseError->getMessage());
                     die;
                 }
             }
