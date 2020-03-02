@@ -120,6 +120,7 @@ define([
                     break;
 
                 case 'collectorCheckoutReloadedByUser':
+                    location.reload();
                     /*
                         Occurs when the user has clicked a "reload" button in the checkout.
                         This can occur when there is a version mismatch in the checkout.
