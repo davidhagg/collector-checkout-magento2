@@ -122,7 +122,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $this->config->getStyleDataActionColor(),
             $this->config->getStyleDataActionTextColor()
         );
-        $iframe = \Webbhuset\CollectorCheckoutSDK\Iframe::getScript($iframeConfig);
+        $iframe = \Webbhuset\CollectorCheckoutSDK\Iframe::getScript($iframeConfig, $this->config->getMode());
 
         $block = $page
             ->getLayout()

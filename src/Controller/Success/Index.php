@@ -34,6 +34,8 @@ class Index extends \Magento\Framework\App\Action\Action
      */
     protected $logger;
 
+    protected $config;
+
     /**
      * Index constructor.
      *
@@ -50,13 +52,15 @@ class Index extends \Magento\Framework\App\Action\Action
         \Webbhuset\CollectorCheckout\Checkout\Order\ManagerFactory $orderManager,
         \Webbhuset\CollectorCheckout\Data\OrderHandlerFactory $orderDataHandler,
         \Magento\Framework\View\Result\PageFactory $pageFactory,
-        \Webbhuset\CollectorCheckout\Logger\Logger $logger
+        \Webbhuset\CollectorCheckout\Logger\Logger $logger,
+        \Webbhuset\CollectorCheckout\Config\Config $config
     ) {
         $this->pageFactory      = $pageFactory;
         $this->collectorAdapter = $collectorAdapter;
         $this->orderManager     = $orderManager;
         $this->orderDataHandler = $orderDataHandler;
         $this->logger           = $logger;
+        $this->config           = $config;
 
         parent::__construct($context);
     }
@@ -88,7 +92,7 @@ class Index extends \Magento\Framework\App\Action\Action
         $iframeConfig = new \Webbhuset\CollectorCheckoutSDK\Config\IframeConfig(
             $publicToken
         );
-        $iframe = \Webbhuset\CollectorCheckoutSDK\Iframe::getScript($iframeConfig);
+        $iframe = \Webbhuset\CollectorCheckoutSDK\Iframe::getScript($iframeConfig, $this->config->getMode());
 
         $page->getLayout()
             ->getBlock('collectorbank_success_iframe')
