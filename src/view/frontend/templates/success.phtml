@@ -4,12 +4,12 @@
 <?php if ($iframe): ?>
     <script>
         window.dataLayer = window.dataLayer || [];
-        dataLayer.push({
+        dataLayer.push(
             <?= $block->getAnalyticsDatalayer() ?>
-        });
-        dataLayer.push({
+        );
+        dataLayer.push(
             <?= $block->getEnhancedEcommerceDatalayer() ?>
-        });
+        );
     </script>
     <?= $iframe ?>
 <?php else: ?>
