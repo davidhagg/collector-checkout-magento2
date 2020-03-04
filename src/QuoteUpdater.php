@@ -77,6 +77,11 @@ class QuoteUpdater
         $customerLoggedIn = $this->session->isLoggedIn();
         if (!$customerLoggedIn) {
             $quote->setCustomerIsGuest(true);
+
+            if($customer->getEmail()) {
+                $email = $customer->getEmail();
+                $quote->setEmail($email);
+            }
         } else {
             $customerId = $this->session->getCustomer()->getId();
             $customer = $this->customerRepositoryInterface->getById($customerId);
