@@ -72,6 +72,9 @@ define([
             document.addEventListener('collectorCheckoutExpired', self.listener.bind(self));
             document.addEventListener('collectorCheckoutResumed', self.listener.bind(self));
 
+            var event = {type: "update", detail: window.checkoutConfig.quoteData.collectorbank_public_id}
+            this.addressUpdated(event);
+
             this._super();
         },
         listener: function(event) {
