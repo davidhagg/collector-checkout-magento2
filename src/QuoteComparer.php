@@ -85,6 +85,7 @@ class QuoteComparer
         $cartItems = $cartItems['items'];
 
         array_walk($cartItems, [$this, 'removeExtraColumns']);
+        array_walk($cartItems, [$this, 'trimIdField']);
 
         return $cartItems;
     }
@@ -146,6 +147,11 @@ class QuoteComparer
         }
 
         return $total;
+    }
+
+    protected function trimIdField(&$item, $key)
+    {
+        $item['id'] = trim($item['id']);
     }
 
     protected function serializeElements(&$item, $key)
