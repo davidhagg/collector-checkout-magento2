@@ -148,22 +148,22 @@ define([
             }
         },
 
-        getRemoveItemImage() {
+        getRemoveItemImage: function() {
 
             return window.checkoutConfig.payment.collector_checkout.image_remove_item;
         },
 
-        getPlusQtyImage() {
+        getPlusQtyImage: function() {
 
             return window.checkoutConfig.payment.collector_checkout.image_plus_qty;
         },
 
-        getMinusQtyImage() {
+        getMinusQtyImage: function() {
 
             return window.checkoutConfig.payment.collector_checkout.image_minus_qty;
         },
 
-        getReinitUrl() {
+        getReinitUrl: function() {
 
             return window.checkoutConfig.payment.collector_checkout.reinit_url;
         },
@@ -172,7 +172,7 @@ define([
             return window.checkoutConfig.payment.collector_checkout.update_url + '?event=' + eventName + '&quoteid=' + publicId
         },
 
-        fetchShippingRates() {
+        fetchShippingRates: function() {
             var address = quote.shippingAddress();
             var type = address.getType();
             var rateProcessors = [];
@@ -223,7 +223,7 @@ define([
             return this.cartData().items;
         },
 
-        plusQty(itemId) {
+        plusQty: function(itemId) {
             return function () {
                 var inputElem = $('#collector-cart-item-' + itemId + '-qty');
                 var val = Number(inputElem.val());
@@ -232,7 +232,7 @@ define([
             }
         },
 
-        minusQty(itemId) {
+        minusQty: function(itemId) {
             return function () {
                 var inputElem = $('#collector-cart-item-' + itemId + '-qty');
                 var val = Number(inputElem.val());
@@ -241,7 +241,7 @@ define([
             }
         },
 
-        debounce(func, wait, immediate) {
+        debounce: function(func, wait, immediate) {
             var self = this;
             return function() {
                 var context = this, args = arguments;
@@ -256,7 +256,7 @@ define([
             };
         },
 
-        updateItemQty(itemId) {
+        updateItemQty: function(itemId) {
             var self = this;
 
             return function() {
@@ -281,7 +281,7 @@ define([
             }
         },
 
-        removeItem(itemId) {
+        removeItem: function(itemId) {
             var self = this;
             return function() {
                 confirm({

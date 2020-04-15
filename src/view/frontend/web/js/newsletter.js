@@ -8,11 +8,11 @@ define([
             this._super();
         },
 
-        getNewsletterUrl() {
+        getNewsletterUrl: function() {
             return window.checkoutConfig.payment.collector_checkout.newsletter_url;
         },
 
-        newsletterSubscribe() {
+        newsletterSubscribe: function() {
             var self = this;
 
             return function() {
