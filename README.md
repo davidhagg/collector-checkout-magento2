@@ -1,9 +1,8 @@
 # Collector Checkout for Magento 2
 
-## Requirements:
-
-Magento 2.2.0 or above
-PHP 7.2 and above
+## Requirements
+* Magento Open Source 2.2.0 or above
+* PHP 7.2 and above
 
 ## Install
 Run these commands from the Magento base folder:
