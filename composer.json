@@ -1,21 +1,11 @@
 {
-    "name": "webbhuset/collector-checkout",
+    "name": "webbhuset/collector-checkout-magento2",
     "type": "magento2-module",
-    "description": "Collector Bank Checkout Module",
+    "description": "Magento 2 Collector Bank Checkout Module",
     "require": {
 		"webbhuset/collector-payment-sdk": "dev-master",
 		"webbhuset/collector-checkout-sdk": "dev-master"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@gitlab.webbhuset.com:webbhuset/client/collector-bank/php-sdk-checkout.git"
-        },
-        {
-            "type": "vcs",
-            "url": "git@gitlab.webbhuset.com:webbhuset/client/collector-bank/php-sdk-payments.git"
-        }
-    ],
     "authors": [
         {
             "name":"Webbhuset",
